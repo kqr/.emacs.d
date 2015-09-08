@@ -8,17 +8,20 @@
 (eval-when-compile (require 'use-package))
 
 (use-package evil
-    :ensure t
-    :init (evil-mode 1)
-    :config (setq evil-echo-state nil))
-
+  :ensure t
+  :init (evil-mode 1)
+  :config (setq evil-echo-state nil))
 
 
 (menu-bar-mode -1)
-(setq-default mode-line-format nil)
+;(setq-default mode-line-format nil)
 (global-linum-mode t)
 (setq-default linum-format "%4d ")
 (setq make-backup-files nil)
+
+(define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
+(define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
+(define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
 
 
@@ -40,4 +43,6 @@
  '(font-lock-keyword-face ((t (:foreground "color-208"))))
  '(font-lock-string-face ((t (:foreground "color-106"))))
  '(font-lock-type-face ((t (:foreground "color-31"))))
- '(font-lock-variable-name-face ((t nil))))
+ '(font-lock-variable-name-face ((t nil)))
+ '(mode-line ((t (:background "color-235" :foreground "color-242" :box (:line-width -1 :style released-button)))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "color-240" :box (:line-width -1 :color "grey75") :weight light)))))
