@@ -14,14 +14,16 @@
 
 
 (menu-bar-mode -1)
-;(setq-default mode-line-format nil)
 (global-linum-mode t)
 (setq-default linum-format "%4d ")
 (setq make-backup-files nil)
 
+(define-key evil-normal-state-map (kbd ";") #'evil-ex)
 (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
 (define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
-(define-key evil-normal-state-map (kbd ";") #'evil-ex)
+(define-key evil-normal-state-map (kbd "<backtab>") #'indent-for-tab-command)
+(define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
+(define-key evil-visual-state-map (kbd "<backtab>") #'indent-for-tab-command)
 
 
 
