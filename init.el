@@ -1,17 +1,13 @@
 (require 'package)
-(push '("marmalade" . "http://marmalade-repo.org/packages/")
-      package-archives )
-(push '("melpa" . "http://melpa.milkbox.net/packages/")
-      package-archives)
+(push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
+(push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
 (package-initialize)
 (package-install 'use-package)
-(eval-when-compile (require 'use-package))
+(require 'use-package)
 
 (use-package evil
   :ensure t
-  :init
-  (evil-mode 1)
-  
+  :init (evil-mode 1)
   :config
   
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
@@ -24,9 +20,7 @@
 
 (use-package projectile
   :ensure t
-  :init
-  (projectile-global-mode)
-
+  :init (projectile-global-mode)
   :config
   
   (setq projectile-tags-file-name ".etags")
@@ -34,37 +28,30 @@
     (lambda ()
       (interactive)
       (let* ((tags-fn projectile-tags-file-name)
-	     (tags-dir (projectile-project-root))
-	     (tags-path (expand-file-name tags-fn tags-dir)))
-	(setq tags-file-name tags-path))
+         (tags-dir (projectile-project-root))
+         (tags-path (expand-file-name tags-fn tags-dir)))
+    (setq tags-file-name tags-path))
       (evil-jump-to-tag))))
 
 (use-package centered-cursor-mode
   :ensure t
-  :config
-  
-  (global-centered-cursor-mode +1))
+  :config (global-centered-cursor-mode t))
 
 
-(menu-bar-mode -1)
-(global-linum-mode t)
-(setq-default linum-format "%4d ")
 (setq-default make-backup-files nil)
 (setq-default truncate-lines t)
-(set-display-table-slot standard-display-table 0 ?›)
 (setq-default large-file-warning-threshold 100000000)
+(setq-default indent-tabs-mode nil)
+
+(menu-bar-mode -1)
+(scroll-bar-mode nil)
+(tool-bar-mode nil)
+(tooltip-mode nil)
+(global-linum-mode t)
+(setq-default linum-format "%4d ")
+(set-display-table-slot standard-display-table 0 ?›)
 
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t)
- '(menu-bar-mode nil)
- '(scroll-bar-mode nil)
- '(tool-bar-mode nil)
- '(tooltip-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
