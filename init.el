@@ -32,10 +32,14 @@
          (tags-path (expand-file-name tags-fn tags-dir)))
     (setq tags-file-name tags-path))
       (evil-jump-to-tag))))
+  (define-key evil-normal-state-map (kbd "C-p") #'projectile-find-file)
 
 (use-package centered-cursor-mode
   :ensure t
   :config (global-centered-cursor-mode +1))
+
+(use-package less-css-mode
+  :ensure t)
 
 
 (setq-default make-backup-files nil)
@@ -70,3 +74,9 @@
  '(hl-line ((t (:background "grey11"))))
  '(mode-line ((t (:background "gray11" :foreground "dim gray"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey")))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(inhibit-startup-screen t))
