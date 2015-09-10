@@ -7,7 +7,7 @@
 
 (use-package evil
   :ensure t
-  :init (evil-mode 1)
+  :init (evil-mode +1)
   :config
   
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
@@ -35,7 +35,7 @@
 
 (use-package centered-cursor-mode
   :ensure t
-  :config (global-centered-cursor-mode t))
+  :config (global-centered-cursor-mode +1))
 
 
 (setq-default make-backup-files nil)
@@ -44,10 +44,10 @@
 (setq-default indent-tabs-mode nil)
 
 (menu-bar-mode -1)
-(scroll-bar-mode nil)
-(tool-bar-mode nil)
-(tooltip-mode nil)
-(global-linum-mode t)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(global-linum-mode +1)
 (setq-default linum-format "%4d ")
 (set-display-table-slot standard-display-table 0 ?›)
 
