@@ -1,3 +1,9 @@
+;;;; Dependencies:
+;;;; - Emacs 2.24+
+;;;; - Git 1.9.4+
+
+;; Enable the built in package manager and install and load the use-package
+;; package
 (require 'package)
 (push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
 (push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
@@ -7,11 +13,20 @@
   (package-install 'use-package))
 (require 'use-package)
 
+;; Install and load evil-leader to get a leader key in evil mode. Needs to be
+;; loaded before evil itself
 (use-package evil-leader
   :ensure t
   :init (global-evil-leader-mode)
   :config (evil-leader/set-leader "SPC"))
 
+;; Install and load evil mode. Define a bunch of keybinds. Notable binds:
+;;
+;;     ; => ":", which means you don't have to press shift to save files
+;;     TAB => "esc", which means you press tab to escape out of insert mode
+;;     S-TAB => "TAB", so you can still indent in insert mode
+;;     <Leader>-; => M-x, for more convenient function execution
+;;
 (use-package evil
   :ensure t
   :init (evil-mode +1)
@@ -31,6 +46,8 @@
     (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
     (setq evil-echo-state t)
+
+    ;; Don't use evil mode in git integration windows. It breaks stuff.
     (evil-set-initial-state 'magit-popup-mode 'emacs)
     (evil-set-initial-state 'magit-blame-mode 'emacs)))
 
@@ -38,6 +55,9 @@
   :ensure t
   :init (global-evil-surround-mode +1))
 
+;; Ad hoc project management in Emacs. Treats any git repo as a project, which
+;; makes it easier to generate/search among ctags and open files within that
+;; project.
 (use-package projectile
   :ensure t
   :init (projectile-global-mode)
@@ -51,10 +71,12 @@
   :config (progn
             (setq magit-push-always-verify nil)))
 
+;; I prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
   :ensure t
   :config (global-centered-cursor-mode +1))
 
+;; Marker at 80 characters. For some reason can't set width other than 1?
 (use-package fill-column-indicator
   :ensure t
   :init (progn
@@ -66,20 +88,27 @@
     (setq fci-rule-width 1)
     (setq fci-rule-color "grey11")))
 
+;; Extension for making Emacs understand .less files
 (use-package less-css-mode
   :ensure t)
 
+
 (setq-default make-backup-files nil)
 
+;; Don't word wrap lines, rather behave as vim with horizontal scrolling
 (setq-default truncate-lines t)
 (set-display-table-slot standard-display-table 0 ?›)
 (setq-default fill-column 80)
 
+;; By default Emacs wants confirmation to open files larger than 10 MB. That's
+;; silly.
 (setq-default large-file-warning-threshold 100000000)
 
+;; expandtab + four space tabs
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
+;; Turn off all the GUI crap
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -87,9 +116,11 @@
 (blink-cursor-mode -1)
 (setq-default inhibit-startup-screen t)
 
+;; Line numbers are nice
 (global-linum-mode +1)
 (setq-default linum-format "%4d ")
 
+;; Immediately display matching parens
 (setq-default show-paren-delay 0)
 (show-paren-mode +1)
 
