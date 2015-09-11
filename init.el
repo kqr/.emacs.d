@@ -115,7 +115,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Luxi Mono" :foundry "b&h" :slant normal :weight normal :height 128 :width normal :background "black" :foreground "beige"))))
+ '(default ((t (:inherit nil :stipple nil :background "black" :foreground "beige" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 135 :width normal :foundry "nil" :family "Luxi Mono"))))
  '(font-lock-builtin-face ((t nil)))
  '(font-lock-comment-face ((t (:foreground "dim gray"))))
  '(font-lock-constant-face ((t nil)))
