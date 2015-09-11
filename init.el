@@ -127,7 +127,9 @@
  '(font-lock-variable-name-face ((t nil)))
  '(fringe ((t (:background "black" :foreground "grey11"))))
  '(hl-line ((t (:background "grey11"))))
+ '(linum ((t (:background "grey11" :foreground "dim grey"))))
  '(mode-line ((t (:background "gray11" :foreground "dim gray"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey"))))
  '(show-paren-match ((t (:background "dodger blue" :foreground "black"))))
  '(show-paren-mismatch ((t (:background "black" :foreground "red")))))
+
