@@ -16,7 +16,7 @@
   :ensure t
   :init (evil-mode +1)
   :config (progn
-    (define-key evil-normal-state-map (kbd "RET") #'open-line)
+    (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
     (define-key evil-normal-state-map (kbd "g t") #'other-window)
     (define-key evil-normal-state-map (kbd ";") #'evil-ex)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
@@ -112,6 +112,13 @@
       (setq deactivate-mark  t)
     (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
     (abort-recursive-edit)))
+
+(defun open-next-line ()
+  "Insert a blank line *under* point"
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (open-line 1)))
 
 
 (custom-set-faces
