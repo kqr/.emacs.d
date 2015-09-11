@@ -46,7 +46,9 @@
             (evil-leader/set-key "p" #'projectile-find-file)))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :config (progn
+            (setq magit-push-always-verify nil)))
 
 (use-package centered-cursor-mode
   :ensure t
