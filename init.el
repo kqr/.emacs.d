@@ -13,6 +13,10 @@
   (package-install 'use-package))
 (require 'use-package)
 
+;; Ace jump for quick & convenient navigation
+(use-package ace-jump-mode
+  :ensure t)
+
 ;; Install and load evil-leader to get a leader key in evil mode. Needs to be
 ;; loaded before evil itself
 (use-package evil-leader
@@ -34,6 +38,7 @@
     (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
     (define-key evil-normal-state-map (kbd "g t") #'other-window)
     (define-key evil-normal-state-map (kbd ";") #'evil-ex)
+    (evil-leader/set-key "w" #'evil-ace-jump-word-mode)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-normal-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
