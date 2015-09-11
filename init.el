@@ -31,7 +31,8 @@
     (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
     (setq evil-echo-state t)
-    (evil-set-initial-state 'magit-popup-mode 'emacs)))
+    (evil-set-initial-state 'magit-popup-mode 'emacs)
+    (evil-set-initial-state 'magit-blame-mode 'emacs)))
 
 (use-package evil-surround
   :ensure t
