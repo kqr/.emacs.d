@@ -40,6 +40,7 @@
     (define-key evil-normal-state-map (kbd "<backtab>") #'indent-for-tab-command)
     (evil-leader/set-key ";" #'execute-extended-command)
     (evil-leader/set-key "g" #'magit-status)
+    (evil-leader/set-key "s" #'toggle-scratch)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
@@ -47,7 +48,7 @@
     (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
     (setq evil-echo-state t)
 
-    ;; Don't use evil mode in git integration windows. It breaks stuff.
+    ;; don't use evil mode in git integration windows. it breaks stuff.
     (evil-set-initial-state 'magit-popup-mode 'emacs)
     (evil-set-initial-state 'magit-blame-mode 'emacs)))
 
@@ -55,7 +56,7 @@
   :ensure t
   :init (global-evil-surround-mode +1))
 
-;; Ad hoc project management in Emacs. Treats any git repo as a project, which
+;; ad hoc project management in emacs. treats any git repo as a project, which
 ;; makes it easier to generate/search among ctags and open files within that
 ;; project.
 (use-package projectile
@@ -71,12 +72,12 @@
   :config (progn
             (setq magit-push-always-verify nil)))
 
-;; I prefer to have my cursor centered as much as possible
+;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
   :ensure t
   :config (global-centered-cursor-mode +1))
 
-;; Marker at 80 characters. For some reason can't set width other than 1?
+;; marker at 80 characters. for some reason can't set width other than 1?
 (use-package fill-column-indicator
   :ensure t
   :init (progn
@@ -88,19 +89,24 @@
     (setq fci-rule-width 1)
     (setq fci-rule-color "grey11")))
 
-;; Extension for making Emacs understand .less files
+;; I do work in Haskell
+(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+(use-package haskell-mode
+  :ensure t)
+
+;; extension for making emacs understand .less files
 (use-package less-css-mode
   :ensure t)
 
 
 (setq-default make-backup-files nil)
 
-;; Don't word wrap lines, rather behave as vim with horizontal scrolling
+;; don't word wrap lines, rather behave as vim with horizontal scrolling
 (setq-default truncate-lines t)
 (set-display-table-slot standard-display-table 0 ?›)
 (setq-default fill-column 80)
 
-;; By default Emacs wants confirmation to open files larger than 10 MB. That's
+;; by default emacs wants confirmation to open files larger than 10 mb. that's
 ;; silly.
 (setq-default large-file-warning-threshold 100000000)
 
@@ -108,7 +114,7 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
-;; Turn off all the GUI crap
+;; turn off all the gui crap
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -116,17 +122,17 @@
 (blink-cursor-mode -1)
 (setq-default inhibit-startup-screen t)
 
-;; Line numbers are nice
+;; line numbers are nice
 (global-linum-mode +1)
 (setq-default linum-format "%4d ")
 
-;; Immediately display matching parens
+;; immediately display matching parens
 (setq-default show-paren-delay 0)
 (show-paren-mode +1)
 
 
 (defun projectevil-jump-to-tag ()
-  "Find tags file with help from projectile and then evil-jump to the tag
+  "find tags file with help from projectile and then evil-jump to the tag
    under point."
   (interactive)
   (let *((tags-fn projectile-tags-file-name)
@@ -135,22 +141,28 @@
   (evil-jump-to-tag))
 
 (defun minibuffer-keyboard-quit ()
-  "Abort recursive edit.
-   In Delete Selection mode, if the mark is active, just deactivate it;
+  "abort recursive edit.
+   in delete selection mode, if the mark is active, just deactivate it;
    then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (interactive)
   (if (and delete-selection-mode transient-mark-mode mark-active)
       (setq deactivate-mark  t)
-    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (when (get-buffer "*completions*") (delete-windows-on "*completions*"))
     (abort-recursive-edit)))
 
 (defun open-next-line ()
-  "Insert a blank line *under* point"
+  "insert a blank line *under* point"
   (interactive)
   (save-excursion
     (end-of-line)
     (open-line 1)))
 
+(defun toggle-scratch ()
+  "toggles between scratch buffer and last non-scratch buffer"
+  (interactive)
+  (if (string-equal (buffer-name) "*scratch*")
+      (switch-to-prev-buffer)
+      (switch-to-buffer "*scratch*")))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
