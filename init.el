@@ -31,6 +31,10 @@
 ;;     S-TAB => "TAB", so you can still indent in insert mode
 ;;     <Leader>-; => M-x, for more convenient function execution
 ;;
+;; Also adds the ex command
+;;
+;;     :k => kill-buffer, which kills the currently active buffer
+;;
 (use-package evil
   :ensure t
   :init (evil-mode +1)
@@ -47,6 +51,7 @@
     (evil-leader/set-key ";" #'execute-extended-command)
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
+    (evil-ex-define-cmd "k" #'kill-buffer)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
@@ -71,7 +76,8 @@
   :config (progn
             (setq projectile-tags-file-name ".etags")
             (evil-leader/set-key "]" #'projectevil-jump-to-tag)
-            (evil-leader/set-key "p" #'projectile-find-file)))
+            (evil-leader/set-key "p" #'projectile-find-file)
+            (evil-ex-define-cmd "tn" #'projectevil-tagnext)))
 
 (use-package magit
   :ensure t
@@ -137,14 +143,21 @@
 (show-paren-mode +1)
 
 
-(defun projectevil-jump-to-tag ()
+(defun projectevil-jump-to-tag (arg)
   "find tags file with help from projectile and then evil-jump to the tag
    under point."
+  (interactive "P")
+  (unless tags-file-name
+    (let ((tags-fn projectile-tags-file-name)
+          (tags-dir (projectile-project-root)))
+      (setq tags-file-name (expand-file-name tags-fn tags-dir))))
+  (evil-jump-to-tag arg))
+
+(defun projectevil-tagnext ()
+  "jumps to the next tag!"
   (interactive)
-  (let *((tags-fn projectile-tags-file-name)
-         (tags-dir (projectile-project-root)))
-       (setq tags-file-name (expand-file-name tags-fn tags-dir)))
-  (evil-jump-to-tag))
+  (let ((current-prefix-arg '(4)))
+    (call-interactively 'projectevil-jump-to-tag)))
 
 (defun minibuffer-keyboard-quit ()
   "abort recursive edit.
