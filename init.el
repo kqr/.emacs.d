@@ -89,6 +89,13 @@
   :ensure t
   :config (global-centered-cursor-mode +1))
 
+;; highlight the current line when you have been idle for a while
+(use-package hl-line+
+  :ensure t
+  :init (progn
+          (global-hl-line-mode -1)
+          (toggle-hl-line-when-idle +1)))
+
 ;; marker at 80 characters. for some reason can't set width other than 1?
 (use-package fill-column-indicator
   :ensure t
