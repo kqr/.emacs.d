@@ -52,6 +52,7 @@
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
     (evil-ex-define-cmd "k" #'kill-buffer)
+    (evil-ex-define-cmd "ko" #'kill-other-buffers)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
     (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
@@ -189,6 +190,12 @@
   (if (string-equal (buffer-name) "*scratch*")
       (switch-to-prev-buffer)
       (switch-to-buffer "*scratch*")))
+
+(defun kill-other-buffers ()
+  "Kill all buffers that are not the currently active one"
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
