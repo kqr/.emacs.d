@@ -194,7 +194,8 @@
 (defun kill-other-buffers ()
   "Kill all buffers that are not the currently active one"
   (interactive)
-  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+  (dolist (buf (buffer-list))
+    (unless (get-buffer-window buf 'visible) (kill-buffer buf))))
 
 
 (custom-set-faces
