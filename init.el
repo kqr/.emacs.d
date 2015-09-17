@@ -34,6 +34,7 @@
 ;; Also adds the ex command
 ;;
 ;;     :k => kill-buffer, which kills the currently active buffer
+;;     :ko => kill-other-buffers, which knocks out any non-active buffers, to make magit faster
 ;;
 (use-package evil
   :ensure t
