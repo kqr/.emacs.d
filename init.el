@@ -113,7 +113,14 @@
 ;; I do work in Haskell
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (use-package haskell-mode
-  :ensure t)
+  :ensure t
+  :config (progn
+            (setq haskell-indentation-layout-offset 4)
+            (setq haskell-indentation-starter-offset 4)
+            (setq haskell-indentation-left-offset 4)
+            (setq haskell-indentation-ifte-offset 4)
+            (setq haskell-indentation-where-pre-offset 4)
+            (setq haskell-indentation-where-post-offset 4)))
 
 ;; extension for making emacs understand .less files
 (use-package less-css-mode
