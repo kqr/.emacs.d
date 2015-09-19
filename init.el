@@ -86,6 +86,15 @@
   :config (progn
             (setq magit-push-always-verify nil)))
 
+(use-package org
+  :ensure t)
+
+(use-package evil-org
+  :ensure t
+  :config (progn
+            (evil-define-key 'normal evil-org-mode-map
+              (kbd "RET") #'org-cycle)))
+
 ;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
   :ensure t
@@ -225,6 +234,10 @@
  '(linum ((t (:background "grey11" :foreground "dim grey"))))
  '(mode-line ((t (:background "gray11" :foreground "dim gray"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey"))))
+ '(org-level-1 ((t (:foreground "dodger blue" :weight bold))))
+ '(org-level-2 ((t (:foreground "light blue"))))
+ '(org-level-3 ((t (:foreground "slate blue"))))
+ '(org-todo ((t (:foreground "magenta" :weight bold))))
  '(show-paren-match ((t (:background "dodger blue" :foreground "black"))))
  '(show-paren-mismatch ((t (:background "black" :foreground "red")))))
 
