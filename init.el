@@ -69,6 +69,12 @@
   :ensure t
   :init (global-evil-surround-mode +1))
 
+(use-package helm
+  :ensure t
+  :init (progn
+          (require 'helm-config)
+          (helm-mode +1)))
+
 ;; ad hoc project management in emacs. treats any git repo as a project, which
 ;; makes it easier to generate/search among ctags and open files within that
 ;; project.
@@ -78,8 +84,12 @@
   :config (progn
             (setq projectile-tags-file-name ".etags")
             (evil-leader/set-key "]" #'projectevil-jump-to-tag)
-            (evil-leader/set-key "p" #'projectile-find-file)
+            (evil-leader/set-key "p" #'helm-projectile-find-file)
             (evil-ex-define-cmd "tn" #'projectevil-tagnext)))
+
+(use-package helm-projectile
+  :ensure t
+  :init (helm-projectile-on))
 
 (use-package magit
   :ensure t
