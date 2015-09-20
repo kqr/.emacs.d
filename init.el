@@ -46,9 +46,9 @@
     (define-key evil-normal-state-map (kbd "w") #'evil-ace-jump-word-mode)
     (define-key evil-normal-state-map (kbd "h") #'evil-ace-jump-char-mode)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
-    (define-key evil-normal-state-map (kbd "TAB") #'evil-normal-state)
+    (define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
-    (define-key evil-normal-state-map (kbd "<backtab>") #'indent-for-tab-command)
+    (define-key evil-visual-state-map (kbd "<backtab>") #'indent-for-tab-command)
     (evil-leader/set-key ";" #'execute-extended-command)
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
@@ -103,7 +103,10 @@
   :ensure t
   :config (progn
             (evil-define-key 'normal evil-org-mode-map
-              (kbd "RET") #'org-cycle)))
+              (kbd "RET") #'org-cycle)
+            (evil-define-key 'insert org-mode-map
+              (kbd "TAB") #'evil-normal-state
+              (kbd "<tab>") #'evil-normal-state)))
 
 (use-package web-mode
   :ensure t
