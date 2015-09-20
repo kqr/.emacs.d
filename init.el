@@ -185,8 +185,8 @@
 (blink-cursor-mode -1)
 (setq-default inhibit-startup-screen t)
 
-;; line numbers are nice
-(global-linum-mode +1)
+;; line numbers are nice, but I'm trying without for a while
+(global-linum-mode -1)
 (setq-default linum-format "%4d ")
 
 ;; immediately display matching parens
