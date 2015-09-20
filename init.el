@@ -105,6 +105,10 @@
             (evil-define-key 'normal evil-org-mode-map
               (kbd "RET") #'org-cycle)))
 
+(use-package web-mode
+  :ensure t
+  :mode "\\.html?\\'")
+
 ;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
   :ensure t
