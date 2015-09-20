@@ -13,7 +13,7 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;; Ace jump for quick & convenient navigation
+;; Ace jump for quick & convenient navigation. Similar to easymotion
 (use-package ace-jump-mode
   :ensure t)
 
@@ -65,10 +65,12 @@
     (evil-set-initial-state 'magit-popup-mode 'emacs)
     (evil-set-initial-state 'magit-blame-mode 'emacs)))
 
+;; surround.vim for evil mode
 (use-package evil-surround
   :ensure t
   :init (global-evil-surround-mode +1))
 
+;; fast & convenient fuzzy matching/input completion
 (use-package helm
   :ensure t
   :init (progn
@@ -87,18 +89,22 @@
             (evil-leader/set-key "p" #'helm-projectile-find-file)
             (evil-ex-define-cmd "tn" #'projectevil-tagnext)))
 
+;; helm integration for projectile
 (use-package helm-projectile
   :ensure t
   :init (helm-projectile-on))
 
+;; git integration for convenient committing, reviewing diffs, blaming and such
 (use-package magit
   :ensure t
   :config (progn
             (setq magit-push-always-verify nil)))
 
+;; org mode!!
 (use-package org
   :ensure t)
 
+;; some evil integration with org
 (use-package evil-org
   :ensure t
   :config (progn
@@ -106,8 +112,11 @@
               (kbd "RET") #'org-cycle)
             (evil-define-key 'insert org-mode-map
               (kbd "TAB") #'evil-normal-state
-              (kbd "<tab>") #'evil-normal-state)))
+              (kbd "<tab>") #'evil-normal-state
+              (kbd "<backtab>" #'org-cycle))))
 
+;; web mode helps with editing files that consist of source code in multiple
+;; languages, e.g. html files with embedded javascript and CSS
 (use-package web-mode
   :ensure t
   :mode "\\.html?\\'")
@@ -136,7 +145,7 @@
     (setq fci-rule-width 1)
     (setq fci-rule-color "grey11")))
 
-;; I do work in Haskell
+;; I do work in Haskell (where I prefer 4 space indents...)
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (use-package haskell-mode
   :ensure t
