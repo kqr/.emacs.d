@@ -113,7 +113,7 @@
             (evil-define-key 'insert org-mode-map
               (kbd "TAB") #'evil-normal-state
               (kbd "<tab>") #'evil-normal-state
-              (kbd "<backtab>" #'org-cycle))))
+              (kbd "<backtab>") #'org-cycle)))
 
 ;; web mode helps with editing files that consist of source code in multiple
 ;; languages, e.g. html files with embedded javascript and CSS
