@@ -31,7 +31,7 @@
 ;;     S-TAB => "TAB", so you can still indent in insert mode
 ;;     <Leader>-; => M-x, for more convenient function execution
 ;;
-;; Also adds the ex command
+;; Also adds the ex commands
 ;;
 ;;     :k => kill-buffer, which kills the currently active buffer
 ;;     :ko => kill-other-buffers, which knocks out any non-active buffers, to make magit faster
@@ -49,6 +49,9 @@
     (define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
     (define-key evil-visual-state-map (kbd "<backtab>") #'indent-for-tab-command)
+    (define-key evil-insert-state-map (kbd "M-w") (lambda () (insert-char ?å)))
+    (define-key evil-insert-state-map (kbd "M-q") (lambda () (insert-char ?ä)))
+    (define-key evil-insert-state-map (kbd "M-;") (lambda () (insert-char ?ö)))
     (evil-leader/set-key ";" #'execute-extended-command)
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
@@ -162,6 +165,9 @@
 (use-package less-css-mode
   :ensure t)
 
+;; Let me insert special characters like åäö even on OS X
+(setq mac-option-key-is-meta t)
+(setq mac-right-option-modifier nil)
 
 (setq-default make-backup-files nil)
 
