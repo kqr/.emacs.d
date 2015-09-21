@@ -109,7 +109,8 @@
   :ensure t
   :config (progn
             (evil-define-key 'normal evil-org-mode-map
-              (kbd "RET") #'org-cycle)
+              (kbd "RET") #'org-cycle
+              (kbd "x") #'org-ctrl-c-ctrl-c)
             (evil-define-key 'insert org-mode-map
               (kbd "TAB") #'evil-normal-state
               (kbd "<tab>") #'evil-normal-state
