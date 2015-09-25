@@ -197,6 +197,9 @@
 (blink-cursor-mode -1)
 (setq-default inhibit-startup-screen t)
 
+;; Selecting goes to selection buffer
+(setq-default x-select-enable-primary t)
+
 ;; line numbers are nice, but I'm trying without for a while
 (global-linum-mode -1)
 (setq-default linum-format "%4d ")
