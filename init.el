@@ -284,6 +284,7 @@
  '(org-level-1 ((t (:foreground "dodger blue" :weight bold))))
  '(org-level-2 ((t (:foreground "light blue"))))
  '(org-level-3 ((t (:foreground "slate blue"))))
+ '(org-link ((t (:foreground "OliveDrab3" :underline t))))
  '(org-todo ((t (:foreground "magenta" :weight bold))))
  '(show-paren-match ((t (:background "dodger blue" :foreground "black"))))
  '(show-paren-mismatch ((t (:background "black" :foreground "red")))))
