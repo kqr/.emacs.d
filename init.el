@@ -13,10 +13,6 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;; Ace jump for quick & convenient navigation. Similar to easymotion
-(use-package ace-jump-mode
-  :ensure t)
-
 ;; Install and load evil-leader to get a leader key in evil mode. Needs to be
 ;; loaded before evil itself
 (use-package evil-leader
@@ -43,8 +39,6 @@
     (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
     (define-key evil-normal-state-map (kbd "g t") #'other-window)
     (define-key evil-normal-state-map (kbd ";") #'evil-ex)
-    (define-key evil-normal-state-map (kbd "w") #'evil-ace-jump-word-mode)
-    (define-key evil-normal-state-map (kbd "h") #'evil-ace-jump-char-mode)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
@@ -72,6 +66,15 @@
 (use-package evil-surround
   :ensure t
   :init (global-evil-surround-mode +1))
+
+
+;; Avy for quick & convenient navigation. Similar to easymotion
+;; Used to be ace-jump-mode but Avy is supposed to be better
+(use-package avy
+  :ensure t
+  :config (progn
+    (define-key evil-normal-state-map (kbd "w") #'avy-goto-word-1)
+    (define-key evil-normal-state-map (kbd "h") #'avy-goto-char)))
 
 ;; fast & convenient fuzzy matching/input completion
 (use-package helm
@@ -105,7 +108,10 @@
 
 ;; org mode!!
 (use-package org
-  :ensure t)
+  :ensure t
+  :config (progn
+            (setq org-todo-keywords '((sequence "TODO" "|" "DONE" "HOLD")))
+            (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))))
 
 ;; some evil integration with org
 (use-package evil-org
