@@ -203,6 +203,9 @@
 (blink-cursor-mode -1)
 (setq-default inhibit-startup-screen t)
 
+;; Selecting goes to selection buffer
+(setq-default x-select-enable-primary t)
+
 ;; line numbers are nice, but I'm trying without for a while
 (global-linum-mode -1)
 (setq-default linum-format "%4d ")
@@ -287,6 +290,7 @@
  '(org-level-1 ((t (:foreground "dodger blue" :weight bold))))
  '(org-level-2 ((t (:foreground "light blue"))))
  '(org-level-3 ((t (:foreground "slate blue"))))
+ '(org-link ((t (:foreground "OliveDrab3" :underline t))))
  '(org-todo ((t (:foreground "magenta" :weight bold))))
  '(show-paren-match ((t (:background "dodger blue" :foreground "black"))))
  '(show-paren-mismatch ((t (:background "black" :foreground "red")))))
