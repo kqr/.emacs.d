@@ -20,6 +20,9 @@
   :init (global-evil-leader-mode)
   :config (evil-leader/set-leader "SPC"))
 
+(use-package expand-region
+  :ensure t)
+
 ;; Install and load evil mode. Define a bunch of keybinds. Notable binds:
 ;;
 ;;     ; => ":", which means you don't have to press shift to save files
@@ -46,9 +49,12 @@
     (define-key evil-insert-state-map (kbd "M-w") (lambda () (insert-char ?å)))
     (define-key evil-insert-state-map (kbd "M-q") (lambda () (insert-char ?ä)))
     (define-key evil-insert-state-map (kbd "M-;") (lambda () (insert-char ?ö)))
+    (setq expand-region-contract-fast-key "z")
+    (evil-leader/set-key "x" 'er/expand-region)
     (evil-leader/set-key ";" #'execute-extended-command)
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
+    (evil-leader/set-key "w" #'switch-to-buffer)
     (evil-ex-define-cmd "k" #'kill-buffer)
     (evil-ex-define-cmd "ko" #'kill-other-buffers)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
@@ -134,7 +140,9 @@
 ;; languages, e.g. html files with embedded javascript and CSS
 (use-package web-mode
   :ensure t
-  :mode "\\.html?\\'")
+  :mode "\\.html?\\'"
+  :config (setq web-mode-engines-alist
+                '(("django" . "\\.html\\\\'"))))
 
 ;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
