@@ -223,6 +223,14 @@
 (show-paren-mode +1)
 
 
+(add-hook 'after-save-hook (lambda ()
+  (when (string-match "xcalibur/.+\.less$" (buffer-file-name))
+    (shell-command (concat
+      "touch $("
+      "find " (projectile-project-root) "xcalibur "
+      "-name bootstrap.less | head -1)")))))
+
+
 (defun projectevil-jump-to-tag (arg)
   "find tags file with help from projectile and then evil-jump to the tag
    under point."
