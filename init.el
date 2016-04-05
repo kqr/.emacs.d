@@ -52,6 +52,7 @@
     (setq expand-region-contract-fast-key "z")
     (evil-leader/set-key "x" 'er/expand-region)
     (evil-leader/set-key ";" #'execute-extended-command)
+    (evil-leader/set-key "e" #'eval-expression)
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
     (evil-leader/set-key "w" #'switch-to-buffer)
