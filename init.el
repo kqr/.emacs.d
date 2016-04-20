@@ -13,16 +13,15 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;; Ace jump for quick & convenient navigation. Similar to easymotion
-(use-package ace-jump-mode
-  :ensure t)
-
 ;; Install and load evil-leader to get a leader key in evil mode. Needs to be
 ;; loaded before evil itself
 (use-package evil-leader
   :ensure t
   :init (global-evil-leader-mode)
   :config (evil-leader/set-leader "SPC"))
+
+(use-package expand-region
+  :ensure t)
 
 ;; Install and load evil mode. Define a bunch of keybinds. Notable binds:
 ;;
@@ -43,8 +42,6 @@
     (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
     (define-key evil-normal-state-map (kbd "g t") #'other-window)
     (define-key evil-normal-state-map (kbd ";") #'evil-ex)
-    (define-key evil-normal-state-map (kbd "w") #'evil-ace-jump-word-mode)
-    (define-key evil-normal-state-map (kbd "h") #'evil-ace-jump-char-mode)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
     (define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
@@ -52,9 +49,13 @@
     (define-key evil-insert-state-map (kbd "M-w") (lambda () (insert-char ?å)))
     (define-key evil-insert-state-map (kbd "M-q") (lambda () (insert-char ?ä)))
     (define-key evil-insert-state-map (kbd "M-;") (lambda () (insert-char ?ö)))
+    (setq expand-region-contract-fast-key "z")
+    (evil-leader/set-key "x" 'er/expand-region)
     (evil-leader/set-key ";" #'execute-extended-command)
+    (evil-leader/set-key "e" #'eval-expression)
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
+    (evil-leader/set-key "w" #'switch-to-buffer)
     (evil-ex-define-cmd "k" #'kill-buffer)
     (evil-ex-define-cmd "ko" #'kill-other-buffers)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
@@ -72,6 +73,15 @@
 (use-package evil-surround
   :ensure t
   :init (global-evil-surround-mode +1))
+
+
+;; Avy for quick & convenient navigation. Similar to easymotion
+;; Used to be ace-jump-mode but Avy is supposed to be better
+(use-package avy
+  :ensure t
+  :config (progn
+    (define-key evil-normal-state-map (kbd "w") #'avy-goto-word-1)
+    (define-key evil-normal-state-map (kbd "h") #'avy-goto-char)))
 
 ;; fast & convenient fuzzy matching/input completion
 (use-package helm
@@ -105,7 +115,10 @@
 
 ;; org mode!!
 (use-package org
-  :ensure t)
+  :ensure t
+  :config (progn
+            (setq org-todo-keywords '((sequence "TODO" "|" "DONE" "HOLD")))
+            (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))))
 
 ;; some evil integration with org
 (use-package evil-org
@@ -128,7 +141,9 @@
 ;; languages, e.g. html files with embedded javascript and CSS
 (use-package web-mode
   :ensure t
-  :mode "\\.html?\\'")
+  :mode "\\.html?\\'"
+  :config (setq web-mode-engines-alist
+                '(("django" . "\\.html\\\\'"))))
 
 ;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
@@ -208,6 +223,14 @@
 ;; immediately display matching parens
 (setq-default show-paren-delay 0)
 (show-paren-mode +1)
+
+
+(add-hook 'after-save-hook (lambda ()
+  (when (string-match "xcalibur/.+\.less$" (buffer-file-name))
+    (shell-command (concat
+      "touch $("
+      "find " (projectile-project-root) "xcalibur "
+      "-name bootstrap.less | head -1)")))))
 
 
 (defun projectevil-jump-to-tag (arg)
