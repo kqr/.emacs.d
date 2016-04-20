@@ -180,6 +180,7 @@
 (setq-default truncate-lines t)
 (set-display-table-slot standard-display-table 0 ?›)
 (setq-default fill-column 80)
+(setq-default major-mode 'text-mode)
 
 ;; by default emacs wants confirmation to open files larger than 10 mb. that's
 ;; silly.
