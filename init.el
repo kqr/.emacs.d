@@ -188,7 +188,9 @@
 
 (use-package ledger-mode
   :ensure t
-  :config (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+  :config (progn
+            (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+            (setq ledger-post-auto-adjust-amounts t))
   :mode "\\.journal\\'")
 
 ;; Let me insert special characters like åäö even on OS X
