@@ -143,7 +143,8 @@
   :ensure t
   :mode "\\.html?\\'"
   :config (setq web-mode-engines-alist
-                '(("django" . "\\.html\\\\'"))))
+                '(("django" . "\\.html\\'")))
+  :mode "\\.html\\'")
 
 ;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
@@ -184,6 +185,11 @@
 ;; extension for making emacs understand .less files
 (use-package less-css-mode
   :ensure t)
+
+(use-package ledger-mode
+  :ensure t
+  :config (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+  :mode "\\.journal\\'")
 
 ;; Let me insert special characters like åäö even on OS X
 (setq mac-option-key-is-meta t)
@@ -301,7 +307,14 @@
  '(helm-match ((t (:foreground "dodger blue"))))
  '(helm-selection ((t (:foreground "dark orange"))))
  '(helm-source-header ((t (:background "grey11" :foreground "white" :weight bold))))
+ '(highlight ((t (:background "grey11"))))
  '(hl-line ((t (:background "grey11"))))
+ '(ledger-font-payee-pending-face ((t (:foreground "olive drab" :weight normal))))
+ '(ledger-font-payee-uncleared-face ((t (:foreground "dim grey"))))
+ '(ledger-font-pending-face ((t (:foreground "olivedrab3" :weight normal))))
+ '(ledger-font-posting-account-face ((t (:foreground "olivedrab3"))))
+ '(ledger-font-posting-amount-face ((t (:foreground "dark orange"))))
+ '(ledger-font-posting-date-face ((t (:foreground "dodger blue"))))
  '(linum ((t (:background "grey11" :foreground "dim grey"))))
  '(mode-line ((t (:background "gray11" :foreground "dim gray"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey"))))
