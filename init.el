@@ -182,6 +182,13 @@
             (setq haskell-indentation-where-pre-offset 4)
             (setq haskell-indentation-where-post-offset 4)))
 
+(use-package srefactor
+  :ensure t
+  :config (progn
+            (semantic-mode +1)
+            (evil-leader/set-key-for-mode 'c++-mode
+              "r" 'srefactor-refactor-at-point)))
+
 ;; extension for making emacs understand .less files
 (use-package less-css-mode
   :ensure t)
