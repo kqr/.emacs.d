@@ -67,7 +67,8 @@
 
     ;; don't use evil mode in git integration windows. it breaks stuff.
     (evil-set-initial-state 'magit-popup-mode 'emacs)
-    (evil-set-initial-state 'magit-blame-mode 'emacs)))
+    (evil-set-initial-state 'magit-blame-mode 'emacs)
+    (evil-set-initial-state 'notmuch-tree-mode 'emacs)))
 
 ;; surround.vim for evil mode
 (use-package evil-surround
@@ -200,6 +201,18 @@
             (setq ledger-post-auto-adjust-amounts t))
   :mode "\\.journal\\'")
 
+;; Use whatever version is installed externally, to ensure correct version
+;; This means don't get it with use-package!!
+(autoload 'notmuch "notmuch" "notmuch mail" t)
+(setq message-auto-save-directory "~/Mail/drafts")
+(setq message-default-mail-headers "Cc: \nBcc: \n")
+(setq message-kill-buffer-on-exit t)
+(setq mail-specify-envelope-from t)
+(setq message-sendmail-envelope-from 'header)
+(setq mail-envelope-from 'header)
+(setq message-send-mail-function 'message-send-mail-with-sendmail)
+(setq sendmail-program "/usr/bin/msmtp")
+
 ;; Let me insert special characters like åäö even on OS X
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
@@ -325,13 +338,54 @@
  '(ledger-font-posting-amount-face ((t (:foreground "dark orange"))))
  '(ledger-font-posting-date-face ((t (:foreground "dodger blue"))))
  '(linum ((t (:background "grey11" :foreground "dim grey"))))
+ '(message-header-cc ((t (:foreground "dim grey"))))
+ '(message-header-name ((t (:foreground "dim gray"))))
+ '(message-header-other ((t (:foreground "dim grey"))))
+ '(message-header-subject ((t (:foreground "default" :weight bold))))
+ '(message-header-to ((t (:foreground "dim grey"))))
+ '(message-mml ((t (:foreground "dim grey"))))
  '(mode-line ((t (:background "gray11" :foreground "dim gray"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey"))))
+ '(notmuch-message-summary-face ((t (:foreground "dim grey"))))
+ '(notmuch-search-count ((t (:foreground "dim gray"))))
+ '(notmuch-search-date ((t (:foreground "dim gray"))))
+ '(notmuch-search-matching-authors ((t (:foreground "dark orange"))))
+ '(notmuch-search-non-matching-authors ((t (:foreground "dark orange"))))
+ '(notmuch-tag-face ((t (:foreground "dodger blue"))))
+ '(notmuch-tree-match-author-face ((t (:foreground "dim gray"))))
+ '(notmuch-tree-match-date-face ((t (:foreground "dim gray"))) t)
+ '(notmuch-tree-match-tag-face ((t (:foreground "dodger blue"))))
+ '(notmuch-tree-no-match-author-face ((t (:foreground "dim gray"))) t)
+ '(notmuch-tree-no-match-date-face ((t (:foreground "dim gray"))) t)
+ '(notmuch-tree-no-match-face ((t nil)))
+ '(notmuch-tree-no-match-tag-face ((t (:foreground "dodger blue"))) t)
+ '(notmuch-wash-cited-text ((t (:foreground "olivedrab3"))))
  '(org-level-1 ((t (:foreground "dodger blue" :weight bold))))
  '(org-level-2 ((t (:foreground "light blue"))))
  '(org-level-3 ((t (:foreground "slate blue"))))
  '(org-link ((t (:foreground "OliveDrab3" :underline t))))
  '(org-todo ((t (:foreground "magenta" :weight bold))))
  '(show-paren-match ((t (:background "dodger blue" :foreground "black"))))
- '(show-paren-mismatch ((t (:background "black" :foreground "red")))))
+ '(show-paren-mismatch ((t (:background "black" :foreground "red"))))
+ '(widget-field ((t (:background "gray11" :foreground "default")))))
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(message-confirm-send t)
+ '(notmuch-archive-tags (quote ("-inbox" "-unread")))
+ '(notmuch-hello-sections
+   (quote
+    (notmuch-hello-insert-saved-searches notmuch-hello-insert-search notmuch-hello-insert-recent-searches notmuch-hello-insert-alltags notmuch-hello-insert-footer)))
+ '(notmuch-poll-script nil)
+ '(notmuch-saved-searches
+   (quote
+    ((:name "inbox" :query "tag:inbox" :key "i")
+     (:name "pending" :query "tag:pending" :key "p")
+     (:name "all mail" :query "*" :key "a"))))
+ '(notmuch-search-line-faces (quote (("unread" :weight bold))))
+ '(notmuch-search-oldest-first nil)
+ '(notmuch-show-indent-messages-width 1)
+ '(send-mail-function (quote smtpmail-send-it)))
