@@ -56,6 +56,7 @@
     (evil-leader/set-key "g" #'magit-status)
     (evil-leader/set-key "s" #'toggle-scratch)
     (evil-leader/set-key "w" #'switch-to-buffer)
+    (evil-leader/set-key "c" #'count-words-region)
     (evil-ex-define-cmd "k" #'kill-buffer)
     (evil-ex-define-cmd "ko" #'kill-other-buffers)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
@@ -201,6 +202,10 @@
             (setq ledger-post-auto-adjust-amounts t))
   :mode "\\.journal\\'")
 
+(use-package fic-mode
+  :ensure t
+  :init (add-hook 'prog-mode-hook 'fic-mode))
+
 ;; Use whatever version is installed externally, to ensure correct version
 ;; This means don't get it with use-package!!
 (autoload 'notmuch "notmuch" "notmuch mail" t)
@@ -314,6 +319,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "black" :foreground "beige" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 135 :width normal :foundry "nil" :family "Luxi Mono"))))
+ '(fic-face ((t (:foreground "red"))))
  '(font-lock-builtin-face ((t nil)))
  '(font-lock-comment-face ((t (:foreground "dim gray"))))
  '(font-lock-constant-face ((t nil)))
