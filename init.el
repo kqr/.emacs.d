@@ -39,7 +39,7 @@
   :ensure t
   :init (evil-mode +1)
   :config (progn
-    (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
+;    (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
     (define-key evil-normal-state-map (kbd "g t") #'other-window)
     (define-key evil-normal-state-map (kbd ";") #'evil-ex)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
@@ -238,6 +238,10 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
+;; some indentation settings for cc mode (C, C++, Java etc)
+(setq-default c-default-style "stroustrup")
+(setq-default c-basic-offset 4)
+
 ;; turn off all the gui crap
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -397,4 +401,8 @@
  '(notmuch-search-line-faces (quote (("unread" :weight bold))))
  '(notmuch-search-oldest-first nil)
  '(notmuch-show-indent-messages-width 1)
+ '(safe-local-variable-values
+   (quote
+    ((haskell-process-use-ghci . t)
+     (haskell-indent-spaces . 4))))
  '(send-mail-function (quote smtpmail-send-it)))
