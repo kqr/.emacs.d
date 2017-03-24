@@ -209,7 +209,7 @@
 ;; Use whatever version is installed externally, to ensure correct version
 ;; This means don't get it with use-package!!
 (autoload 'notmuch "notmuch" "notmuch mail" t)
-(setq message-auto-save-directory "~/Mail/drafts")
+(setq message-auto-save-directory "~/mail/drafts")
 (setq message-default-mail-headers "Cc: \nBcc: \n")
 (setq message-kill-buffer-on-exit t)
 (setq mail-specify-envelope-from t)
@@ -381,6 +381,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(message-confirm-send t)
+ '(message-hidden-headers
+   (quote
+    ("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From:")))
  '(notmuch-archive-tags (quote ("-inbox" "-unread")))
  '(notmuch-hello-sections
    (quote
@@ -389,7 +392,7 @@
  '(notmuch-saved-searches
    (quote
     ((:name "inbox" :query "tag:inbox" :key "i")
-     (:name "pending" :query "tag:pending" :key "p")
+     (:name "sent" :query "tag:sent" :key "s")
      (:name "all mail" :query "*" :key "a"))))
  '(notmuch-search-line-faces (quote (("unread" :weight bold))))
  '(notmuch-search-oldest-first nil)
