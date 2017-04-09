@@ -12,34 +12,26 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
+(setq use-package-always-ensure t)
 
-;; Install and load evil-leader to get a leader key in evil mode. Needs to be
-;; loaded before evil itself
-(use-package evil-leader
-  :ensure t
-  :init (global-evil-leader-mode)
-  :config (evil-leader/set-leader "SPC"))
 
-(use-package expand-region
-  :ensure t)
-
-;; Install and load evil mode. Define a bunch of keybinds. Notable binds:
-;;
-;;     ; => ":", which means you don't have to press shift to save files
-;;     TAB => "esc", which means you press tab to escape out of insert mode
-;;     S-TAB => "TAB", so you can still indent in insert mode
-;;     <Leader>-; => M-x, for more convenient function execution
-;;
-;; Also adds the ex commands
-;;
-;;     :k => kill-buffer, which kills the currently active buffer
-;;     :ko => kill-other-buffers, which knocks out any non-active buffers, to make magit faster
-;;
 (use-package evil
-  :ensure t
+  ;; Install and load evil mode. Define a bunch of keybinds. Notable binds:
+  ;;
+  ;;     ; => ":", which means you don't have to press shift to save files
+  ;;     TAB => "esc", which means you press tab to escape out of insert mode
+  ;;     S-TAB => "TAB", so you can still indent in insert mode
+  ;;     <Leader>-; => M-x, for more convenient function execution
+  ;;
+  ;; Also adds the ex commands
+  ;;
+  ;;     :k => kill-buffer, which kills the currently active buffer
+  ;;     :ko => kill-other-buffers, which knocks out any non-active buffers, to make magit faster
+  ;;
   :init (evil-mode +1)
-  :config (progn
-;    (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
+  :config
+  (progn
+    ; (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
     (define-key evil-normal-state-map (kbd "g t") #'other-window)
     (define-key evil-normal-state-map (kbd ";") #'evil-ex)
     (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
@@ -49,14 +41,6 @@
     (define-key evil-insert-state-map (kbd "M-w") (lambda () (insert-char ?å)))
     (define-key evil-insert-state-map (kbd "M-q") (lambda () (insert-char ?ä)))
     (define-key evil-insert-state-map (kbd "M-;") (lambda () (insert-char ?ö)))
-    (setq expand-region-contract-fast-key "z")
-    (evil-leader/set-key "x" 'er/expand-region)
-    (evil-leader/set-key ";" #'execute-extended-command)
-    (evil-leader/set-key "e" #'eval-expression)
-    (evil-leader/set-key "g" #'magit-status)
-    (evil-leader/set-key "s" #'toggle-scratch)
-    (evil-leader/set-key "w" #'switch-to-buffer)
-    (evil-leader/set-key "c" #'count-words-region)
     (evil-ex-define-cmd "k" #'kill-buffer)
     (evil-ex-define-cmd "ko" #'kill-other-buffers)
     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
@@ -69,142 +53,167 @@
     ;; don't use evil mode in git integration windows. it breaks stuff.
     (evil-set-initial-state 'magit-popup-mode 'emacs)
     (evil-set-initial-state 'magit-blame-mode 'emacs)
-    (evil-set-initial-state 'notmuch-tree-mode 'emacs)))
+    (evil-set-initial-state 'notmuch-tree-mode 'emacs)
+    (evil-set-initial-state 'gnu-apl-mode 'emacs)
+    (evil-set-initial-state 'gnu-apl-interactive-mode 'emacs)
 
-;; surround.vim for evil mode
-(use-package evil-surround
-  :ensure t
-  :init (global-evil-surround-mode +1))
+    (use-package evil-surround
+      :init (global-evil-surround-mode +1))
+
+    (use-package evil-leader
+      :init (global-evil-leader-mode)
+      :config
+      (progn (evil-leader/set-leader "SPC")
+             (evil-leader/set-key ";" #'execute-extended-command)
+             (evil-leader/set-key "e" #'eval-expression)
+             (evil-leader/set-key "s" #'toggle-scratch)
+             (evil-leader/set-key "w" #'switch-to-buffer)
+             (evil-leader/set-key "c" #'count-words-region)))))
 
 
-;; Avy for quick & convenient navigation. Similar to easymotion
-;; Used to be ace-jump-mode but Avy is supposed to be better
-(use-package avy
-  :ensure t
-  :config (progn
-    (define-key evil-normal-state-map (kbd "w") #'avy-goto-word-1)
-    (define-key evil-normal-state-map (kbd "h") #'avy-goto-char)))
+;;======================================
+;; ALWAYS LOADED (related to appearance)
+;;======================================
 
-;; fast & convenient fuzzy matching/input completion
-(use-package helm
-  :ensure t
-  :init (progn
-          (require 'helm-config)
-          (helm-mode +1)))
+(use-package fic-mode
+  :init (add-hook 'prog-mode-hook 'fic-mode))
 
-;; ad hoc project management in emacs. treats any git repo as a project, which
-;; makes it easier to generate/search among ctags and open files within that
-;; project.
-(use-package projectile
-  :ensure t
-  :init (projectile-global-mode)
-  :config (progn
-            (setq projectile-tags-file-name ".etags")
-            (evil-leader/set-key "]" #'projectevil-jump-to-tag)
-            (evil-leader/set-key "p" #'helm-projectile-find-file)
-            (evil-ex-define-cmd "tn" #'projectevil-tagnext)))
-
-;; helm integration for projectile
-(use-package helm-projectile
-  :ensure t
-  :init (helm-projectile-on))
-
-;; git integration for convenient committing, reviewing diffs, blaming and such
-(use-package magit
-  :ensure t
-  :config (progn
-            (setq magit-push-always-verify nil)))
-
-;; org mode!!
-(use-package org
-  :ensure t
-  :config (progn
-            (setq org-todo-keywords '((sequence "TODO" "|" "DONE" "HOLD")))
-            (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))))
-
-;; some evil integration with org
-(use-package evil-org
-  :ensure t
-  :config (progn
-            (evil-define-key 'normal evil-org-mode-map
-              (kbd "RET") #'org-cycle
-              (kbd "x") #'org-ctrl-c-ctrl-c)
-            (evil-define-key 'insert org-mode-map
-              (kbd "TAB") #'evil-normal-state
-              (kbd "<tab>") #'evil-normal-state
-              (kbd "<backtab>") #'org-cycle)
-            (evil-leader/set-key-for-mode 'org-mode
-                "c" (lambda ()
-                      (interactive)
-                      (org-table-blank-field)
-                      (evil-insert-state)))))
-
-;; web mode helps with editing files that consist of source code in multiple
-;; languages, e.g. html files with embedded javascript and CSS
-(use-package web-mode
-  :ensure t
-  :mode "\\.html?\\'"
-  :config (setq web-mode-engines-alist
-                '(("django" . "\\.html\\'")))
-  :mode "\\.html\\'")
-
-;; i prefer to have my cursor centered as much as possible
 (use-package centered-cursor-mode
-  :ensure t
   :config (global-centered-cursor-mode +1))
 
-;; highlight the current line when you have been idle for a while
 (use-package hl-line+
-  :ensure t
-  :init (progn
-          (global-hl-line-mode -1)
-          (toggle-hl-line-when-idle +1)))
+  :config
+  (progn
+    (global-hl-line-mode -1)
+    (toggle-hl-line-when-idle +1)))
 
-;; marker at 80 characters. for some reason can't set width other than 1?
 (use-package fill-column-indicator
-  :ensure t
-  :init (progn
+  ;; marker at 80 characters. for some reason can't set width other than 1?
+  :config
+  (progn
     (define-globalized-minor-mode global-fci-mode
       fci-mode (lambda () (fci-mode +1)))
-    (global-fci-mode +1))
+    (global-fci-mode +1)
 
-  :config (progn
     (setq fci-rule-width 1)
     (setq fci-rule-color "grey11")))
 
-;; I do work in Haskell (where I prefer 4 space indents...)
-(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+
+;;======================================
+;; LOADED BASED ON MODE
+;;======================================
+
+(use-package less-css-mode
+  :mode ("\\.css\\'" "\\.less\\'"))
+
+(use-package ledger-mode
+  :mode "\\.journal\\'"
+  :config
+  (progn
+    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+    (setq ledger-post-auto-adjust-amounts t)))
+
+(use-package web-mode
+  ;; web mode helps with editing files that consist of source code in multiple
+  ;; languages, e.g. html files with embedded javascript and CSS
+  :mode ("\\.htm\\'" "\\.html\\'")
+  :config (setq web-mode-engines-alist '(("django" . "\\.html\\'"))))
+
 (use-package haskell-mode
-  :ensure t
-  :config (progn
-            (setq haskell-indentation-layout-offset 4)
-            (setq haskell-indentation-starter-offset 4)
-            (setq haskell-indentation-left-offset 4)
-            (setq haskell-indentation-ifte-offset 4)
-            (setq haskell-indentation-where-pre-offset 4)
-            (setq haskell-indentation-where-post-offset 4)))
+  :mode ("\\.hs\\'" . haskell-indentation-mode)
+  :config
+  (progn
+    (setq haskell-indentation-layout-offset 4)
+    (setq haskell-indentation-starter-offset 4)
+    (setq haskell-indentation-left-offset 4)
+    (setq haskell-indentation-ifte-offset 4)
+    (setq haskell-indentation-where-pre-offset 4)
+    (setq haskell-indentation-where-post-offset 4)))
+
+(use-package org
+  :mode "\\.org\\'"
+  :config
+  (progn
+    (setq org-todo-keywords '((sequence "TODO" "|" "DONE" "HOLD")))
+    (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))
+
+    ;; some evil integration with org
+    (use-package evil-org
+      :config (progn
+                (evil-define-key 'normal evil-org-mode-map
+                  (kbd "RET") #'org-cycle
+                  (kbd "x") #'org-ctrl-c-ctrl-c)
+                (evil-define-key 'insert org-mode-map
+                  (kbd "TAB") #'evil-normal-state
+                  (kbd "<tab>") #'evil-normal-state
+                  (kbd "<backtab>") #'org-cycle)
+                (evil-leader/set-key-for-mode 'org-mode
+                  "c" (lambda ()
+                        (interactive)
+                        (org-table-blank-field)
+                        (evil-insert-state)))))))
+
+
+;;======================================
+;; LOADED ON COMMAND
+;;======================================
+(use-package helm
+  ;; fast & convenient fuzzy matching/input completion
+  :commands helm-projectile-find-file
+  :init
+  (progn
+    (require 'helm-config)
+    (helm-mode +1)))
+
+(use-package expand-region
+  :commands er/expand-region
+  :config
+  (progn
+    (setq expand-region-contract-fast-key "z")
+    (evil-leader/set-key "x" 'er/expand-region)))
+
+(use-package projectile
+  ;; ad hoc project management in emacs. treats any git repo as a project, which
+  ;; makes it easier to generate/search among ctags and open files within that
+  ;; project.
+  :commands (projectevil-jump-to-tag helm-projectile-find-file projectevil-tagnext)
+  :init (projectile-global-mode)
+  :config
+  (progn
+    (setq projectile-tags-file-name ".etags")
+    (evil-leader/set-key "]" #'projectevil-jump-to-tag)
+    (evil-leader/set-key "p" #'helm-projectile-find-file)
+    (evil-ex-define-cmd "tn" #'projectevil-tagnext)
+
+    (use-package helm-projectile
+      :init (helm-projectile-on))))
+
+(use-package magit
+  ;; git integration for convenient committing, reviewing diffs, blaming and such
+  :commands magit-status
+  :config
+  (progn
+    (setq magit-push-always-verify nil)
+    (evil-leader/set-key "g" #'magit-status)))
 
 (use-package srefactor
-  :ensure t
+  :commands srefactor-refactor-at-point
   :config (progn
             (semantic-mode +1)
             (evil-leader/set-key-for-mode 'c++-mode
               "r" 'srefactor-refactor-at-point)))
 
-;; extension for making emacs understand .less files
-(use-package less-css-mode
-  :ensure t)
 
-(use-package ledger-mode
-  :ensure t
-  :config (progn
-            (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-            (setq ledger-post-auto-adjust-amounts t))
-  :mode "\\.journal\\'")
+(defun em-gnu-apl-init ()
+  (setq buffer-face-mode-face 'gnu-apl-default)
+  (buffer-face-mode))
+(use-package gnu-apl-mode
+  :commands gnu-apl
+  :config
+  (progn
+    (add-hook 'gnu-apl-interactive-mode-hook 'em-gnu-apl-init)
+    (add-hook 'gnu-apl-mode-hook 'em-gnu-apl-init)))
 
-(use-package fic-mode
-  :ensure t
-  :init (add-hook 'prog-mode-hook 'fic-mode))
 
 ;; Use whatever version is installed externally, to ensure correct version
 ;; This means don't get it with use-package!!
@@ -260,14 +269,6 @@
 ;; immediately display matching parens
 (setq-default show-paren-delay 0)
 (show-paren-mode +1)
-
-
-(add-hook 'after-save-hook (lambda ()
-  (when (string-match "xcalibur/.+\.less$" (buffer-file-name))
-    (shell-command (concat
-      "touch $("
-      "find " (projectile-project-root) "xcalibur "
-      "-name bootstrap.less | head -1)")))))
 
 
 (defun projectevil-jump-to-tag (arg)
