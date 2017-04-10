@@ -1,5 +1,5 @@
-;;;; Dependencies:
-;;;; - Emacs 2.24+
+ ;;; Dependencies:
+;;;; - Emacs 24.1+
 ;;;; - Git 1.9.4+
 
 ;; Enable the built in package manager and install and load the use-package
@@ -152,6 +152,13 @@
                         (interactive)
                         (org-table-blank-field)
                         (evil-insert-state)))))))
+
+;; Latex mode stuff
+(add-hook 'latex-mode-hook #'outline-minor-mode)
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+(evil-leader/set-key "q" 'hide-body)
+(evil-leader/set-key "a" 'show-subtree)
+(evil-leader/set-key "z" 'hide-leaves)
 
 
 ;;======================================
