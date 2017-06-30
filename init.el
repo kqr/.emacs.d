@@ -143,7 +143,7 @@
     (setq haskell-indentation-where-post-offset 4)))
 
 (use-package org
-  :mode "\\.org\\'"
+  :mode ("\\.org\\'" . org-mode)
   :config
   (progn
     (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD")))
