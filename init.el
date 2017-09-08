@@ -18,6 +18,7 @@
 ;; package
 (require 'package)
 (push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
+(push '("melpa stable" . "http://stable.melpa.org/packages/") package-archives)
 (push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
 (package-initialize)
 (unless (package-installed-p 'use-package)
@@ -83,6 +84,15 @@
              (evil-leader/set-key "c" #'count-words-region)))))
 
 
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode)
+  :config
+  (progn
+    (add-to-list 'load-path "~/.emacs.d/lisp/")
+    (require 'flycheck-infer)))
+
+
 ;;======================================
 ;; ALWAYS LOADED (related to appearance)
 ;;======================================
@@ -142,6 +152,9 @@
     (setq haskell-indentation-where-pre-offset 4)
     (setq haskell-indentation-where-post-offset 4)))
 
+(use-package racket-mode
+  :mode ("\\.racket\\'" "\\.rkt\\'"))
+
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :config
@@ -193,6 +206,15 @@
 
 (use-package android-mode
   :commands (android-start-emulator android-create-project android-ant-debug))
+
+(use-package java-imports
+  :commands java-imports-add-import-dwim
+  :init
+  (progn
+    (evil-leader/set-key "i" 'java-imports-add-import-dwim))
+  :config
+  (progn
+    (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)))
 
 (use-package projectile
   ;; ad hoc project management in emacs. treats any git repo as a project, which
