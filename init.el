@@ -1,21 +1,73 @@
- ;;; Dependencies:
-;;;; - Emacs 24.1+
-;;;; - Git 1.9.4+
+;;; kqr-dotemacs --- summary
+;;; Commentary:
+;;;
+;;; * Requires Emacs 25
+;;;
 
-;; TABLE OF CONTENTS
-;; 1. melpa/marmalade
-;; 2. evil mode
-;; 3. packages always loaded (related to appearance)
-;; 4. packages loaded based on mode
-;; 5. packages loaded on command
-;; 6. various configuration
-;; 7. defuns
-;; 8. custom-sets
+;;; Configuration toggles:
+
+;; Comment out an element to disable it from the config.
+(defvar *ENABLED*
+  '(
+    ;; Graphics:
+    disable-gui
+    instant-show-matching-paren
+    highlight-todo-comments
+    center-cursor
+    highlight-text-beyond-fill-column
+
+    ;; Global binds:
+    bind-easy-line-join
+    backspace-kills-words
+
+    ;; Config itself:
+    config-debugging
+    
+    ;; God mode:
+    cursor-toggles-with-god-mode
+    god-mode
+
+    ;; Various Emacs improvements:
+    ivy-fuzzy-matching
+    undo-tree
+    expand-region
+
+    ;; Programming specific minor modes:
+    aggressive-indent
+    flycheck-with-infer
+
+    ;; Major modes
+    org-mode-basic-config
+    magit-git-integration
+    
+    ))
+
+;; TODO:
+;; - highlight todo comments
+;; - find a way to browse tags (ggtags etc?)
+;; - declutter .emacs.d
 
 
+;;; Various defaults
 
-;; Enable the built in package manager and install and load the use-package
-;; package
+(setq-default major-mode 'text-mode)
+
+(setq-default x-select-enable-primary t)
+
+(setq-default make-backup-files nil)
+(setq-default large-file-warning-threshold 100000000)
+(setq-default truncate-lines t)
+(set-display-table-slot standard-display-table 0 ?›)
+(setq-default fill-column 80)
+
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
+(setq-default c-default-style "stroustrup")
+(setq-default c-basic-offset 4)
+
+
+;;; Prerequisites:
+
 (require 'package)
 (push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
 (push '("melpa stable" . "http://stable.melpa.org/packages/") package-archives)
@@ -28,338 +80,155 @@
 (setq use-package-always-ensure t)
 
 
-(use-package evil
-  ;; Install and load evil mode. Define a bunch of keybinds. Notable binds:
-  ;;
-  ;;     ; => ":", which means you don't have to press shift to save files
-  ;;     TAB => "esc", which means you press tab to escape out of insert mode
-  ;;     S-TAB => "TAB", so you can still indent in insert mode
-  ;;     <Leader>-; => M-x, for more convenient function execution
-  ;;
-  ;; Also adds the ex commands
-  ;;
-  ;;     :k => kill-buffer, which kills the currently active buffer
-  ;;     :ko => kill-other-buffers, which knocks out any non-active buffers, to make magit faster
-  ;;
-  :init (evil-mode +1)
-  :config
-  (progn
-    ; (define-key evil-normal-state-map (kbd "RET") #'open-next-line)
-    (define-key evil-normal-state-map (kbd "g t") #'other-window)
-    (define-key evil-normal-state-map (kbd ";") #'evil-ex)
-    (define-key evil-insert-state-map (kbd "TAB") #'evil-normal-state)
-    (define-key evil-visual-state-map (kbd "TAB") #'evil-normal-state)
-    (define-key evil-insert-state-map (kbd "<backtab>") #'indent-for-tab-command)
-    (define-key evil-visual-state-map (kbd "<backtab>") #'indent-for-tab-command)
-    (define-key evil-insert-state-map (kbd "M-w") (lambda () (insert-char ?å)))
-    (define-key evil-insert-state-map (kbd "M-q") (lambda () (insert-char ?ä)))
-    (define-key evil-insert-state-map (kbd "M-;") (lambda () (insert-char ?ö)))
-    (evil-ex-define-cmd "k" #'kill-buffer)
-    (evil-ex-define-cmd "ko" #'kill-other-buffers)
-    (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-    (setq evil-echo-state t)
+;;; Code:
 
-    ;; don't use evil mode in git integration windows. it breaks stuff.
-    (evil-set-initial-state 'magit-popup-mode 'emacs)
-    (evil-set-initial-state 'magit-blame-mode 'emacs)
-    (evil-set-initial-state 'notmuch-tree-mode 'emacs)
-    (evil-set-initial-state 'gnu-apl-mode 'emacs)
-    (evil-set-initial-state 'gnu-apl-interactive-mode 'emacs)
-
-    (use-package evil-surround
-      :init (global-evil-surround-mode +1))
-
-    (use-package evil-leader
-      :init (global-evil-leader-mode)
-      :config
-      (progn (evil-leader/set-leader "SPC")
-             (evil-leader/set-key ";" #'execute-extended-command)
-             (evil-leader/set-key "e" #'eval-expression)
-             (evil-leader/set-key "s" #'toggle-scratch)
-             (evil-leader/set-key "w" #'switch-to-buffer)
-             (evil-leader/set-key "c" #'count-words-region)))))
+(defun disable-gui ()
+  "Disable various UI elements for a distraction free experience."
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)
+  (blink-cursor-mode -1)
+  (global-linum-mode -1)
+  (setq-default inhibit-startup-screen t)
+  (require 'diminish))
 
 
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode)
-  :config
-  (progn
-    (add-to-list 'load-path "~/.emacs.d/lisp/")
+(defun instant-show-matching-paren ()
+  "Show matching parens immediately."
+  (setq-default show-paren-delay 0)
+  (show-paren-mode +1))
+
+
+(defun highlight-todo-comments ()
+  "Highlight words like TODO, FIXME and similar in comments."
+  (use-package fic-mode :init
+    (add-hook 'prog-mode-hook 'fic-mode)))
+
+
+(defun center-cursor ()
+  "Scroll buffers to keep the cursor centered."
+  (use-package centered-cursor-mode :config
+    (global-centered-cursor-mode +1)))
+
+
+(defun highlight-text-beyond-fill-column ()
+  "Indicate overlong lines by highlighting the protruding text."
+  (use-package column-enforce-mode :init
+    (global-column-enforce-mode +1)))
+
+
+(defun bind-easy-line-join ()
+  "Set up a quicker keybind to join a line to the one above."
+  (global-set-key (kbd "C-J") 'delete-indentation))
+
+
+(defun unbind-easy-suspend ()
+  "Reduce frustration by disabling the ctrl-z bind for suspending Emacs."
+  (global-unset-key (kbd "C-z")))
+
+
+(defun backspace-kills-words ()
+  "Make backspace delete entire full words for efficiency."
+  (global-set-key (kbd "DEL") 'backward-kill-word))
+
+
+(defun config-debugging ()
+  "Install bug-hunter to better spot errors in dotemacs file."
+  (use-package bug-hunter :commands bug-hunter-init-file))
+
+
+(defun ivy-fuzzy-matching ()
+  "Use Ivy for fuzzy matching buffers, files, commands etc."
+  (use-package ivy :diminish ivy :config (ivy-mode +1)))
+
+
+(defun undo-tree ()
+  "Enable undo-tree for easier traversal of edit history."
+  (use-package undo-tree :diminish undo-tree-mode :config
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-diff t)))
+
+
+(defun expand-region ()
+  "Set up expand-region with convenient key binds."
+  (use-package expand-region
+    :bind (("C-t" . er/expand-region)
+           ("C-o" . contract-or-open-line))
+    
+    :init
+    (defun contract-or-open-line (arg)
+      "Open N new lines or contract region, if active."
+      (interactive "P")
+      (if (region-active-p)
+          (er/contract-region arg)
+        (open-line arg)))
+
+    :config
+    (delete-selection-mode +1)))
+
+
+(defun aggressive-indent ()
+  "Enable aggressive automatic indentation everywhere."
+  (use-package aggressive-indent :config
+    (global-aggressive-indent-mode +1)))
+
+
+(defun flycheck-with-infer ()
+  "Enable flycheck with Java infer support."
+  (use-package flycheck :config
+    (global-flycheck-mode 1)
+    (add-to-list 'load-path "~/.emacs.d/config/libs")
     (require 'flycheck-infer)))
 
 
-;;======================================
-;; ALWAYS LOADED (related to appearance)
-;;======================================
+(defun org-mode-basic-config ()
+  "Install org mode with desired keywords."
+  (use-package org
+    :mode ("\\.org\\'" . org-mode)
 
-(use-package fic-mode
-  :init (add-hook 'prog-mode-hook 'fic-mode))
-
-(use-package centered-cursor-mode
-  :config (global-centered-cursor-mode +1))
-
-(use-package hl-line+
-  :config
-  (progn
-    (global-hl-line-mode -1)
-    (toggle-hl-line-when-idle +1)))
-
-(use-package fill-column-indicator
-  ;; marker at 80 characters. for some reason can't set width other than 1?
-  :config
-  (progn
-    (define-globalized-minor-mode global-fci-mode
-      fci-mode (lambda () (fci-mode +1)))
-    (global-fci-mode +1)
-
-    (setq fci-rule-width 1)
-    (setq fci-rule-color "dim grey")))
-
-
-;;======================================
-;; LOADED BASED ON MODE
-;;======================================
-
-(use-package less-css-mode
-  :mode ("\\.css\\'" "\\.less\\'"))
-
-(use-package ledger-mode
-  :mode "\\.journal\\'"
-  :config
-  (progn
-    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-    (setq ledger-post-auto-adjust-amounts t)))
-
-(use-package web-mode
-  ;; web mode helps with editing files that consist of source code in multiple
-  ;; languages, e.g. html files with embedded javascript and CSS
-  :mode ("\\.htm\\'" "\\.html\\'")
-  :config (setq web-mode-engines-alist '(("django" . "\\.html\\'"))))
-
-(use-package haskell-mode
-  :mode ("\\.hs\\'" . haskell-indentation-mode)
-  :config
-  (progn
-    (setq haskell-indentation-layout-offset 4)
-    (setq haskell-indentation-starter-offset 4)
-    (setq haskell-indentation-left-offset 4)
-    (setq haskell-indentation-ifte-offset 4)
-    (setq haskell-indentation-where-pre-offset 4)
-    (setq haskell-indentation-where-post-offset 4)))
-
-(use-package racket-mode
-  :mode ("\\.racket\\'" "\\.rkt\\'"))
-
-(use-package org
-  :mode ("\\.org\\'" . org-mode)
-  :config
-  (progn
+    :config
     (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD")))
-    (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))
-
-    ;; some evil integration with org
-    (use-package evil-org
-      :config (progn
-                (evil-define-key 'normal evil-org-mode-map
-                  (kbd "RET") #'org-cycle
-                  (kbd "x") #'org-ctrl-c-ctrl-c)
-                (evil-define-key 'insert org-mode-map
-                  (kbd "TAB") #'evil-normal-state
-                  (kbd "<tab>") #'evil-normal-state
-                  (kbd "<backtab>") #'org-cycle)
-                (evil-leader/set-key-for-mode 'org-mode
-                  "c" (lambda ()
-                        (interactive)
-                        (org-table-blank-field)
-                        (evil-insert-state)))))))
-
-;; Latex mode stuff
-(add-hook 'latex-mode-hook #'outline-minor-mode)
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
-(evil-leader/set-key "q" 'hide-body)
-(evil-leader/set-key "a" 'show-subtree)
-(evil-leader/set-key "z" 'hide-leaves)
+    (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))))
 
 
-;;======================================
-;; LOADED ON COMMAND
-;;======================================
-(use-package helm
-  ;; fast & convenient fuzzy matching/input completion
-  :commands helm-projectile-find-file
-  :init
-  (progn
-    (require 'helm-config)
-    (helm-mode +1)))
-
-(use-package expand-region
-  :commands er/expand-region
-  :config
-  (progn
-    (setq expand-region-contract-fast-key "z")
-    (evil-leader/set-key "x" 'er/expand-region)))
-
-(use-package android-mode
-  :commands (android-start-emulator android-create-project android-ant-debug))
-
-(use-package java-imports
-  :commands java-imports-add-import-dwim
-  :init
-  (progn
-    (evil-leader/set-key "i" 'java-imports-add-import-dwim))
-  :config
-  (progn
-    (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)))
-
-(use-package projectile
-  ;; ad hoc project management in emacs. treats any git repo as a project, which
-  ;; makes it easier to generate/search among ctags and open files within that
-  ;; project.
-  :commands (projectevil-jump-to-tag helm-projectile-find-file projectevil-tagnext)
-  :init (projectile-global-mode)
-  :config
-  (progn
-    (setq projectile-tags-file-name ".etags")
-    (evil-leader/set-key "]" #'projectevil-jump-to-tag)
-    (evil-leader/set-key "p" #'helm-projectile-find-file)
-    (evil-ex-define-cmd "tn" #'projectevil-tagnext)
-
-    (use-package helm-projectile
-      :init (helm-projectile-on))))
-
-(use-package magit
-  ;; git integration for convenient committing, reviewing diffs, blaming and such
-  :commands magit-status
-  :config
-  (progn
-    (setq magit-push-always-verify nil)
-    (evil-leader/set-key "g" #'magit-status)))
-
-(use-package srefactor
-  :commands srefactor-refactor-at-point
-  :config (progn
-            (semantic-mode +1)
-            (evil-leader/set-key-for-mode 'c++-mode
-              "r" 'srefactor-refactor-at-point)))
+(defun magit-git-integration ()
+  "Install magit and trigger on ctrl-x ctrl-g."
+  (use-package magit
+    :bind ((("C-x g") . magit-status))))
 
 
-(defun em-gnu-apl-init ()
-  (setq buffer-face-mode-face 'gnu-apl-default)
-  (buffer-face-mode))
-(use-package gnu-apl-mode
-  :commands gnu-apl
-  :config
-  (progn
-    (add-hook 'gnu-apl-interactive-mode-hook 'em-gnu-apl-init)
-    (add-hook 'gnu-apl-mode-hook 'em-gnu-apl-init)))
+(defvar god-local-mode)
+
+(defun cursor-toggles-with-god-mode ()
+  "Default to bar cursor and switch to box type in God mode."
+  (setq-default cursor-type 'box)
+  (defun god-mode-update-cursor ()
+    (defun god-mode-update-cursor ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar))))
+  (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
+  (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor))
+
+(defun god-mode ()
+  "Reduce wrist pain by installing God mode."
+  (use-package god-mode :defines god-mode-isearch-map
+    :bind (("<escape>" . god-local-mode)
+           :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
+           :map god-mode-isearch-map ("<escape>" . god-mode-isearch-disable))
+
+    :demand t
+    
+    :init
+    (define-key key-translation-map (kbd "<backtab>") (kbd "<tab>"))
+    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+
+    :config
+    (god-mode-all)
+    (require 'god-mode-isearch)))
 
 
-;; Use whatever version is installed externally, to ensure correct version
-;; This means don't get it with use-package!!
-(autoload 'notmuch "notmuch" "notmuch mail" t)
-(setq message-auto-save-directory "~/mail/drafts")
-(setq message-default-mail-headers "Cc: \nBcc: \n")
-(setq message-kill-buffer-on-exit t)
-(setq mail-specify-envelope-from t)
-(setq message-sendmail-envelope-from 'header)
-(setq mail-envelope-from 'header)
-(setq message-send-mail-function 'message-send-mail-with-sendmail)
-(setq sendmail-program "/usr/bin/msmtp")
-
-;; Let me insert special characters like åäö even on OS X
-(setq mac-option-key-is-meta t)
-(setq mac-right-option-modifier nil)
-
-(setq-default make-backup-files nil)
-
-;; don't word wrap lines, rather behave as vim with horizontal scrolling
-(setq-default truncate-lines t)
-(set-display-table-slot standard-display-table 0 ?›)
-(setq-default fill-column 80)
-(setq-default major-mode 'text-mode)
-
-;; by default emacs wants confirmation to open files larger than 10 mb. that's
-;; silly.
-(setq-default large-file-warning-threshold 100000000)
-
-;; expandtab + four space tabs
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-
-;; some indentation settings for cc mode (C, C++, Java etc)
-(setq-default c-default-style "stroustrup")
-(setq-default c-basic-offset 4)
-
-;; turn off all the gui crap
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(tooltip-mode -1)
-(blink-cursor-mode -1)
-(setq-default inhibit-startup-screen t)
-
-;; Selecting goes to selection buffer
-(setq-default x-select-enable-primary t)
-
-;; line numbers are nice, but I'm trying without for a while
-(global-linum-mode -1)
-(setq-default linum-format "%4d ")
-
-;; immediately display matching parens
-(setq-default show-paren-delay 0)
-(show-paren-mode +1)
-
-
-(defun projectevil-jump-to-tag (arg)
-  "find tags file with help from projectile and then evil-jump to the tag
-   under point."
-  (interactive "P")
-  (unless tags-file-name
-    (let ((tags-fn projectile-tags-file-name)
-          (tags-dir (projectile-project-root)))
-      (setq tags-file-name (expand-file-name tags-fn tags-dir))))
-  (evil-jump-to-tag arg))
-
-(defun projectevil-tagnext ()
-  "jumps to the next tag!"
-  (interactive)
-  (let ((current-prefix-arg '(4)))
-    (call-interactively 'projectevil-jump-to-tag)))
-
-(defun minibuffer-keyboard-quit ()
-  "abort recursive edit.
-   in delete selection mode, if the mark is active, just deactivate it;
-   then it takes a second \\[keyboard-quit] to abort the minibuffer."
-  (interactive)
-  (if (and delete-selection-mode transient-mark-mode mark-active)
-      (setq deactivate-mark  t)
-    (when (get-buffer "*completions*") (delete-windows-on "*completions*"))
-    (abort-recursive-edit)))
-
-(defun open-next-line ()
-  "insert a blank line *under* point"
-  (interactive)
-  (save-excursion
-    (end-of-line)
-    (open-line 1)))
-
-(defun toggle-scratch ()
-  "toggles between scratch buffer and last non-scratch buffer"
-  (interactive)
-  (if (string-equal (buffer-name) "*scratch*")
-      (switch-to-prev-buffer)
-      (switch-to-buffer "*scratch*")))
-
-(defun kill-other-buffers ()
-  "Kill all buffers that are not the currently active one"
-  (interactive)
-  (dolist (buf (buffer-list))
-    (unless (get-buffer-window buf 'visible) (kill-buffer buf))))
+(dolist (config *ENABLED*)
+  (funcall config))
 
 
 (custom-set-faces
@@ -447,6 +316,9 @@
  '(notmuch-search-oldest-first nil)
  '(notmuch-show-indent-messages-width 1)
  '(org-agenda-files (quote ("/home/kqr/Dropbox/Orgzly/brain.org")))
+ '(package-selected-packages
+   (quote
+    (undo-tree use-package ivy hl-line+ god-mode flycheck fill-column-indicator fic-mode expand-region column-enforce-mode centered-cursor-mode bug-hunter aggressive-indent)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
