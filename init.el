@@ -9,11 +9,12 @@
 ;; Comment out an element to disable it from the config.
 (defvar *ENABLED*
   '(
-    ;; Graphics:
+    ;; Appearance:
     disable-gui
     instant-show-matching-paren
     highlight-todo-comments
     center-cursor
+    no-soft-wrap
     highlight-text-beyond-fill-column
 
     ;; Global binds:
@@ -35,6 +36,7 @@
     ;; Programming specific minor modes:
     aggressive-indent
     flycheck-with-infer
+    c-mode-config
 
     ;; Major modes
     org-mode-basic-config
@@ -43,7 +45,6 @@
     ))
 
 ;; TODO:
-;; - highlight todo comments
 ;; - find a way to browse tags (ggtags etc?)
 ;; - declutter .emacs.d
 
@@ -52,18 +53,8 @@
 
 (setq-default major-mode 'text-mode)
 
-(setq-default x-select-enable-primary t)
-
 (setq-default make-backup-files nil)
 (setq-default large-file-warning-threshold 100000000)
-(setq-default truncate-lines t)
-(set-display-table-slot standard-display-table 0 ?›)
-(setq-default fill-column 80)
-
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq-default c-default-style "stroustrup")
-(setq-default c-basic-offset 4)
 
 
 ;;; Prerequisites:
@@ -78,6 +69,10 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+(use-package no-littering :init
+  (setq backup-inhibited t)
+  (setq auto-save-default nil))
 
 
 ;;; Code:
@@ -97,6 +92,8 @@
 (defun instant-show-matching-paren ()
   "Show matching parens immediately."
   (setq-default show-paren-delay 0)
+  (setq-default show-paren-when-point-inside-paren t)
+  (setq-default show-paren-style 'expression)
   (show-paren-mode +1))
 
 
@@ -112,9 +109,16 @@
     (global-centered-cursor-mode +1)))
 
 
+(defun no-soft-wrap ()
+  "Enable horizontal scrolling for lines extending beyond frame border."
+  (setq-default truncate-lines t)
+  (set-display-table-slot standard-display-table 0 ?›))
+
+
 (defun highlight-text-beyond-fill-column ()
   "Indicate overlong lines by highlighting the protruding text."
   (use-package column-enforce-mode :init
+    (setq-default fill-column 80)
     (global-column-enforce-mode +1)))
 
 
@@ -153,18 +157,10 @@
 (defun expand-region ()
   "Set up expand-region with convenient key binds."
   (use-package expand-region
-    :bind (("C-t" . er/expand-region)
-           ("C-o" . contract-or-open-line))
+    :bind (("C-t" . er/expand-region))
     
-    :init
-    (defun contract-or-open-line (arg)
-      "Open N new lines or contract region, if active."
-      (interactive "P")
-      (if (region-active-p)
-          (er/contract-region arg)
-        (open-line arg)))
-
     :config
+    (setq expand-region-contract-fast-key "n")
     (delete-selection-mode +1)))
 
 
@@ -180,6 +176,12 @@
     (global-flycheck-mode 1)
     (add-to-list 'load-path "~/.emacs.d/config/libs")
     (require 'flycheck-infer)))
+
+
+(defun c-mode-config ()
+  "Set a few defaults for C mode."
+  (setq-default c-default-style "stroustrup")
+  (setq-default c-basic-offset 4))
 
 
 (defun org-mode-basic-config ()
@@ -225,6 +227,13 @@
     :config
     (god-mode-all)
     (require 'god-mode-isearch)))
+
+
+(defun x11-clipboard-integration ()
+  "Enable the X11 clipboard in Emacs"
+  (setq-default x-select-enable-primary t))
+
+
 
 
 (dolist (config *ENABLED*)
@@ -289,8 +298,8 @@
  '(org-level-3 ((t (:foreground "slate blue"))))
  '(org-link ((t (:foreground "OliveDrab3" :underline t))))
  '(org-todo ((t (:foreground "magenta" :weight bold))))
- '(show-paren-match ((t (:background "dodger blue" :foreground "black"))))
- '(show-paren-mismatch ((t (:background "black" :foreground "red"))))
+ '(show-paren-match ((t (:background "gray20"))))
+ '(show-paren-mismatch ((t (:background "red"))))
  '(widget-field ((t (:background "gray11" :foreground "default")))))
 
 (custom-set-variables
