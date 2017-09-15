@@ -94,6 +94,9 @@
   (setq-default show-paren-delay 0)
   (setq-default show-paren-when-point-inside-paren t)
   (setq-default show-paren-style 'expression)
+  ;; This is in order for selected region to take priority over
+  ;; show-paren expression style
+  (setq-default show-paren-priority -50)
   (show-paren-mode +1))
 
 
@@ -298,6 +301,7 @@
  '(org-level-3 ((t (:foreground "slate blue"))))
  '(org-link ((t (:foreground "OliveDrab3" :underline t))))
  '(org-todo ((t (:foreground "magenta" :weight bold))))
+ '(region ((t (:background "beige" :foreground "black"))))
  '(show-paren-match ((t (:background "gray20"))))
  '(show-paren-mismatch ((t (:background "red"))))
  '(widget-field ((t (:background "gray11" :foreground "default")))))
@@ -307,6 +311,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(expand-region-contract-fast-key "n")
  '(message-confirm-send t)
  '(message-hidden-headers
    (quote
