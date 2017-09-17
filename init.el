@@ -1,8 +1,30 @@
 ;;; kqr-dotemacs --- summary
 ;;; Commentary:
-;;;
-;;; * Requires Emacs 25
-;;;
+;;
+;; * Requires Emacs 25
+;;
+
+
+;;; Todo:
+;; - find a way to browse tags (ggtags etc?)
+;; - include a "site-local" config file if it exists
+;;
+;; Inspiration for further items:
+;; - https://oremacs.com/2015/04/16/ivy-mode/
+;; - https://github.com/julienfantin/.emacs.d/blob/master/init.el
+;; - https://github.com/magnars/.emacs.d/blob/master/init.el
+;; - https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org
+;; - https://github.com/rejeep/emacs/
+;; - https://github.com/hlissner/doom-emacs
+;; - https://github.com/redguardtoo/emacs.d
+;; - https://github.com/defunkt/emacs
+;; - https://github.com/lunaryorn/old-emacs-configuration
+;; - https://github.com/grettke/home/blob/master/.emacs.el
+;; - https://github.com/abo-abo/oremacs
+;; - https://github.com/kaushalmodi/.emacs.d/blob/master/init.el
+;; - https://github.com/grettke/home
+;; - https://github.com/jorgenschaefer/Config/blob/master/emacs.el
+
 
 ;;; Configuration toggles:
 
@@ -43,10 +65,6 @@
     magit-git-integration
     
     ))
-
-;; TODO:
-;; - find a way to browse tags (ggtags etc?)
-;; - declutter .emacs.d
 
 
 ;;; Various defaults
@@ -198,9 +216,9 @@
 
 
 (defun magit-git-integration ()
-  "Install magit and trigger on ctrl-x ctrl-g."
+  "Install magit and trigger on ctrl-x ctrl-d."
   (use-package magit
-    :bind ((("C-x g") . magit-status))))
+    :bind ((("C-x C-d") . magit-status))))
 
 
 (defvar god-local-mode)
@@ -233,7 +251,7 @@
 
 
 (defun x11-clipboard-integration ()
-  "Enable the X11 clipboard in Emacs"
+  "Enable the X11 clipboard in Emacs."
   (setq-default x-select-enable-primary t))
 
 
