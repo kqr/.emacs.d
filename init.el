@@ -243,7 +243,7 @@
     
     :init
     (define-key key-translation-map (kbd "<backtab>") (kbd "<tab>"))
-    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+    (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
 
     :config
     (god-mode-all)
