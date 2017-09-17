@@ -2,10 +2,23 @@
 ;;;; - Emacs 24.1+
 ;;;; - Git 1.9.4+
 
+;; TABLE OF CONTENTS
+;; 1. melpa/marmalade
+;; 2. evil mode
+;; 3. packages always loaded (related to appearance)
+;; 4. packages loaded based on mode
+;; 5. packages loaded on command
+;; 6. various configuration
+;; 7. defuns
+;; 8. custom-sets
+
+
+
 ;; Enable the built in package manager and install and load the use-package
 ;; package
 (require 'package)
 (push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
+(push '("melpa stable" . "http://stable.melpa.org/packages/") package-archives)
 (push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
 (package-initialize)
 (unless (package-installed-p 'use-package)
@@ -71,6 +84,15 @@
              (evil-leader/set-key "c" #'count-words-region)))))
 
 
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode)
+  :config
+  (progn
+    (add-to-list 'load-path "~/.emacs.d/lisp/")
+    (require 'flycheck-infer)))
+
+
 ;;======================================
 ;; ALWAYS LOADED (related to appearance)
 ;;======================================
@@ -96,7 +118,7 @@
     (global-fci-mode +1)
 
     (setq fci-rule-width 1)
-    (setq fci-rule-color "grey11")))
+    (setq fci-rule-color "dim grey")))
 
 
 ;;======================================
@@ -130,11 +152,14 @@
     (setq haskell-indentation-where-pre-offset 4)
     (setq haskell-indentation-where-post-offset 4)))
 
+(use-package racket-mode
+  :mode ("\\.racket\\'" "\\.rkt\\'"))
+
 (use-package org
-  :mode "\\.org\\'"
+  :mode ("\\.org\\'" . org-mode)
   :config
   (progn
-    (setq org-todo-keywords '((sequence "TODO" "|" "DONE" "HOLD")))
+    (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD")))
     (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))
 
     ;; some evil integration with org
@@ -178,6 +203,18 @@
   (progn
     (setq expand-region-contract-fast-key "z")
     (evil-leader/set-key "x" 'er/expand-region)))
+
+(use-package android-mode
+  :commands (android-start-emulator android-create-project android-ant-debug))
+
+(use-package java-imports
+  :commands java-imports-add-import-dwim
+  :init
+  (progn
+    (evil-leader/set-key "i" 'java-imports-add-import-dwim))
+  :config
+  (progn
+    (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)))
 
 (use-package projectile
   ;; ad hoc project management in emacs. treats any git repo as a project, which
@@ -411,6 +448,7 @@
  '(notmuch-search-line-faces (quote (("unread" :weight bold))))
  '(notmuch-search-oldest-first nil)
  '(notmuch-show-indent-messages-width 1)
+ '(org-agenda-files (quote ("/home/kqr/Dropbox/Orgzly/brain.org")))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
