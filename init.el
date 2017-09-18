@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;
 ;; * Requires Emacs 25
+;; * Requires an internet connection
 ;;
 
 
@@ -39,10 +40,6 @@
     no-soft-wrap
     highlight-text-beyond-fill-column
 
-    ;; Global binds:
-    bind-easy-line-join
-    backspace-kills-words
-
     ;; Config itself:
     config-debugging
     
@@ -63,6 +60,11 @@
     ;; Major modes
     org-mode-basic-config
     magit-git-integration
+
+    ;; Convenient global binds and minor modes:
+    paredit-all-the-things
+    bind-easy-line-join
+    backspace-kills-words
     
     ))
 
@@ -126,7 +128,7 @@
 
 (defun center-cursor ()
   "Scroll buffers to keep the cursor centered."
-  (use-package centered-cursor-mode :config
+  (use-package centered-cursor-mode :diminish centered-cursor-mode :config
     (global-centered-cursor-mode +1)))
 
 
@@ -138,24 +140,9 @@
 
 (defun highlight-text-beyond-fill-column ()
   "Indicate overlong lines by highlighting the protruding text."
-  (use-package column-enforce-mode :init
+  (use-package column-enforce-mode :diminish column-enforce-mode :init
     (setq-default fill-column 80)
     (global-column-enforce-mode +1)))
-
-
-(defun bind-easy-line-join ()
-  "Set up a quicker keybind to join a line to the one above."
-  (global-set-key (kbd "C-J") 'delete-indentation))
-
-
-(defun unbind-easy-suspend ()
-  "Reduce frustration by disabling the ctrl-z bind for suspending Emacs."
-  (global-unset-key (kbd "C-z")))
-
-
-(defun backspace-kills-words ()
-  "Make backspace delete entire full words for efficiency."
-  (global-set-key (kbd "DEL") 'backward-kill-word))
 
 
 (defun config-debugging ()
@@ -165,7 +152,7 @@
 
 (defun ivy-fuzzy-matching ()
   "Use Ivy for fuzzy matching buffers, files, commands etc."
-  (use-package ivy :diminish ivy :config (ivy-mode +1)))
+  (use-package ivy :diminish ivy-mode :config (ivy-mode +1)))
 
 
 (defun undo-tree ()
@@ -187,8 +174,19 @@
 
 (defun aggressive-indent ()
   "Enable aggressive automatic indentation everywhere."
-  (use-package aggressive-indent :config
+  (use-package aggressive-indent :diminish aggressive-indent-mode :config
     (global-aggressive-indent-mode +1)))
+
+
+(defun paredit-all-the-things ()
+  "Enable paredit everywhere."
+  (use-package paredit :diminish paredit-mode
+    :demand t
+
+    :config
+    (add-hook 'text-mode-hook #'paredit-mode)
+    (add-hook 'prog-mode-hook #'paredit-mode)
+    (bind-key "DEL" 'paredit-backward-kill-word)))
 
 
 (defun flycheck-with-infer ()
@@ -242,7 +240,9 @@
     :demand t
     
     :init
-    (define-key key-translation-map (kbd "<backtab>") (kbd "<tab>"))
+    (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
+    (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
+    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
     (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
 
     :config
@@ -253,6 +253,28 @@
 (defun x11-clipboard-integration ()
   "Enable the X11 clipboard in Emacs."
   (setq-default x-select-enable-primary t))
+
+
+(defun bind-easy-line-join ()
+  "Set up a quicker keybind to join a line to the one above."
+  (bind-key* "C-J" 'delete-indentation))
+
+
+(defun unbind-easy-suspend ()
+  "Reduce frustration by disabling the ctrl-z bind for suspending Emacs."
+  (unbind-key "C-z"))
+
+
+(defun backspace-kills-words ()
+  "Make backspace delete entire full words for efficiency."
+
+  (defun kill-word (arg)
+    "Do what I mean and don't kill the word if there is whitespace to kill..."
+    (interactive "P")
+    (kill-region (point) (progn (forward-same-syntax arg) (point))))
+
+  (bind-key "DEL" 'backward-kill-word))
+
 
 
 
