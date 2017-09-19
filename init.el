@@ -32,7 +32,7 @@
 ;; Comment out an element to disable it from the config.
 (defvar *ENABLED*
   '(
-    ;; Appearance:
+    ;; Appearance loaded first to avoid silly allocations and flashing UI.
     disable-gui
     instant-show-matching-paren
     highlight-todo-comments
@@ -40,31 +40,32 @@
     no-soft-wrap
     highlight-text-beyond-fill-column
 
-    ;; Config itself:
+    ;; Config debugging loaded early to enable even if rest of init is broken.
     config-debugging
     
-    ;; God mode:
+    ;; God mode loaded next because I'm practically addicted to it.
     cursor-toggles-with-god-mode
     god-mode
 
-    ;; Various Emacs improvements:
+    ;; Global (or globalised) minor modes providing various Emacs improvements.
     ivy-fuzzy-matching
     undo-tree
     expand-region
+    paredit-all-the-things
 
-    ;; Programming specific minor modes:
+    ;; Programming specific minor modes.
     aggressive-indent
     flycheck-with-infer
     c-mode-config
 
-    ;; Major modes
+    ;; Useful non-standard major modes.
     org-mode-basic-config
     magit-git-integration
 
-    ;; Convenient global binds and minor modes:
-    paredit-all-the-things
-    bind-easy-line-join
+
+    ;; Personal keybindings. Last in evaluation order to override other modes.
     backspace-kills-words
+    bind-easy-line-join
     
     ))
 
@@ -185,8 +186,7 @@
 
     :config
     (add-hook 'text-mode-hook #'paredit-mode)
-    (add-hook 'prog-mode-hook #'paredit-mode)
-    (bind-key "DEL" 'paredit-backward-kill-word)))
+    (add-hook 'prog-mode-hook #'paredit-mode)))
 
 
 (defun flycheck-with-infer ()
@@ -273,7 +273,8 @@
     (interactive "P")
     (kill-region (point) (progn (forward-same-syntax arg) (point))))
 
-  (bind-key "DEL" 'backward-kill-word))
+  (bind-key* "DEL" 'backward-kill-word)
+  (eval-after-load "paredit" #'(progn (message "paredit loaded!") (bind-key* "DEL" 'paredit-backward-kill-word))))
 
 
 
