@@ -66,6 +66,7 @@
     ;; Personal keybindings. Last in evaluation order to override other modes.
     backspace-kills-words
     bind-easy-line-join
+    unbind-easy-suspend
     
     ))
 
@@ -164,7 +165,7 @@
 
 
 (defun expand-region ()
-  "Set up expand-region with convenient key binds."
+  "Set up expand-region with convenient keybinds."
   (use-package expand-region
     :bind (("C-t" . er/expand-region))
     
@@ -181,10 +182,13 @@
 
 (defun paredit-all-the-things ()
   "Enable paredit everywhere."
-  (use-package paredit :diminish paredit-mode
-    :demand t
-
-    :config
+  (use-package paredit :diminish paredit-mode :config
+    ;; Fixes to make paredit more convenient to work with in other languages
+    (setq-default paredit-space-for-delimiter-predicates
+		  (list (lambda (&rest args) nil)))
+    (unbind-key "\\" paredit-mode-map)
+    (unbind-key "M-q" paredit-mode-map)
+    
     (add-hook 'text-mode-hook #'paredit-mode)
     (add-hook 'prog-mode-hook #'paredit-mode)))
 
@@ -214,9 +218,9 @@
 
 
 (defun magit-git-integration ()
-  "Install magit and trigger on ctrl-x ctrl-d."
+  "Install magit and trigger on x g g."
   (use-package magit
-    :bind ((("C-x C-d") . magit-status))))
+    :bind (("C-x M-g" . magit-status))))
 
 
 (defvar god-local-mode)
@@ -256,12 +260,12 @@
 
 
 (defun bind-easy-line-join ()
-  "Set up a quicker keybind to join a line to the one above."
+  "Set up a quicker keybind J to join a line to the one above."
   (bind-key* "C-J" 'delete-indentation))
 
 
 (defun unbind-easy-suspend ()
-  "Reduce frustration by disabling the ctrl-z bind for suspending Emacs."
+  "Reduce frustration by disabling the z binding for suspending Emacs."
   (unbind-key "C-z"))
 
 
@@ -274,7 +278,7 @@
     (kill-region (point) (progn (forward-same-syntax arg) (point))))
 
   (bind-key* "DEL" 'backward-kill-word)
-  (eval-after-load "paredit" #'(progn (message "paredit loaded!") (bind-key* "DEL" 'paredit-backward-kill-word))))
+  (eval-after-load "paredit" #'(bind-key* "DEL" 'paredit-backward-kill-word)))
 
 
 
