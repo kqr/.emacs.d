@@ -219,8 +219,10 @@
 
 (defun magit-git-integration ()
   "Install magit and trigger on x g g."
-  (use-package magit
-    :bind (("C-x M-g" . magit-status))))
+  (use-package magit :defines god-exempt-major-modes
+    :bind (("C-x M-g" . magit-status))
+    :config
+    (add-to-list 'god-exempt-major-modes 'magit-mode)))
 
 
 (defvar god-local-mode)
