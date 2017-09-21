@@ -201,6 +201,39 @@
     (require 'flycheck-infer)))
 
 
+(defvar god-local-mode)
+
+(defun cursor-toggles-with-god-mode ()
+  "Default to bar cursor and switch to box type in God mode."
+  (setq-default cursor-type 'box)
+
+  (defun god-mode-update-cursor ()
+    (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+
+  (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
+  (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor))
+
+(defun god-mode ()
+  "Reduce wrist pain by installing God mode."
+  (use-package god-mode :defines god-mode-isearch-map
+    :bind (("<escape>" . god-local-mode)
+           :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
+           :map god-mode-isearch-map ("<escape>" . god-mode-isearch-disable))
+
+    :demand t
+    
+    :init
+    (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
+    (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
+    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+    (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
+    (setq god-exempt-major-modes '())
+
+    :config
+    (god-mode-all)
+    (require 'god-mode-isearch)))
+
+
 (defun c-mode-config ()
   "Set a few defaults for C mode."
   (setq-default c-default-style "stroustrup")
@@ -225,37 +258,6 @@
     :bind (("C-x M-g" . magit-status))
     :config
     (add-to-list 'god-exempt-major-modes 'magit-mode)))
-
-
-(defvar god-local-mode)
-
-(defun cursor-toggles-with-god-mode ()
-  "Default to bar cursor and switch to box type in God mode."
-  (setq-default cursor-type 'box)
-  (defun god-mode-update-cursor ()
-    (defun god-mode-update-cursor ()
-      (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar))))
-  (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
-  (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor))
-
-(defun god-mode ()
-  "Reduce wrist pain by installing God mode."
-  (use-package god-mode :defines god-mode-isearch-map
-    :bind (("<escape>" . god-local-mode)
-           :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
-           :map god-mode-isearch-map ("<escape>" . god-mode-isearch-disable))
-
-    :demand t
-    
-    :init
-    (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
-    (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
-    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
-    (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
-
-    :config
-    (god-mode-all)
-    (require 'god-mode-isearch)))
 
 
 (defun x11-clipboard-integration ()
