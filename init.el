@@ -214,7 +214,9 @@
 
     :config
     (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD")))
-    (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))))
+    (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))
+    (setq org-lowest-priority ?F)
+    (setq org-default-priority ?D)))
 
 
 (defun magit-git-integration ()
