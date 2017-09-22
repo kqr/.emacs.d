@@ -274,7 +274,7 @@
     (setq org-default-priority ?D)
 
     (setq org-capture-templates
-	  '(("n" "NEW" entry (file "") "* NEW [#D] %?\n  SCHEDULED: [%t]")))
+	  '(("n" "NEW" entry (file "") "* NEW [#D] %?\n  SCHEDULED: %t")))
     
     (setq org-agenda-files '("~/Dropbox/Orgzly/brain.org"))
     (setq org-default-notes-file "~/Dropbox/Orgzly/brain.org")))
