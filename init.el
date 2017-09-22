@@ -44,8 +44,10 @@
     config-debugging
     
     ;; God mode loaded next because I'm practically addicted to it.
-    cursor-toggles-with-god-mode
     god-mode
+    cursor-toggles-with-god-mode
+    bind-escape-to-tab
+    hold-ctrl-for-common
 
     ;; Global (or globalised) minor modes providing various Emacs improvements.
     ivy-fuzzy-matching
@@ -55,13 +57,12 @@
 
     ;; Programming specific minor modes.
     aggressive-indent
-    flycheck-with-infer
+    flycheck
     c-mode-config
 
     ;; Useful non-standard major modes.
     org-mode-basic-config
     magit-git-integration
-
 
     ;; Personal keybindings. Last in evaluation order to override other modes.
     backspace-kills-words
@@ -193,25 +194,11 @@
     (add-hook 'prog-mode-hook #'paredit-mode)))
 
 
-(defun flycheck-with-infer ()
-  "Enable flycheck with Java infer support."
+(defun flycheck ()
+  "Enable flycheck."
   (use-package flycheck :config
-    (global-flycheck-mode 1)
-    (add-to-list 'load-path "~/.emacs.d/config/libs")
-    (require 'flycheck-infer)))
+    (global-flycheck-mode 1)))
 
-
-(defvar god-local-mode)
-
-(defun cursor-toggles-with-god-mode ()
-  "Default to bar cursor and switch to box type in God mode."
-  (setq-default cursor-type 'box)
-
-  (defun god-mode-update-cursor ()
-    (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
-
-  (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
-  (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor))
 
 (defun god-mode ()
   "Reduce wrist pain by installing God mode."
@@ -223,15 +210,40 @@
     :demand t
     
     :init
-    (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
-    (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
-    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
-    (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
     (setq god-exempt-major-modes '())
+    (setq god-exempt-predicates '(god-exempt-mode-p))
+
 
     :config
     (god-mode-all)
     (require 'god-mode-isearch)))
+
+
+(defun hold-ctrl-for-common ()
+  "Let you hold down ctrl for common combinations like ctrl-x b."
+  (bind-key "C-x C-0" 'delete-window)
+  (bind-key "C-x C-1" 'delete-other-windows)
+  (bind-key "C-x C-b" 'switch-to-buffer)
+  (bind-key "C-x C-o" 'other-window))
+
+
+(defun cursor-toggles-with-god-mode ()
+  "Default to bar cursor and switch to box type in God mode."
+  (setq-default cursor-type 'box)
+
+  (defun god-mode-update-cursor ()
+    (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+  
+  (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
+  (add-hook 'god-mode-disabled-hook 'god-mode-update-cursor))
+
+
+(defun bind-escape-to-tab ()
+  "Universally bind the tab key to mean escape, and shift-tab to mean tab."
+  (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
+  (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
+  (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+  (define-key input-decode-map (kbd "C-i") (kbd "<escape>")))
 
 
 (defun c-mode-config ()
@@ -243,17 +255,29 @@
 (defun org-mode-basic-config ()
   "Install org mode with desired keywords."
   (use-package org
-    :bind (("C-c C-o C-a" . org-agenda)
-	   ("C-c C-o C-c" . org-capture))
+    :bind (("C-c C-a" . org-agenda)
+	   ("C-c C-c" . org-capture)
+	   ("M-g" . org-agenda-redo))  ;; More convenient in God mode
     :mode ("\\.org\\'" . org-mode)
 
+    :defines org-capture-templates
     :config
-    (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD")))
-    (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))
+    (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD" "CANCELED")))
+    (setq org-todo-keyword-faces
+	  '(("NEW" . (:foreground "red" :weight bold))
+	    ("TODO" . (:foreground "dark orange" :weight bold))
+	    ("DONE" . (:foreground "olivedrab3" :weight bold))
+	    ("HOLD" . (:foreground "dodger blue" :weight bold))
+	    ("CANCELED" . (:foreground "dim grey" :weight bold))))
+    
     (setq org-lowest-priority ?F)
     (setq org-default-priority ?D)
 
-    (setq org-agenda-files '("~/Dropbox/Orgzly/brain.org"))))
+    (setq org-capture-templates
+	  '(("n" "NEW" entry (file "") "* NEW [#D] %?\n  SCHEDULED: [%t]")))
+    
+    (setq org-agenda-files '("~/Dropbox/Orgzly/brain.org"))
+    (setq org-default-notes-file "~/Dropbox/Orgzly/brain.org")))
 
 
 (defun magit-git-integration ()
