@@ -243,13 +243,17 @@
 (defun org-mode-basic-config ()
   "Install org mode with desired keywords."
   (use-package org
+    :bind (("C-c C-o C-a" . org-agenda)
+	   ("C-c C-o C-c" . org-capture))
     :mode ("\\.org\\'" . org-mode)
 
     :config
     (setq org-todo-keywords '((sequence "NEW" "TODO" "|" "DONE" "HOLD")))
     (setq org-todo-keyword-faces '(("HOLD" . (:foreground "dim grey"))))
     (setq org-lowest-priority ?F)
-    (setq org-default-priority ?D)))
+    (setq org-default-priority ?D)
+
+    (setq org-agenda-files '("~/Dropbox/Orgzly/brain.org"))))
 
 
 (defun magit-git-integration ()
@@ -288,10 +292,14 @@
 
 
 
-
-
 (dolist (config *ENABLED*)
   (funcall config))
+
+
+(defun edit-init ()
+  "Interactive command to open the .emacs init file."
+  (interactive)
+  (find-file (substitute-in-file-name "$HOME/.emacs.d/init.el")))
 
 
 (custom-set-faces
