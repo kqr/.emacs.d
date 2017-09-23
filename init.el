@@ -121,7 +121,7 @@
   (setq-default show-paren-style 'expression)
   ;; This is in order for selected region to take priority over
   ;; show-paren expression style
-  (setq-default show-paren-priority -50)
+  (setq-default show-paren-priority -200)
   (show-paren-mode +1))
 
 
@@ -308,7 +308,23 @@
 
 (defun ctrl-equals-for-whitespace-mode ()
   "Turn whitespace mode on and off by pressing =."
-  (bind-key* "C-=" 'whitespace-mode))
+
+  (defun toggle-showparen-with-whitespace (arg)
+    "Ensures show-paren-mode is off when whitespace-mode is turned on."
+    (if (bound-and-true-p whitespace-mode)
+	(show-paren-mode -1)
+      (show-paren-mode +1)))
+
+  (advice-add 'whitespace-mode :after #'toggle-showparen-with-whitespace)
+
+  (bind-key* "C-=" 'whitespace-mode)
+
+  (setq whitespace-style
+	'(face trailing tabs spaces newline space-mark tab-mark newline-mark))
+  (setq whitespace-display-mappings
+	'((space-mark 32 [183] [46])
+	  (tab-mark 9 [187 9] [92 9])
+	  (newline-mark 10 [182 10]))))
 
 
 (defun backspace-kills-words ()
@@ -395,6 +411,11 @@
  '(region ((t (:background "beige" :foreground "black"))))
  '(show-paren-match ((t (:background "gray20"))))
  '(show-paren-mismatch ((t (:background "red"))))
+ '(trailing-whitespace ((t (:background "red" :foreground "black"))))
+ '(whitespace-hspace ((t (:background "red" :foreground "black"))))
+ '(whitespace-newline ((t (:background "red" :foreground "black"))))
+ '(whitespace-space ((t (:background "red" :foreground "black"))))
+ '(whitespace-tab ((t (:background "red" :foreground "black"))))
  '(widget-field ((t (:background "gray11" :foreground "default")))))
 
 (custom-set-variables
