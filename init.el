@@ -53,7 +53,7 @@
     ivy-fuzzy-matching
     undo-tree
     expand-region
-    paredit-all-the-things
+    paredit-all-the-things  ;; still not 100% sure about this one...
 
     ;; Programming specific minor modes.
     aggressive-indent
@@ -65,6 +65,7 @@
     magit-git-integration
 
     ;; Personal keybindings. Last in evaluation order to override other modes.
+    ctrl-equals-for-whitespace-mode
     backspace-kills-words
     bind-easy-line-join
     unbind-easy-suspend
@@ -303,6 +304,11 @@
 (defun unbind-easy-suspend ()
   "Reduce frustration by disabling the z binding for suspending Emacs."
   (unbind-key "C-z"))
+
+
+(defun ctrl-equals-for-whitespace-mode ()
+  "Turn whitespace mode on and off by pressing =."
+  (bind-key* "C-=" 'whitespace-mode))
 
 
 (defun backspace-kills-words ()
