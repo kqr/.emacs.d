@@ -213,7 +213,7 @@
     
     :init
     (setq god-exempt-major-modes '())
-    (setq god-exempt-predicates '(god-exempt-mode-p))
+    (setq god-exempt-predicates '(god-exempt-mode-p god-git-commit-mode-p))
 
 
     :config
