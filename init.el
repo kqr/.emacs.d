@@ -102,10 +102,11 @@
 
 (defun disable-gui ()
   "Disable various UI elements for a distraction free experience."
+  (when (display-graphic-p)
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1)
+    (tooltip-mode -1))
   (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  (tool-bar-mode -1)
-  (tooltip-mode -1)
   (blink-cursor-mode -1)
   (global-linum-mode -1)
   (setq-default inhibit-startup-screen t)
@@ -243,7 +244,8 @@
   (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
   (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
   (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
-  (define-key input-decode-map (kbd "C-i") (kbd "<escape>")))
+  (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
+  (define-key input-decode-map "\e[Z" [backtab]))
 
 
 (defun c-mode-config ()
