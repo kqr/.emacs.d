@@ -212,9 +212,8 @@
     :demand t
     
     :init
-    (setq god-exempt-major-modes '())
-    (setq god-exempt-predicates '(god-exempt-mode-p god-git-commit-mode-p))
-
+    (setq god-exempt-major-modes '(Magit MagitPopup))
+    (setq god-exempt-predicates '(god-exempt-mode-p))
 
     :config
     (god-mode-all)
@@ -237,7 +236,7 @@
     (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar))
     (cond
      (god-local-mode
-      (progn (set-face-background 'mode-line "dark orange")
+      (progn (set-face-background 'mode-line "olive drab")
 	     (set-face-foreground 'mode-line "black")))
      (t
       (progn (set-face-background 'mode-line "default")
@@ -326,8 +325,10 @@
 
   (bind-key* "C-=" 'whitespace-mode)
 
+  (defvar whitespace-style)
   (setq whitespace-style
 	'(face trailing tabs spaces newline space-mark tab-mark newline-mark))
+  (defvar whitespace-display-mappings)
   (setq whitespace-display-mappings
 	'((space-mark 32 [183] [46])
 	  (tab-mark 9 [187 9] [92 9])
@@ -362,7 +363,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "beige" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 135 :width normal :foundry "nil" :family "Luxi Mono"))))
+ '(default ((t (:inherit nil :stipple nil :background "black" :foreground "AntiqueWhite2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 135 :width normal :foundry "b&h" :family "Luxi Mono"))))
  '(fic-face ((t (:foreground "red"))))
  '(font-lock-builtin-face ((t nil)))
  '(font-lock-comment-face ((t (:foreground "dim gray"))))
@@ -394,7 +395,7 @@
  '(message-header-subject ((t (:foreground "default" :weight bold))))
  '(message-header-to ((t (:foreground "dim grey"))))
  '(message-mml ((t (:foreground "dim grey"))))
- '(mode-line ((t (:background "gray11" :foreground "dim gray"))))
+ '(mode-line ((t (:background "olivedrab" :foreground "black"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey"))))
  '(notmuch-message-summary-face ((t (:foreground "dim grey"))))
  '(notmuch-search-count ((t (:foreground "dim gray"))))
