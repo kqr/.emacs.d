@@ -42,7 +42,10 @@
 		      whitespace-hspace
 		      whitespace-newline
 		      whitespace-space
-		      whitespace-tab))
+		      whitespace-tab)
+
+		     ("default"
+		      fic-face))
 
 	(:foreground ("AntiqueWhite2"
 		      default)
@@ -65,6 +68,10 @@
 		      whitespace-space
 		      whitespace-tab)
 		     
+		     ;; Strong highlight, to be used sparingly
+		     ("red"
+		      fic-face)
+
 		     ;; Primary accent colour
 		     ("dark orange"
 		      org-level-1
@@ -106,8 +113,9 @@
 		      notmuch-tree-no-match-date-face))
 
 	(:weight (bold
-		  message-header-subject
-		  org-level-1))
+		  fic-face
+		  org-level-1
+		  message-header-subject))
 	
 	(:foundry ("b&h"
 		   default))

@@ -131,10 +131,7 @@
 (defun highlight-todo-comments ()
   "Highlight words like TODO, FIXME and similar in comments."
   (use-package fic-mode :init
-    (add-hook 'prog-mode-hook 'fic-mode)
-    
-    :config
-    (set-face-foreground 'fic-face "red")))
+    (add-hook 'prog-mode-hook 'fic-mode)))
 
 
 (defun center-cursor ()
