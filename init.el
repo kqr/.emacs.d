@@ -297,6 +297,34 @@
     (add-to-list 'god-exempt-major-modes 'magit-mode)))
 
 
+(defun open-eshell-here ()
+  "Add a keybind to launch eshell in the same directory as the current buffer."
+
+  (defun eshell-here ()
+    "Launch eshell in the same directory as the current buffer."
+    (interactive)
+    (let* ((parent (if (buffer-file-name)
+		       (file-name-directory (buffer-file-name))
+		     default-directory)))
+      (eshell "new")
+      (rename-buffer (concat "*eshell: " parent "*"))
+      (insert (concat "ls"))
+      (eshell-send-input)))
+
+  (bind-key (kbd "C-!") 'eshell-here))
+
+
+(defun fast-buffer-toggle ()
+  "Add a keybind to switch to the previous buffer."
+
+  (defun switch-to-last-buffer ()
+    "Switch to the previous buffer."
+    (interactive)
+    (switch-to-buffer (other-buffer (current-buffer) 1)))
+  
+  (bind-key* "C-#" 'switch-to-last-buffer))
+
+
 (defun x11-clipboard-integration ()
   "Enable the X11 clipboard in Emacs."
   (setq-default x-select-enable-primary t))
@@ -343,6 +371,14 @@
     (interactive "P")
     (kill-region (point) (progn (forward-same-syntax arg) (point))))
 
+  (defun kill-region-or-word-dwim (arg)
+    "Either kill the active region or kill a word forward"
+    (interactive "P")
+    (if (region-active-p)
+	(kill-region (region-beginning) (region-end))
+      (kill-word arg)))
+  
+  (bind-key "C-w" 'kill-region-or-word-dwim)
   (bind-key* "DEL" 'backward-kill-word)
   (eval-after-load "paredit" #'(bind-key* "DEL" 'paredit-backward-kill-word)))
 
