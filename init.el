@@ -205,6 +205,13 @@
     (global-flycheck-mode 1)))
 
 
+(defun dynamic-abbrevs ()
+  "Enable 'dabbrev-expand' for basic out-of-the-way completion."
+  (use-package dabbrev :config
+    (bind-key* "C-M-i" 'dabbrev-expand)
+    (setq-default dabbrev-case-fold-search nil)))
+
+
 (defun god-mode ()
   "Reduce wrist pain by installing God mode."
   (use-package god-mode :defines god-mode-isearch-map
@@ -470,3 +477,17 @@
 
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (dabbrev-expand use-package undo-tree paredit no-littering magit ivy god-mode flycheck fic-mode expand-region column-enforce-mode centered-cursor-mode bug-hunter auto-yasnippet aggressive-indent))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
