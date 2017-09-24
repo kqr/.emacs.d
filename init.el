@@ -5,10 +5,10 @@
 ;; * Requires an internet connection
 ;;
 
-
 ;;; Todo:
 ;; - find a way to browse tags (ggtags etc?)
-;; - include a "site-local" config file if it exists
+;; - find a way to list the defines in current buffer?
+;; - abbrev?
 ;;
 ;; Inspiration for further items:
 ;; - https://oremacs.com/2015/04/16/ivy-mode/
@@ -39,6 +39,7 @@
     center-cursor
     no-soft-wrap
     highlight-text-beyond-fill-column
+    use-kqr-dark-theme
 
     ;; Config debugging loaded early to enable even if rest of init is broken.
     config-debugging
@@ -60,11 +61,13 @@
     flycheck
     c-mode-config
 
-    ;; Useful non-standard major modes.
+    ;; Useful major modes.
     org-mode-basic-config
     magit-git-integration
+    open-eshell-here
 
     ;; Personal keybindings. Last in evaluation order to override other modes.
+    fast-buffer-toggle
     ctrl-equals-for-whitespace-mode
     backspace-kills-words
     bind-easy-line-join
@@ -128,7 +131,10 @@
 (defun highlight-todo-comments ()
   "Highlight words like TODO, FIXME and similar in comments."
   (use-package fic-mode :init
-    (add-hook 'prog-mode-hook 'fic-mode)))
+    (add-hook 'prog-mode-hook 'fic-mode)
+    
+    :config
+    (set-face-foreground 'fic-face "red")))
 
 
 (defun center-cursor ()
@@ -383,116 +389,87 @@
   (eval-after-load "paredit" #'(bind-key* "DEL" 'paredit-backward-kill-word)))
 
 
-
-(dolist (config *ENABLED*)
-  (funcall config))
-
-
 (defun edit-init ()
   "Interactive command to open the .emacs init file."
   (interactive)
   (find-file (substitute-in-file-name "$HOME/.emacs.d/init.el")))
 
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "AntiqueWhite2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 135 :width normal :foundry "b&h" :family "Luxi Mono"))))
- '(fic-face ((t (:foreground "red"))))
- '(font-lock-builtin-face ((t nil)))
- '(font-lock-comment-face ((t (:foreground "dim gray"))))
- '(font-lock-constant-face ((t nil)))
- '(font-lock-function-name-face ((t nil)))
- '(font-lock-keyword-face ((t (:foreground "dark orange"))))
- '(font-lock-string-face ((t (:foreground "OliveDrab3"))))
- '(font-lock-type-face ((t (:foreground "dodger blue"))))
- '(font-lock-variable-name-face ((t nil)))
- '(fringe ((t (:background "black" :foreground "grey11"))))
- '(helm-buffer-file ((t (:foreground "dim grey"))))
- '(helm-candidate-number ((t (:foreground "dim grey"))))
- '(helm-ff-file ((t (:foreground "dim grey"))))
- '(helm-match ((t (:foreground "dodger blue"))))
- '(helm-selection ((t (:foreground "dark orange"))))
- '(helm-source-header ((t (:background "grey11" :foreground "white" :weight bold))))
- '(highlight ((t (:background "grey11"))))
- '(hl-line ((t (:background "grey11"))))
- '(ledger-font-payee-pending-face ((t (:foreground "olive drab" :weight normal))))
- '(ledger-font-payee-uncleared-face ((t (:foreground "dim grey"))))
- '(ledger-font-pending-face ((t (:foreground "olivedrab3" :weight normal))))
- '(ledger-font-posting-account-face ((t (:foreground "olivedrab3"))))
- '(ledger-font-posting-amount-face ((t (:foreground "dark orange"))))
- '(ledger-font-posting-date-face ((t (:foreground "dodger blue"))))
- '(linum ((t (:background "grey11" :foreground "dim grey"))))
- '(message-header-cc ((t (:foreground "dim grey"))))
- '(message-header-name ((t (:foreground "dim gray"))))
- '(message-header-other ((t (:foreground "dim grey"))))
- '(message-header-subject ((t (:foreground "default" :weight bold))))
- '(message-header-to ((t (:foreground "dim grey"))))
- '(message-mml ((t (:foreground "dim grey"))))
- '(mode-line ((t (:background "olivedrab" :foreground "black"))))
- '(mode-line-inactive ((t (:inherit mode-line :background "black" :foreground "dim grey"))))
- '(notmuch-message-summary-face ((t (:foreground "dim grey"))))
- '(notmuch-search-count ((t (:foreground "dim gray"))))
- '(notmuch-search-date ((t (:foreground "dim gray"))))
- '(notmuch-search-matching-authors ((t (:foreground "dark orange"))))
- '(notmuch-search-non-matching-authors ((t (:foreground "dark orange"))))
- '(notmuch-tag-face ((t (:foreground "dodger blue"))))
- '(notmuch-tree-match-author-face ((t (:foreground "dim gray"))))
- '(notmuch-tree-match-date-face ((t (:foreground "dim gray"))) t)
- '(notmuch-tree-match-tag-face ((t (:foreground "dodger blue"))))
- '(notmuch-tree-no-match-author-face ((t (:foreground "dim gray"))) t)
- '(notmuch-tree-no-match-date-face ((t (:foreground "dim gray"))) t)
- '(notmuch-tree-no-match-face ((t nil)))
- '(notmuch-tree-no-match-tag-face ((t (:foreground "dodger blue"))) t)
- '(notmuch-wash-cited-text ((t (:foreground "olivedrab3"))))
- '(org-level-1 ((t (:foreground "dodger blue" :weight bold))))
- '(org-level-2 ((t (:foreground "light blue"))))
- '(org-level-3 ((t (:foreground "slate blue"))))
- '(org-link ((t (:foreground "OliveDrab3" :underline t))))
- '(org-todo ((t (:foreground "magenta" :weight bold))))
- '(region ((t (:background "beige" :foreground "black"))))
- '(show-paren-match ((t (:background "gray20"))))
- '(show-paren-mismatch ((t (:background "red"))))
- '(trailing-whitespace ((t (:background "red" :foreground "black"))))
- '(whitespace-hspace ((t (:background "red" :foreground "black"))))
- '(whitespace-newline ((t (:background "red" :foreground "black"))))
- '(whitespace-space ((t (:background "red" :foreground "black"))))
- '(whitespace-tab ((t (:background "red" :foreground "black"))))
- '(widget-field ((t (:background "gray11" :foreground "default")))))
+(defun use-kqr-dark-theme ()
+  "Use the kqr-theme specified by kqr-dark-theme.el."
+  (let ((fn (substitute-in-file-name "$HOME/.emacs.d/kqr-dark-theme.el")))
+    (when (file-readable-p fn)
+      (load fn)
+      (apply-kqr-dark-theme))))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(browse-url-browser-function (quote browse-url-generic))
- '(browse-url-generic-program "links")
- '(expand-region-contract-fast-key "n")
- '(message-confirm-send t)
- '(message-hidden-headers
-   (quote
-    ("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From:")))
- '(notmuch-archive-tags (quote ("-inbox" "-unread")))
- '(notmuch-hello-sections
-   (quote
-    (notmuch-hello-insert-saved-searches notmuch-hello-insert-search notmuch-hello-insert-recent-searches notmuch-hello-insert-alltags notmuch-hello-insert-footer)))
- '(notmuch-poll-script nil)
- '(notmuch-saved-searches
-   (quote
-    ((:name "inbox" :query "tag:inbox" :key "i")
-     (:name "sent" :query "tag:sent" :key "s")
-     (:name "all mail" :query "*" :key "a"))))
- '(notmuch-search-line-faces (quote (("unread" :weight bold))))
- '(notmuch-search-oldest-first nil)
- '(notmuch-show-indent-messages-width 1)
- '(org-agenda-files (quote ("/home/kqr/Dropbox/Orgzly/brain.org")))
- '(package-selected-packages
-   (quote
-    (undo-tree use-package ivy hl-line+ god-mode flycheck fill-column-indicator fic-mode expand-region column-enforce-mode centered-cursor-mode bug-hunter aggressive-indent)))
- '(safe-local-variable-values
-   (quote
-    ((haskell-process-use-ghci . t)
-     (haskell-indent-spaces . 4))))
- '(send-mail-function (quote smtpmail-send-it)))
+
+(dolist (config *ENABLED*)
+  (funcall config))
+
+
+(defun browse-with-links ()
+  "Set links as the generic browser."
+  (setq-default browse-url-browser-function 'browse-url-generic)
+  (setq-default browse-url-generic-program "links"))
+
+
+
+(defun load-host-specific ()
+  "Load any configuration files found under config."
+  (let ((fn (substitute-in-file-name "$HOME/.emacs.d/config/*.el")))
+    (when (file-readable-p fn)
+      (load fn))))
+
+
+;; This is host-specific and as such needs to be moved eventually
+(defun notmuch-mode ()
+  "Load the locally installed notmuch mode to ensure versions match."
+  (autoload 'notmuch "notmuch" "notmuch mail" t)
+  (defvar mail-envelope-from)
+  (defvar sendmail-program)
+  (defvar notmuch-archive-tags)
+  (defvar notmuch-hello-sections)
+  (defvar notmuch-poll-script)
+  (defvar notmuch-saved-searches)
+  (defvar notmuch-search-line-faces)
+  (defvar notmuch-search-oldest-first)
+  (defvar notmuch-show-indent-messages-width)
+  
+  (setq message-auto-save-directory "~/mail/drafts")
+  (setq message-default-mail-headers "Cc: \nBcc: \n")
+  (setq message-kill-buffer-on-exit t)
+  (setq message-sendmail-envelope-from 'header)
+  (setq message-send-mail-function 'message-send-mail-with-sendmail)
+  (setq message-confirm-send t)
+  (setq message-hidden-headers
+	'("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From"))
+
+  (setq mail-specify-envelope-from t)
+  (setq mail-envelope-from 'header)
+
+  (setq send-mail-function 'smtpmail-send-it)
+  (setq sendmail-program "/usr/bin/msmtp")
+
+  (setq notmuch-archive-tags '("-inbox" "-unread"))
+  (setq notmuch-hello-sections
+	'(notmuch-hello-insert-saved-searches
+	  notmuch-hello-insert-search
+	  notmuch-hello-insert-recent-searches
+	  notmuch-hello-insert-alltags
+	  notmuch-hello-insert-footer))
+  (setq notmuch-poll-script nil)
+  (setq notmuch-saved-searches
+	'(((:name "inbox" :query "tag:inbox" :key "i")
+	   (:name "sent" :query "tag:sent" :key "s")
+	   (:name "all mail" :query "*" :key "a"))))
+  (setq notmuch-search-line-faces '(("unread" :weight bold)))
+
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-show-indent-messages-width 4)
+  
+  )
+
+
+
+
+;;; init.el ends here
