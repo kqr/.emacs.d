@@ -72,6 +72,12 @@
     backspace-kills-words
     bind-easy-line-join
     unbind-easy-suspend
+
+    ;; This is probably not what I want anyway so it's commented out
+    ;; browse-with-links
+    
+    ;; Really only for the email server to begin with...
+    load-host-specific
     
     ))
 
@@ -242,7 +248,7 @@
 
 (defun cursor-toggles-with-god-mode ()
   "Default to bar cursor and switch to box type in God mode."
-  (setq-default cursor-type 'box)
+  (setq-default cursor-type 'bar)
 
   (defun god-mode-update-cursor ()
     (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar))
