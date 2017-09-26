@@ -110,6 +110,8 @@
     (scroll-bar-mode -1)
     (tool-bar-mode -1)
     (tooltip-mode -1))
+  (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
+  (add-to-list 'default-frame-alist '(tool-bar-lines . nil))
   (menu-bar-mode -1)
   (blink-cursor-mode -1)
   (global-linum-mode -1)
@@ -469,25 +471,6 @@
   (setq notmuch-search-line-faces '(("unread" :weight bold)))
 
   (setq notmuch-search-oldest-first nil)
-  (setq notmuch-show-indent-messages-width 4)
-  
-  )
+  (setq notmuch-show-indent-messages-width 4))
 
 
-
-
-;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (dabbrev-expand use-package undo-tree paredit no-littering magit ivy god-mode flycheck fic-mode expand-region column-enforce-mode centered-cursor-mode bug-hunter auto-yasnippet aggressive-indent))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

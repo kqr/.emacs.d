@@ -2,13 +2,22 @@
 ;;; Commentary:
 ;;; Code:
 
-(defvar kqr-dark-theme
+(defvar kqr-dark-faces
   "A sparsely but tastefully coloured dark theme.")
 
 (defun apply-kqr-dark-theme ()
   "Apply the kqr-dark-theme theme."
-  ;; Apply the theme, ignoring faces that don't exist
-  (dolist (prop-group kqr-dark-theme)
+  
+  (setq-default org-priority-faces
+		'((65 . "red")
+		  (66 . "dark orange")
+		  (67 . "dodger blue")
+		  (68 . "OliveDrab3")
+		  (69 . "dim gray")
+		  (70 . "dim gray")))
+
+  ;; Apply the faces, ignoring faces that don't exist
+  (dolist (prop-group kqr-dark-faces)
     (let ((prop (car prop-group)) (values (cdr prop-group)))
       (dolist (value-group values)
 	(let ((value (car value-group)) (faces (cdr value-group)))
@@ -16,9 +25,9 @@
 	    (when (facep face)
 	      (set-face-attribute face nil prop value))))))))
 
-;;  (set-face-attribute 'highlight nil :background "grey11")
 
-(setq kqr-dark-theme
+
+(setq kqr-dark-faces
       '((:background ("black"
 		      default
 		      fringe
@@ -34,6 +43,7 @@
 		      show-paren-match)
 
 		     ("gray11"
+		      highlight
 		      widget-field)
 		     
 		     ("red"
@@ -51,6 +61,7 @@
 		      default)
 		     
 		     ("default"
+		      org-level-1
 		      font-lock-builtin-face
 		      font-lock-constant-face
 		      font-lock-variable-name-face
@@ -74,7 +85,7 @@
 
 		     ;; Primary accent colour
 		     ("dark orange"
-		      org-level-1
+		      org-level-2
 		      font-lock-keyword-face
 		      notmuch-search-matching-authors
 		      notmch-search-non-matching-authors
@@ -82,7 +93,8 @@
 
 		     ;; Secondary accent colour
 		     ("dodger blue"
-		      org-level-2
+		      org-level-3
+		      org-priority
 		      org-link
 		      font-lock-type-face
 		      notmuch-tag-face
@@ -91,13 +103,14 @@
 		     
 		     ;; Visible diminuitive colour
 		     ("OliveDrab3"
-		      org-level-3
+		      org-level-4
 		      font-lock-string-face
 		      notmuch-wash-cited-text)
 
 		     ;; Receding diminuitive colour
 		     ("dim grey"
 		      mode-line-inactive
+		      org-special-keyword
 		      font-lock-comment-face
 		      message-header-cc
 		      message-header-name
