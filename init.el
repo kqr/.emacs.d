@@ -230,7 +230,7 @@
     :demand t
     
     :init
-    (setq god-exempt-major-modes '(Magit MagitPopup))
+    (setq god-exempt-major-modes '(magit-mode magit-popup-mode org-agenda-mode))
     (setq god-exempt-predicates '(god-exempt-mode-p))
 
     :config
@@ -266,11 +266,22 @@
 
 (defun bind-escape-to-tab ()
   "Universally bind the tab key to mean escape, and shift-tab to mean tab."
+  (defun setup-tab-decode (&optional frame)
+    "Sets the decode map to interpret tab as escape."
+    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+    (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
+    (define-key input-decode-map "\e[Z" [backtab]))
+
+  ;; Translation maps work "globally" across all emacs clients
   (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
   (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
-  (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
-  (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
-  (define-key input-decode-map "\e[Z" [backtab]))
+  
+  ;; Decode maps need to be set up once per frame
+  (setup-tab-decode)
+  (add-hook 'server-visit-hook #'setup-tab-decode)
+  (add-hook 'tty-setup-hook #'setup-tab-decode)
+  (add-hook 'window-setup-hook #'setup-tab-decode)
+  (add-hook 'after-make-frame-functions #'setup-tab-decode))
 
 
 (defun c-mode-config ()
@@ -415,15 +426,10 @@
       (apply-kqr-dark-theme))))
 
 
-(dolist (config *ENABLED*)
-  (funcall config))
-
-
 (defun browse-with-links ()
   "Set links as the generic browser."
   (setq-default browse-url-browser-function 'browse-url-generic)
   (setq-default browse-url-generic-program "links"))
-
 
 
 (defun load-host-specific ()
@@ -431,6 +437,11 @@
   (let ((fn (substitute-in-file-name "$HOME/.emacs.d/config/*.el")))
     (when (file-readable-p fn)
       (load fn))))
+
+
+
+(dolist (config *ENABLED*)
+  (funcall config))
 
 
 ;; This is host-specific and as such needs to be moved eventually
