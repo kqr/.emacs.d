@@ -230,7 +230,7 @@
     :demand t
     
     :init
-    (setq god-exempt-major-modes '(magit-mode magit-popup-mode org-agenda-mode))
+    (setq god-exempt-major-modes '(magit-mode magit-status-mode magit-popup-mode org-agenda-mode))
     (setq god-exempt-predicates '(god-exempt-mode-p))
 
     :config
@@ -266,8 +266,12 @@
 
 (defun bind-escape-to-tab ()
   "Universally bind the tab key to mean escape, and shift-tab to mean tab."
+
   (defun setup-tab-decode (&optional frame)
     "Sets the decode map to interpret tab as escape."
+    (when frame
+      (select-frame frame))
+    (message "### SETTING UP TAB DECODE ###")
     (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
     (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
     (define-key input-decode-map "\e[Z" [backtab]))
@@ -281,7 +285,8 @@
   (add-hook 'server-visit-hook #'setup-tab-decode)
   (add-hook 'tty-setup-hook #'setup-tab-decode)
   (add-hook 'window-setup-hook #'setup-tab-decode)
-  (add-hook 'after-make-frame-functions #'setup-tab-decode))
+  (add-hook 'after-make-frame-functions #'setup-tab-decode)
+  (add-to-list 'after-make-frame-functions #'setup-tab-decode))
 
 
 (defun c-mode-config ()
