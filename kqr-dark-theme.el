@@ -63,6 +63,9 @@
 		     ("default"
 		      org-level-1
 		      org-scheduled-today
+		      org-agenda-date
+		      org-agenda-date-today
+		      org-agenda-date-weekend
 		      font-lock-builtin-face
 		      font-lock-constant-face
 		      font-lock-variable-name-face
@@ -107,7 +110,6 @@
 		     ;; Visible diminuitive colour
 		     ("OliveDrab3"
 		      org-level-4
-		      org-agenda-done
 		      font-lock-string-face
 		      notmuch-wash-cited-text)
 
@@ -115,9 +117,8 @@
 		     ("dim grey"
 		      mode-line-inactive
 		      org-special-keyword
-		      org-agenda-date
-		      org-agenda-date-today
-		      org-agenda-date-weekend
+		      org-scheduled
+		      org-agenda-done
 		      font-lock-comment-face
 		      message-header-cc
 		      message-header-name
