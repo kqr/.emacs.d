@@ -271,7 +271,6 @@
     "Sets the decode map to interpret tab as escape."
     (when frame
       (select-frame frame))
-    (message "### SETTING UP TAB DECODE ###")
     (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
     (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
     (define-key input-decode-map "\e[Z" [backtab]))

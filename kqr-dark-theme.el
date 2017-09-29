@@ -62,6 +62,7 @@
 		     
 		     ("default"
 		      org-level-1
+		      org-scheduled-today
 		      font-lock-builtin-face
 		      font-lock-constant-face
 		      font-lock-variable-name-face
@@ -86,6 +87,7 @@
 		     ;; Primary accent colour
 		     ("dark orange"
 		      org-level-2
+		      org-scheduled-previously
 		      font-lock-keyword-face
 		      notmuch-search-matching-authors
 		      notmch-search-non-matching-authors
@@ -96,6 +98,7 @@
 		      org-level-3
 		      org-priority
 		      org-link
+		      org-agenda-structure
 		      font-lock-type-face
 		      notmuch-tag-face
 		      notmuch-tree-match-tag-face
@@ -104,6 +107,7 @@
 		     ;; Visible diminuitive colour
 		     ("OliveDrab3"
 		      org-level-4
+		      org-agenda-done
 		      font-lock-string-face
 		      notmuch-wash-cited-text)
 
@@ -111,6 +115,9 @@
 		     ("dim grey"
 		      mode-line-inactive
 		      org-special-keyword
+		      org-agenda-date
+		      org-agenda-date-today
+		      org-agenda-date-weekend
 		      font-lock-comment-face
 		      message-header-cc
 		      message-header-name
