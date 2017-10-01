@@ -89,6 +89,8 @@
 (setq-default make-backup-files nil)
 (setq-default large-file-warning-threshold 100000000)
 
+(column-number-mode +1)
+
 
 ;;; Prerequisites:
 
