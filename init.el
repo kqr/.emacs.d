@@ -39,7 +39,6 @@
     center-cursor
     no-soft-wrap
     highlight-text-beyond-fill-column
-    use-kqr-dark-theme
 
     ;; Config debugging loaded early to enable even if rest of init is broken.
     config-debugging
@@ -77,7 +76,7 @@
     ;; browse-with-links
     
     ;; Really only for the email server to begin with...
-    load-host-specific
+    load-separate-configs
     
     ))
 
@@ -232,8 +231,17 @@
     :demand t
     
     :init
-    (setq god-exempt-major-modes '(magit-mode magit-status-mode magit-popup-mode org-agenda-mode))
-    (setq god-exempt-predicates '(god-exempt-mode-p))
+    (setq god-exempt-major-modes
+          '(magit-mode
+	    magit-status-mode
+	    magit-popup-mode
+	    org-agenda-mode
+	    notmuch-hello-mode
+	    notmuch-search-mode
+	    notmuch-show-mode
+	    notmuch-tree-mode))
+    (setq god-exempt-predicates
+          '(god-exempt-mode-p))
 
     :config
     (god-mode-all)
@@ -326,10 +334,8 @@
 
 (defun magit-git-integration ()
   "Install magit and trigger on x g g."
-  (use-package magit :defines god-exempt-major-modes
-    :bind (("C-x M-g" . magit-status))
-    :config
-    (add-to-list 'god-exempt-major-modes 'magit-mode)))
+  (use-package magit
+    :bind (("C-x M-g" . magit-status))))
 
 
 (defun open-eshell-here ()
@@ -424,76 +430,27 @@
   (find-file (substitute-in-file-name "$HOME/.emacs.d/init.el")))
 
 
-(defun use-kqr-dark-theme ()
-  "Use the kqr-theme specified by kqr-dark-theme.el."
-  (let ((fn (substitute-in-file-name "$HOME/.emacs.d/kqr-dark-theme.el")))
-    (when (file-readable-p fn)
-      (load fn)
-      (apply-kqr-dark-theme))))
-
-
 (defun browse-with-links ()
   "Set links as the generic browser."
   (setq-default browse-url-browser-function 'browse-url-generic)
   (setq-default browse-url-generic-program "links"))
 
 
-(defun load-host-specific ()
+(defun load-separate-configs ()
+  (load-configs-from "~/.emacs.d/config/*.el")
+  (load-configs-from "~/.emacs.d/config/local/*.el"))
+
+
+
+
+(defun load-configs-from (path)
   "Load any configuration files found under config."
-  (let ((fn (substitute-in-file-name "$HOME/.emacs.d/config/*.el")))
+  (dolist (fn (file-expand-wildcards (substitute-in-file-name path)))
     (when (file-readable-p fn)
       (load fn))))
 
 
-
 (dolist (config *ENABLED*)
   (funcall config))
-
-
-;; This is host-specific and as such needs to be moved eventually
-(defun notmuch-mode ()
-  "Load the locally installed notmuch mode to ensure versions match."
-  (autoload 'notmuch "notmuch" "notmuch mail" t)
-  (defvar mail-envelope-from)
-  (defvar sendmail-program)
-  (defvar notmuch-archive-tags)
-  (defvar notmuch-hello-sections)
-  (defvar notmuch-poll-script)
-  (defvar notmuch-saved-searches)
-  (defvar notmuch-search-line-faces)
-  (defvar notmuch-search-oldest-first)
-  (defvar notmuch-show-indent-messages-width)
-  
-  (setq message-auto-save-directory "~/mail/drafts")
-  (setq message-default-mail-headers "Cc: \nBcc: \n")
-  (setq message-kill-buffer-on-exit t)
-  (setq message-sendmail-envelope-from 'header)
-  (setq message-send-mail-function 'message-send-mail-with-sendmail)
-  (setq message-confirm-send t)
-  (setq message-hidden-headers
-	'("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From"))
-
-  (setq mail-specify-envelope-from t)
-  (setq mail-envelope-from 'header)
-
-  (setq send-mail-function 'smtpmail-send-it)
-  (setq sendmail-program "/usr/bin/msmtp")
-
-  (setq notmuch-archive-tags '("-inbox" "-unread"))
-  (setq notmuch-hello-sections
-	'(notmuch-hello-insert-saved-searches
-	  notmuch-hello-insert-search
-	  notmuch-hello-insert-recent-searches
-	  notmuch-hello-insert-alltags
-	  notmuch-hello-insert-footer))
-  (setq notmuch-poll-script nil)
-  (setq notmuch-saved-searches
-	'(((:name "inbox" :query "tag:inbox" :key "i")
-	   (:name "sent" :query "tag:sent" :key "s")
-	   (:name "all mail" :query "*" :key "a"))))
-  (setq notmuch-search-line-faces '(("unread" :weight bold)))
-
-  (setq notmuch-search-oldest-first nil)
-  (setq notmuch-show-indent-messages-width 4))
 
 

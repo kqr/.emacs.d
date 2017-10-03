@@ -1,6 +1,4 @@
 ;;; kqr-dark-theme --- A sparsely but tastefully coloured dark theme.
-;;; Commentary:
-;;; Code:
 
 (defvar kqr-dark-faces
   "A sparsely but tastefully coloured dark theme.")
@@ -24,7 +22,6 @@
 	  (dolist (face faces)
 	    (when (facep face)
 	      (set-face-attribute face nil prop value))))))))
-
 
 
 (setq kqr-dark-faces
@@ -150,5 +147,9 @@
 	(:box (nil
 	       mode-line
 	       mode-line-inactive))))
+
+
+(apply-kqr-dark-theme)
+
 
 ;;; kqr-dark-theme.el ends here
