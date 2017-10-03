@@ -1,7 +1,6 @@
-(defun notmuch-mode ()
-  "Load the locally installed notmuch mode to ensure versions match."
-  (autoload 'notmuch "notmuch" "notmuch mail" t)
-  
+;; Load the locally installed notmuch mode to ensure versions match.
+(when (require 'notmuch nil :noerror)
+
   (setq message-auto-save-directory "~/mail/drafts")
   (setq message-default-mail-headers "Cc: \nBcc: \n")
   (setq message-kill-buffer-on-exit t)
@@ -25,13 +24,15 @@
 	  notmuch-hello-insert-alltags
 	  notmuch-hello-insert-footer))
   (setq notmuch-poll-script nil)
+
   (setq notmuch-saved-searches
-	'(((:name "inbox" :query "tag:inbox")
-	   (:name "sent" :query "tag:sent")
-	   (:name "all mail" :query "*"))))
+	'((:name "inbox" :query "tag:inbox" :key "i")
+	  (:name "sent" :query "tag:sent" :key "s")
+	  (:name "all mail" :query "*" :key "a")))
+
   (setq notmuch-search-line-faces '(("unread" :weight bold)))
 
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-show-indent-messages-width 4))
 
-(notmuch-mode)
+
