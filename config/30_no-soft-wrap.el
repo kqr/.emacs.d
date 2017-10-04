@@ -1,3 +1,2 @@
-
-(use-package centered-cursor-mode :diminish centered-cursor-mode :config
-  (global-centered-cursor-mode +1))
+(setq-default truncate-lines t)
+(set-display-table-slot standard-display-table 0 ?›)
