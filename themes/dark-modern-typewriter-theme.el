@@ -29,158 +29,153 @@
                              real-faces)))
                  faces-map)))
 
-(defun default-with (&rest spec)
-  "Define a face with SPEC that inherits from default and can be extended."
-  (mapcar (lambda (props) (append props '(:inherit default))) spec))
-
-
 (deftheme dark-modern-typewriter
   "A sparsely but tastefully coloured dark theme.")
 
-(let* ((theme-strong-highlight "cornsilk3")
+(let* ((theme-default-color "antiquewhite2")
+       (theme-strong-highlight "antiquewhite3")
        (theme-medium-highlight "gray20")
        (theme-weak-highlight "gray11")
        (theme-error-color "red")
-       (theme-primary-accent "chocolate2")
-       (theme-secondary-accent "dodger blue")
-       (theme-strong-diminuitive "olivedrab3")
-       (theme-weak-diminuitive "cornsilk4")
+       (theme-primary-accent "sienna3")
+       (theme-secondary-accent "dodgerblue")
+       (theme-strong-diminuitive "palegreen3")
+       (theme-weak-diminuitive "peachpuff4")
        
        (theme-faces
         (from-faces-map
-         (list
-          ;; Set the default face, which is inherited by most things
-          '(((t
-              :background "black" :foreground "cornsilk2"
-              :foundry "b&h" :family "Luxi Mono" :height 135))
+         `(
+           ;; Set the default face, which is inherited by most things
+           (((t :background "black" :foreground ,theme-default-color
+                :foundry "b&h" :family "Luxi Mono" :height 135))
             default)
 
-          ;; Faces that inherit the pure default face and nothing else
-          (cons (default-with '(t))
-                '(org-level-1
-                  org-scheduled-today
-                  org-agenda-date
-                  org-agenda-date-today
-                  org-agenda-date-weekend
-                  font-lock-builtin-face
-                  font-lock-constant-face
-                  font-lock-variable-name-face
-                  font-lock-function-name-face
-                  message-header-subject
-                  fringe
-                  whitespace-hspace
-                  whitespace-newline
-                  whitespace-tab
-                  whitespace-space))
+           ;; Faces that inherit the pure default face and nothing else
+           (((t :foreground ,theme-default-color))
+            org-level-1
+            org-level-2
+            org-level-3
+            org-level-4
+            org-scheduled-today
+            org-agenda-date
+            org-agenda-date-today
+            org-agenda-date-weekend
+            font-lock-builtin-face
+            font-lock-constant-face
+            font-lock-variable-name-face
+            font-lock-function-name-face
+            message-header-subject
+            fringe
+            whitespace-hspace
+            whitespace-newline
+            whitespace-tab
+            whitespace-space)
 
-          (cons (default-with `(t :weight bold))
-                '(undo-tree-visualizer-active-branch-face))
-          
-          (cons (default-with `(t :inverse-video t))
-                '(region))
+           (((t :weight bold))
+            undo-tree-visualizer-active-branch-face)
+           
+           (((t :inverse-video t))
+            region)
 
-          (cons (default-with `(t :background ,theme-strong-highlight
-                                  :foreground "black"))
-                '(mode-line))
+           (((t :background ,theme-strong-highlight
+                :foreground "black"))
+            mode-line)
 
-          (cons (default-with `(t :background ,theme-medium-highlight))
-                '(show-paren-match))
-          
-          (cons (default-with `(t :background ,theme-weak-highlight))
-                '(highlight
-                  widget-field))
-          
-          (cons (default-with `(t :foreground ,theme-error-color
-                                  :weight bold))
-                '(error
-                  show-paren-mismatch
-                  column-enforce-face
-                  whitespace-trailing
-                  isearch-fail
-                  flycheck-fringe-error))
-          
-          (cons (default-with `(t :underline
-                                  (:color ,theme-error-color :style wave)))
-                '(flycheck-error))
-          
-          (cons (default-with `(t :foreground ,theme-primary-accent))
-                '(warning
-                  org-level-2
-                  org-scheduled-previously
-                  flycheck-fringe-warning
-                  undo-tree-visualizer-current-face
-                  notmuch-search-matching-authors
-                  notmuch-search-non-matching-authors))
-          
-          (cons (default-with `(t :underline
-                                  (:color ,theme-primary-accent :style wave)))
-                '(flycheck-warning))
-          
-          (cons (default-with `(t :foreground ,theme-primary-accent
-                                  :weight bold))
-                '(minibuffer-prompt
-                  font-lock-keyword-face
-                  font-lock-warning-face
-                  fic-face
-                  fic-author-face))
+           (((t :background ,theme-medium-highlight))
+            show-paren-match)
+           
+           (((t :background ,theme-weak-highlight))
+            highlight
+            widget-field)
+           
+           (((t :foreground ,theme-error-color
+                :weight bold))
+            error
+            show-paren-mismatch
+            column-enforce-face
+            whitespace-trailing
+            isearch-fail
+            flycheck-fringe-error)
+           
+           (((t :underline
+                (:color ,theme-error-color :style wave)))
+            flycheck-error)
+           
+           (((t :foreground ,theme-primary-accent))
+            warning
+            org-scheduled-previously
+            flycheck-fringe-warning
+            undo-tree-visualizer-current-face
+            notmuch-search-matching-authors
+            notmuch-search-non-matching-authors)
+           
+           (((t :underline
+                (:color ,theme-primary-accent :style wave)))
+            font-lock-warning-face
+            flycheck-warning)
+           
+           (((t :foreground ,theme-primary-accent
+                :weight bold))
+            minibuffer-prompt
+            font-lock-keyword-face
+            fic-face
+            fic-author-face)
 
-          (cons (default-with `(t :foreground ,theme-primary-accent
-                                  :inverse-video t))
-                '(match))
-          
-          (cons (default-with `(t :foreground ,theme-secondary-accent))
-                '(org-level-3
-                  org-priority
-                  org-agenda-structure
-                  font-lock-type-face
-                  flycheck-fringe-info
-                  notmuch-tag-face
-                  notmuch-tree-match-tag-face
-                  notmuch-tree-no-match-tag-face))
-          
-          (cons (default-with `(t :underline
-                                  (:color ,theme-secondary-accent :style wave)))
-                '(flycheck-info))
-          
-          (cons (default-with `(t :foreground ,theme-secondary-accent
-                                  :underline t))
-                '(link
-                  button
-                  org-link))
+           (((t :foreground ,theme-primary-accent
+                :inverse-video t))
+            match)
+           
+           (((t :foreground ,theme-secondary-accent))
+            org-priority
+            org-agenda-structure
+            font-lock-type-face
+            flycheck-fringe-info
+            notmuch-tag-face
+            notmuch-tree-match-tag-face
+            notmuch-tree-no-match-tag-face)
+           
+           (((t :underline
+                (:color ,theme-secondary-accent :style wave)))
+            flycheck-info)
+           
+           (((t :foreground ,theme-secondary-accent
+                :underline t))
+            link
+            button
+            org-link)
 
-          (cons (default-with `(t :foreground ,theme-secondary-accent
-                                  :inverse-video t))
-                '(lazy-highlight))
-          
-          (cons (default-with `(t :foreground ,theme-strong-diminuitive))
-                '(org-level-4
-                  font-lock-string-face
-                  undo-tree-visualizer-unmodified-face
-                  notmuch-wash-cited-text))
+           (((t :foreground ,theme-secondary-accent
+                :inverse-video t))
+            lazy-highlight)
+           
+           (((t :foreground ,theme-strong-diminuitive))
+            font-lock-string-face
+            undo-tree-visualizer-unmodified-face
+            notmuch-wash-cited-text)
 
-          (cons (default-with `(t :foreground ,theme-strong-diminuitive
-                                  :inverse-video t))
-                '(escape-glyph))
-          
-          (cons (default-with `(t :foreground ,theme-weak-diminuitive))
-                '(mode-line-inactive
-                  org-specissal-keyword
-                  org-scheduled
-                  org-agenda-done
-                  font-lock-comment-face
-                  undo-tree-visualizer-default-face
-                  message-header-cc
-                  message-header-name
-                  message-header-other
-                  message-header-to
-                  message-mml
-                  notmuch-message-summary-face
-                  notmuch-search-count
-                  notmuch-search-date
-                  notmuch-tree-match-author-face
-                  notmuch-tree-match-date-face
-                  notmuch-tree-no-match-author-face
-                  notmuch-tree-no-match-date-face))))))
+           (((t :foreground ,theme-strong-diminuitive
+                :inverse-video t))
+            escape-glyph)
+           
+           (((t :foreground ,theme-weak-diminuitive))
+            mode-line-inactive
+            org-specissal-keyword
+            org-scheduled
+            org-agenda-done
+            font-lock-comment-face
+            undo-tree-visualizer-default-face
+            message-header-cc
+            message-header-name
+            message-header-other
+            message-header-to
+            message-mml
+            notmuch-message-summary-face
+            notmuch-search-count
+            notmuch-search-date
+            notmuch-tree-match-author-face
+            notmuch-tree-match-date-face
+            notmuch-tree-no-match-author-face
+            notmuch-tree-no-match-date-face)))))
 
   (apply #'custom-theme-set-faces
          'dark-modern-typewriter

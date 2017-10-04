@@ -2,7 +2,7 @@
   "Make sure the modeline and cursor is updated with god mode state."
   (if (or god-local-mode buffer-read-only)
       (progn (setq cursor-type 'box)
-             (set-face-background 'mode-line "chocolate2"))
+             (set-face-background 'mode-line "sienna3"))
     (progn (setq cursor-type 'bar)
            (mapc #'enable-theme custom-enabled-themes))))
 
