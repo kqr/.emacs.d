@@ -37,23 +37,25 @@
 (deftheme dark-modern-typewriter
   "A sparsely but tastefully coloured dark theme.")
 
-(let* ((theme-strong-highlight "gray20")
+(let* ((theme-strong-highlight "cornsilk3")
+       (theme-medium-highlight "gray20")
        (theme-weak-highlight "gray11")
        (theme-error-color "red")
-       (theme-primary-accent "dark orange")
+       (theme-primary-accent "chocolate2")
        (theme-secondary-accent "dodger blue")
        (theme-strong-diminuitive "olivedrab3")
-       (theme-weak-diminuitive "dim gray")
+       (theme-weak-diminuitive "cornsilk4")
        
        (theme-faces
         (from-faces-map
          (list
           ;; Set the default face, which is inherited by most things
           '(((t
-              :background "black" :foreground "AntiqueWhite2"
+              :background "black" :foreground "cornsilk2"
               :foundry "b&h" :family "Luxi Mono" :height 135))
             default)
-          
+
+          ;; Faces that inherit the pure default face and nothing else
           (cons (default-with '(t))
                 '(org-level-1
                   org-scheduled-today
@@ -76,39 +78,49 @@
           
           (cons (default-with `(t :inverse-video t))
                 '(region))
-          
-          (cons (default-with `(t :background ,theme-strong-highlight))
-                '(mode-line
-                  show-paren-match))
 
+          (cons (default-with `(t :background ,theme-strong-highlight
+                                  :foreground "black"))
+                '(mode-line))
+
+          (cons (default-with `(t :background ,theme-medium-highlight))
+                '(show-paren-match))
+          
           (cons (default-with `(t :background ,theme-weak-highlight))
                 '(highlight
                   widget-field))
           
-          (cons (default-with `(t :foreground ,theme-error-color))
+          (cons (default-with `(t :foreground ,theme-error-color
+                                  :weight bold))
                 '(error
                   show-paren-mismatch
                   column-enforce-face
                   whitespace-trailing
                   isearch-fail
-                  flycheck-error
                   flycheck-fringe-error))
+          
+          (cons (default-with `(t :underline
+                                  (:color ,theme-error-color :style wave)))
+                '(flycheck-error))
           
           (cons (default-with `(t :foreground ,theme-primary-accent))
                 '(warning
                   org-level-2
                   org-scheduled-previously
-                  font-lock-keyword-face
-                  font-lock-warning-face
-                  flycheck-warning
                   flycheck-fringe-warning
                   undo-tree-visualizer-current-face
                   notmuch-search-matching-authors
                   notmuch-search-non-matching-authors))
-
+          
+          (cons (default-with `(t :underline
+                                  (:color ,theme-primary-accent :style wave)))
+                '(flycheck-warning))
+          
           (cons (default-with `(t :foreground ,theme-primary-accent
                                   :weight bold))
                 '(minibuffer-prompt
+                  font-lock-keyword-face
+                  font-lock-warning-face
                   fic-face
                   fic-author-face))
 
@@ -121,11 +133,14 @@
                   org-priority
                   org-agenda-structure
                   font-lock-type-face
-                  flycheck-info
                   flycheck-fringe-info
                   notmuch-tag-face
                   notmuch-tree-match-tag-face
                   notmuch-tree-no-match-tag-face))
+          
+          (cons (default-with `(t :underline
+                                  (:color ,theme-secondary-accent :style wave)))
+                '(flycheck-info))
           
           (cons (default-with `(t :foreground ,theme-secondary-accent
                                   :underline t))
@@ -149,7 +164,7 @@
           
           (cons (default-with `(t :foreground ,theme-weak-diminuitive))
                 '(mode-line-inactive
-                  org-special-keyword
+                  org-specissal-keyword
                   org-scheduled
                   org-agenda-done
                   font-lock-comment-face
@@ -183,6 +198,7 @@
 
   (custom-theme-set-variables
    'dark-modern-typewriter
+   '(cursor-type 'bar)
    '(org-priority-faces '((65 . theme-error-color)
                           (66 . theme-primary-accent)
                           (67 . theme-secondary-accent)
