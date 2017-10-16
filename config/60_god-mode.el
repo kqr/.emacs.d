@@ -10,7 +10,9 @@
         '(magit-mode
           magit-status-mode
           magit-popup-mode
+          magit-diff-mode
           org-agenda-mode
+          dired-mode
           notmuch-hello-mode
           notmuch-search-mode
           notmuch-show-mode

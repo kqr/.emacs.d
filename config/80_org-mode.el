@@ -1,7 +1,9 @@
+(unbind-key "<f4>")
+
 (use-package org
-  :bind (("C-c C-a" . org-agenda)
-         ("C-c C-c" . org-capture)
-         ("C-c C-o" . org-cycle-agenda-files)
+  :bind (("<f4> a" . org-agenda)
+         ("<f4> c" . org-capture)
+         ("<f4> o" . org-cycle-agenda-files)
          ("M-g" . org-agenda-redo))  ;; More convenient in God mode
   :mode ("\\.org\\'" . org-mode)
 

@@ -9,4 +9,3 @@
     (insert (concat "ls"))
     (eshell-send-input)))
 
-(bind-key (kbd "C-!") 'eshell-here)
