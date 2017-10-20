@@ -1,6 +1,9 @@
-(add-to-list 'load-path "config/libs/emacs-versor/lisp")
 
 (use-package versor
+  :ensure nil
+  :load-path "~/.emacs.d/config/libs/emacs-versor/lisp"
+  :pin manual
+
   :config
   (versor-setup
    'arrows
@@ -11,7 +14,6 @@
    'quiet-underlying)
 
   (customize-set-variable 'versor-auto-change-for-modes nil)
-  ;;  (customize-set-variable 'versor-change-cursor-color nil)
   (customize-set-variable 'versor-move-out-when-at-end nil)
   (customize-set-variable 'versor-level-wrap nil)
   (customize-set-variable 'versor-meta-level-wrap nil)

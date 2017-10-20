@@ -30,7 +30,9 @@
 (defun load-directory (dir)
   "Load all *.el files located in DIR."
   (let ((load-it
-	 (lambda (f) (load-file (concat (file-name-as-directory dir) f)))))
+	 (lambda (f)
+           (progn (message "Applying config file %s" f)
+                  (load-file (concat (file-name-as-directory dir) f))))))
     (mapc load-it (directory-files dir nil "\\.el$"))))
 
 (package-initialize)

@@ -1,6 +1,8 @@
 (unbind-key "<f4>")
 
-(use-package org
+(add-to-list 'package-archives'("org" . "http://orgmode.org/elpa/") t)
+
+(use-package org-plus-contrib
   :bind (("<f4> a" . org-agenda)
          ("<f4> c" . org-capture)
          ("<f4> o" . org-cycle-agenda-files)
@@ -9,6 +11,8 @@
 
   :defines org-capture-templates
   :config
+  (customize-set-variable 'org-export-backends '(html s5))
+  
   (setq org-todo-keywords '((sequence "NEW" "HOLD" "TODO" "|" "DONE" "CANCELED")))
   (setq org-todo-keyword-faces
         '(("NEW" . (:foreground "red" :weight bold))
