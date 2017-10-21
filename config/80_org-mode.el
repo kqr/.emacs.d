@@ -10,9 +10,11 @@
   :mode ("\\.org\\'" . org-mode)
 
   :defines org-capture-templates
-  :config
-  (customize-set-variable 'org-export-backends '(html s5))
+
+  :init
+  (setq org-export-backends '(html s5))
   
+  :config
   (setq org-todo-keywords '((sequence "NEW" "HOLD" "TODO" "|" "DONE" "CANCELED")))
   (setq org-todo-keyword-faces
         '(("NEW" . (:foreground "red" :weight bold))
