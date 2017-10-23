@@ -1,3 +1,5 @@
+(unbind-key "<f2>")
+
 (add-to-list 'package-archives
              '("sunrise" . "http://joseito.republika.pl/sunrise-commander/"))
 
