@@ -553,15 +553,31 @@ With optional LEVEL-OFFSET, add that to the level first."
       (setq versor-level
 	    (if versor-level-wrap max 1)))))
 
+(defun versor-meta-level-bounds ()
+  "Find the first and last valid meta level in the current major mode."
+  (let ((first -1)
+        (last -1))
+    (dotimes (meta-level (length moves-moves))
+      (when (versor-meta-dimension-valid-for-mode
+             (aref (aref moves-moves meta-level) 0)
+             major-mode)
+        (when (= last -1) (setq first meta-level))
+        (setq last meta-level)))
+    (cons first last)))
+
 (defun versor-trim-meta-level ()
   "Ensure that `versor-meta-level' is in range."
-  (let ((max (1- (length moves-moves))))
+  (message "current meta level %s" versor-meta-level)
+  (let ((min (car (versor-meta-level-bounds)))
+        (max (cdr (versor-meta-level-bounds))))
     (when (> versor-meta-level max)
+      (message "meta level > max, trimming")
       (setq versor-meta-level
-	    (if versor-meta-level-wrap 1 max)))
-    (when (< versor-meta-level 1)
+            (if versor-meta-level-wrap min max)))
+    (when (< versor-meta-level min)
+      (message "meta level < min, trimming")
       (setq versor-meta-level
-	    (if versor-meta-level-wrap max 1)))))
+            (if versor-meta-level-wrap max min)))))
 
 (defvar versor-meta-dimensions-valid-for-modes
   '(((emacs-lisp-mode lisp-mode scheme-mode lisp-interaction-mode)

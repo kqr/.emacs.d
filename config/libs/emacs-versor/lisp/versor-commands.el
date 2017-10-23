@@ -252,8 +252,8 @@ comment and doing \(funcall function 1) until not in a comment."
 		 major-mode))
       (if (and (interactive-p)
 	       versor-reversed)
-	  (decf versor-meta-level)
-	(incf versor-meta-level))
+	  (incf versor-meta-level)
+	(decf versor-meta-level))
       (versor-trim-meta-level))
     (versor-trim-level)
     (versor-set-status-display

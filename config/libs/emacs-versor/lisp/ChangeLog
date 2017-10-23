@@ -1,3 +1,8 @@
+2016-10-23  Christoffer Stjernlöf  <k@rdw.se>
+
+	* A couple of bug fixes relating to changing meta levels when
+	some meta levels are invalid for the current major mode.
+
 2008-01-22  John Sturdy  <jcgs@ezekiel.csis.ul.ie>
 
 	* languide-c-like.el (class): Start definition of C++ class
