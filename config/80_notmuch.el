@@ -17,18 +17,26 @@
   (setq sendmail-program "/usr/bin/msmtp")
 
   (setq notmuch-archive-tags '("-inbox" "-unread"))
+
+  (defun notmuch-toggle-deleted-tag (&optional beg end)
+    (interactive (notmuch-search-interactive-region))
+    (if (member "deleted" (notmuch-search-get-tags))
+        (notmuch-search-tag (list "-deleted") beg end)
+      (notmuch-search-tag (list "+deleted") beg end)))
+  (define-key notmuch-search-mode-map "k" #'notmuch-toggle-deleted-tag)
+
   (setq notmuch-hello-sections
-	'(notmuch-hello-insert-saved-searches
-	  notmuch-hello-insert-search
-	  notmuch-hello-insert-recent-searches
-	  notmuch-hello-insert-alltags
-	  notmuch-hello-insert-footer))
+        '(notmuch-hello-insert-saved-searches
+          notmuch-hello-insert-search
+          notmuch-hello-insert-recent-searches
+          notmuch-hello-insert-alltags
+          notmuch-hello-insert-footer))
   (setq notmuch-poll-script nil)
 
   (setq notmuch-saved-searches
-	'((:name "inbox" :query "tag:inbox" :key "i")
-	  (:name "sent" :query "tag:sent" :key "s")
-	  (:name "all mail" :query "*" :key "a")))
+        '((:name "inbox" :query "tag:inbox" :key "i")
+          (:name "sent" :query "tag:sent" :key "s")
+          (:name "all mail" :query "*" :key "a")))
 
   (setq notmuch-search-line-faces '(("unread" :weight bold)))
 
