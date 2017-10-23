@@ -6,7 +6,6 @@
   :bind (("<f4> a" . org-agenda)
          ("<f4> c" . org-capture)
          ("<f4> o" . org-cycle-agenda-files)
-         ("M-g" . org-agenda-redo))  ;; More convenient in God mode
   :mode ("\\.org\\'" . org-mode)
 
   :defines org-capture-templates
