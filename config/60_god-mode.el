@@ -13,6 +13,7 @@
           magit-diff-mode
           org-agenda-mode
           dired-mode
+          sr-mode
           notmuch-hello-mode
           notmuch-search-mode
           notmuch-show-mode
