@@ -1,10 +1,11 @@
-(use-package god-mode :defines god-mode-isearch-map
+(use-package god-mode :diminish (god-local-mode . " G")
+  :defines god-mode-isearch-map
   :bind (("<escape>" . god-local-mode)
          :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
          :map god-mode-isearch-map ("<escape>" . god-mode-isearch-disable))
 
   :demand t
-  
+
   :init
   (setq god-exempt-major-modes
         '(magit-mode
@@ -19,7 +20,7 @@
           notmuch-show-mode
           notmuch-tree-mode))
 
-  
+
   (setq god-exempt-predicates
         '(god-exempt-mode-p))
 

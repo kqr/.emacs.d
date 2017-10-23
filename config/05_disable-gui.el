@@ -9,6 +9,8 @@
 (menu-bar-mode -1)
 (blink-cursor-mode -1)
 (global-linum-mode -1)
-(setq-default inhibit-startup-screen t)
+
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message "")
 
 (require 'diminish)
