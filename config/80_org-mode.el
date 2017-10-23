@@ -5,7 +5,7 @@
 (use-package org-plus-contrib
   :bind (("<f4> a" . org-agenda)
          ("<f4> c" . org-capture)
-         ("<f4> o" . org-cycle-agenda-files)
+         ("<f4> o" . org-cycle-agenda-files))
   :mode ("\\.org\\'" . org-mode)
 
   :defines org-capture-templates
