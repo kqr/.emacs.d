@@ -22,6 +22,8 @@
 (package-initialize)
 
 (setq custom-file "~/.emacs.d/config/local/custom.el")
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
 (load custom-file)
 
 (customize-set-variable 'custom-theme-directory "~/.emacs.d/themes/")

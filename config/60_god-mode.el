@@ -15,6 +15,7 @@
           org-agenda-mode
           dired-mode
           sr-mode
+          Custom-mode
           notmuch-hello-mode
           notmuch-search-mode
           notmuch-show-mode

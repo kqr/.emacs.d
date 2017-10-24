@@ -18,7 +18,7 @@
        " "
        'mode-line-buffer-identification
        ":"
-       '(:eval (propertize "%l,%c (~ %P)"))
+       '(:eval (propertize "(%l,%c)"))
        " [%["
        '(:eval mode-name)
        " ("

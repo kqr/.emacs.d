@@ -118,6 +118,7 @@
                 :weight bold))
             minibuffer-prompt
             font-lock-keyword-face
+            org-todo
             fic-face
             fic-author-face)
 
@@ -161,6 +162,7 @@
             mode-line-inactive
             org-specissal-keyword
             org-scheduled
+            org-done
             org-agenda-done
             font-lock-comment-face
             undo-tree-visualizer-default-face
