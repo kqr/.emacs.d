@@ -10,6 +10,7 @@
 ;; - find a way to list the defines in current buffer?
 
 ;;; Code:
+;; Prevent the flash of black
 
 (defun load-directory (dir)
   "Load all *.el files located in DIR."

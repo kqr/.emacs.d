@@ -32,24 +32,39 @@
 (deftheme dark-modern-typewriter
   "A sparsely but tastefully coloured dark theme.")
 
-(let* ((theme-default-color "antiquewhite2")
-       (theme-strong-highlight "antiquewhite3")
-       (theme-medium-highlight "gray20")
-       (theme-weak-highlight "gray11")
+(let* ((theme-light-version? (equal 'light frame-background-mode))
+       (theme-default-color (if theme-light-version? "black" "antiquewhite2"))
+       (theme-background-color (if theme-light-version? "#fbf1e4" "black"))
+       (theme-strong-highlight (if theme-light-version? "antiquewhite4" "antiquewhite3"))
+       (theme-medium-highlight (if theme-light-version? "antiquewhite3" "gray20"))
+       (theme-weak-highlight (if theme-light-version? "antiquewhite2" "gray11"))
        (theme-error-color "red")
-       (theme-primary-accent "sienna3")
-       (theme-secondary-accent "dodgerblue")
-       (theme-strong-diminuitive "palegreen3")
+       (theme-primary-accent (if theme-light-version? "chocolate3" "sienna3"))
+       (theme-secondary-accent (if theme-light-version? "dodgerblue3" "dodgerblue"))
+       (theme-strong-diminuitive (if theme-light-version? "forest green" "palegreen3"))
        (theme-weak-diminuitive "peachpuff4")
        
        (theme-faces
         (from-faces-map
          `(
            ;; Set the default face, which is inherited by most things
-           (((t :background "black" :foreground ,theme-default-color
-                :foundry "b&h" :family "Luxi Mono" :height 135))
+           (((t :foundry "b&h" :family "Luxi Mono" :height 135)
+             :background ,theme-background-color
+             :foreground ,theme-default-color)
+            fixed-pitch)
+           (((t :foundry "unknown" :family "Whitman" :height 160
+                :background ,theme-background-color
+                :foreground ,theme-default-color))
+            variable-pitch
             default)
 
+           ;; Faces that necessarily use fixed pitch, even with variable default
+           (((t :inherit fixed-pitch))
+            org-table
+            org-code
+            org-block
+            org-block-background)
+           
            ;; Faces that inherit the pure default face and nothing else
            (((t :foreground ,theme-default-color))
             org-level-1
@@ -78,15 +93,15 @@
             region)
 
            (((t :background ,theme-strong-highlight
-                :foreground "black"))
+                :foreground ,theme-background-color))
             mode-line)
 
            (((t :background ,theme-medium-highlight))
-            show-paren-match)
+            show-paren-match
+            widget-field)
            
            (((t :background ,theme-weak-highlight))
-            highlight
-            widget-field)
+            highlight)
            
            (((t :foreground ,theme-error-color
                 :weight bold))

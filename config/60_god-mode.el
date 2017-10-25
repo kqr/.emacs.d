@@ -13,6 +13,7 @@
           magit-popup-mode
           magit-diff-mode
           org-agenda-mode
+          help-mode
           dired-mode
           sr-mode
           Custom-mode

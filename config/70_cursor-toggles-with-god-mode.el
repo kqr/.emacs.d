@@ -4,7 +4,7 @@
       (setq cursor-type 'box)
     (setq cursor-type 'bar))
   (if god-local-mode
-      (set-face-background 'mode-line "sienna3")
+      (set-face-background 'mode-line (face-attribute 'font-lock-type-face :foreground))
     (mapc #'enable-theme custom-enabled-themes)))
 
 (add-hook 'god-mode-enabled-hook 'god-mode-update-cursor)
