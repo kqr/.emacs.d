@@ -1,4 +1,4 @@
-;;; dark-modern-typewriter --- A sparsely but tastefully coloured dark theme.
+;;; modern-minik-theme --- A sparsely but tastefully coloured light/dark theme.
 ;;; Commentary:
 ;;
 ;; I've used a syntax highlighting theme similar to this since the beginning of
@@ -15,7 +15,7 @@
 ;;
 ;;; Code:
 
-(deftheme dark-modern-typewriter
+(deftheme modern-minik
   "A sparsely but tastefully coloured dark theme.")
 
 (defun from-faces-map (faces-map)
@@ -53,16 +53,13 @@
         (from-faces-map
          `(
            ;; Set the default face, which is inherited by most things
-           (((t :foundry "b&h" :family "Luxi Mono" :height 135)
-             :background ,theme-background-color
-             :foreground ,theme-default-color)
-            fixed-pitch)
-           (((t :foundry "unknown" :family "Whitman" :height 160
-                :background ,theme-background-color
-                :foreground ,theme-default-color))
+           (((t
+              :background ,theme-background-color
+              :foreground ,theme-default-color))
+            default
             variable-pitch
-            default)
-
+            fixed-pitch)
+           
            ;; Faces that necessarily use fixed pitch, even with variable default
            (((t :inherit fixed-pitch))
             org-table
@@ -85,7 +82,6 @@
             font-lock-variable-name-face
             font-lock-function-name-face
             message-header-subject
-            fringe
             whitespace-hspace
             whitespace-newline
             whitespace-tab
@@ -106,6 +102,7 @@
             widget-field)
 
            (((t :background ,theme-weak-highlight))
+            fringe
             highlight)
 
            (((t :foreground ,theme-error-color
@@ -203,7 +200,7 @@
             notmuch-tree-no-match-date-face)))))
 
   (apply #'custom-theme-set-faces
-         'dark-modern-typewriter
+         'modern-minik
          (append
           theme-faces
           '((isearch ((t :inherit match)))
@@ -215,11 +212,17 @@
             (ivy-minibuffer-match-face-4 ((t :inherit lazy-highlight)))
             (ivy-cursor ((t :inherit cursor)))
             (ivy-match-required-face ((t :inherit isearch-fail))))))
-
-
+  
   (custom-theme-set-variables
-   'dark-modern-typewriter
+   'modern-minik
    '(cursor-type 'bar)
+   
+   '(org-priority-faces '((65 . theme-error-color)
+                          (66 . theme-primary-accent)
+                          (67 . theme-secondary-accent)
+                          (68 . theme-strong-diminuitive)
+                          (69 . theme-weak-diminuitive)
+                          (70 . theme-weak-diminuitive)))
    
    '(mode-line-format (list "%e"
                             '(:eval (when (buffer-local-value buffer-read-only
@@ -238,14 +241,29 @@
                             " )"
                             '(:eval (propertize "%n"))
                             "%]]"
-                            #'mode-line-misc-info))
-   
-   '(org-priority-faces '((65 . theme-error-color)
-                          (66 . theme-primary-accent)
-                          (67 . theme-secondary-accent)
-                          (68 . theme-strong-diminuitive)
-                          (69 . theme-weak-diminuitive)
-                          (70 . theme-weak-diminuitive)))))
+                            #'mode-line-misc-info))))
 
-(provide-theme 'dark-modern-typewriter)
-;;; dark-modern-typewriter-theme.el ends here
+(defvar modern-minik-mode-icon-alist
+  "Alist mapping mode symbol to two strings – one unicode and one ascii.")
+
+(setq modern-minik-mode-icon-alist
+      '((auto-revert-mode (" ⭮" . " R"))
+        (whitespace-mode (" ⬚" . " W"))
+        (god-local-mode (" ⇪" . " G"))
+        (projectile-mode (" ⎘" . " P"))
+        (flycheck-mode (" ᪶" . " FC"))
+        (mml-mode (" 🖃" . " M"))
+        (aggressive-indent-mode (" ↹" . " AI"))
+        (auto-fill-function (" ∃" . " |"))
+        (isearch-mode (" 🔍" . " S"))))
+
+(defun modern-minik-mode-icon (mode)
+  "Return either unicode or ascii icon for MODE.
+Chooses based on `display-graphic-p'."
+  (let ((pick (if (display-graphic-p) #'car #'cdr))
+        (icon (alist-get mode modern-minik-mode-icon-alist)))
+    (apply pick icon)))
+
+(provide-theme 'modern-minik)
+
+;;; modern-minik-theme.el ends here

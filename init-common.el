@@ -5,7 +5,7 @@
 ;;; Code:
 
 (use-package emacs
-  :config
+  :init
   (setcq inhibit-startup-screen t)
   (setcq initial-scratch-message "")
   (setcq major-mode 'text-mode)
@@ -20,33 +20,48 @@
     (scroll-bar-mode -1)
     (tool-bar-mode -1)
     (tooltip-mode -1))
+  (menu-bar-mode -1)
+  (blink-cursor-mode -1)
 
   (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
   (add-to-list 'default-frame-alist '(tool-bar-lines . nil))
-  (menu-bar-mode -1)
-  (blink-cursor-mode -1)
+  (add-to-list 'initial-frame-alist '(left-fringe . 40))
+  (add-to-list 'default-frame-alist '(left-fringe . 40))
+  (add-to-list 'initial-frame-alist '(right-fringe . 80))
+  (add-to-list 'default-frame-alist '(right-fringe . 80))
+  
+  (setcq cursor-in-non-selected-windows nil)
   (global-linum-mode -1)
 
   ;; Enable column numbers in mode line (probably unnecessary with my
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
 
-  ;; We like our theme (although it's now become a light-modern-typesetting...)
+  (set-fontset-font "fontset-startup" 'unicode
+                    (font-spec :name "Whitman" :size 16.0))
+  (set-fontset-font "fontset-default" 'unicode
+                    (font-spec :name "Symbola" :size 16.0))
+  (add-to-list 'initial-frame-alist '(line-spacing . 1))
+  (add-to-list 'default-frame-alist '(line-spacing . 1))
+  
+  ;; We like our theme (although it's now become a light-modern-thing...)
   (setcq frame-background-mode 'light)
-  (load-theme 'dark-modern-typewriter)
+  (load-theme 'modern-minik)
 
+  ;; Set a column limit at 80 characters  
+  (setcq fill-column 80)
   ;; Don't soft wrap lines, simply let them extend beyond the window width
   (setcq truncate-lines t)
   (set-display-table-slot standard-display-table 0 ?›)
+  ;; Automatically hard-wrap when text extends beyond fill column
+  (auto-fill-mode)
+  (diminish 'auto-fill-function)
 
   ;; Copy stuff to the X11 primary selection
   (setcq select-enable-primary t)
 
   ;; Make available smaller changes in text size
   (setcq text-scale-mode-step 1.05)
-
-  ;; Don't automatically reload files from disk without asking
-  (global-auto-revert-mode -1)
 
   ;; Focus on newly opened help windows
   (setcq help-window-select t)
@@ -84,7 +99,6 @@
 
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :init
-  (setcq fill-column 80)
   (global-column-enforce-mode +1))
 
 
@@ -94,8 +108,8 @@
   (setcq fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 
 
-;; Highlight the stuff between matching parentheses
-;; Currently disabled because versor-mode does this so much better
+;; Highlight the stuff between matching parentheses ;; Currently disabled
+;; because versor-mode does this so much better
 (use-package paren
   :disabled
   :config
@@ -117,12 +131,17 @@
   (setcq c-basic-offset 4))
 
 
+(use-package autorevert :config
+  ;; Don't automatically reload files from disk without asking
+  (global-auto-revert-mode -1))
+
+
 (use-package aggressive-indent :diminish aggressive-indent-mode :config
   (electric-indent-mode -1)
   (global-aggressive-indent-mode +1))
 
 
-(use-package whitespace :diminish " W" :bind
+(use-package whitespace :bind
   ("C-=" . whitespace-mode)
 
   :init
@@ -190,7 +209,7 @@
 
 ;; Modal editing *is* the greatest. This reduces hand-strain in an Emacs
 ;; default friendly sort of way. Very cool, actually.
-(use-package god-mode :diminish (god-local-mode . " G")
+(use-package god-mode
   :defines god-mode-isearch-map
   :bind (("<escape>" . god-local-mode)
          :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
@@ -242,14 +261,16 @@
 
 
 (use-package tab-as-escape :diminish tab-as-escape-mode
-  :load-path "~/.emacs.d/libs"
+  :ensure nil :load-path "~/.emacs.d/libs"
   :config
+  (require 'tab-as-escape)
   (tab-as-escape-mode +1))
 
 
 (use-package versor
-  :load-path "~/.emacs.d/config/libs/emacs-versor/lisp"
+  :ensure nil :load-path "~/.emacs.d/config/libs/emacs-versor/lisp"
   :config
+  (require 'versor)
   (setcq versor-auto-change-for-modes nil)
   (setcq versor-move-out-when-at-end nil)
   (setcq versor-level-wrap nil)
@@ -388,13 +409,16 @@
   (setcq notmuch-show-indent-messages-width 4))
 
 
-(use-package projectile :diminish " P" :config
+(use-package projectile
+  :config
   (projectile-mode)
   (use-package counsel-projectile :config
     (counsel-projectile-on)))
 
-
-
+;; We do tihs here because apparently use-package will override it otherwise
+(dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
+  (unless (member mode '(flycheck-mode auto-indent-mode auto-fill-function))
+    (diminish mode (modern-minik-mode-icon mode))))
 
 
 
