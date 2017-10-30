@@ -84,19 +84,20 @@ Given OLD-BUFFER as a calling convention, but doesn't use it."
   (when versor-per-buffer
     (condition-case evar
 	(progn
-	  (save-excursion
-	    (set-buffer old-buffer)
-	    (setq versor-this-buffer-meta-level versor-meta-level
-		  versor-this-buffer-level versor-level))
-	  (when (numberp versor-this-buffer-meta-level)
-	    (setq versor-meta-level versor-this-buffer-meta-level)
-	    (versor-trim-meta-level))
-	  (when (numberp versor-this-buffer-level)
-	    (setq versor-level versor-this-buffer-level)
-	    (versor-trim-level))
-	  (versor-set-status-display nil nil nil t))
+          (when (get-buffer old-buffer)
+            (save-excursion
+              (set-buffer old-buffer)
+              (setq versor-this-buffer-meta-level versor-meta-level
+                    versor-this-buffer-level versor-level)))
+          (when (numberp versor-this-buffer-meta-level)
+            (setq versor-meta-level versor-this-buffer-meta-level)
+            (versor-trim-meta-level))
+          (when (numberp versor-this-buffer-level)
+            (setq versor-level versor-this-buffer-level)
+            (versor-trim-level))
+          (versor-set-status-display nil nil nil t))
       (error (message "error %S in versor-buffer-change-function" evar)
-	     nil))))
+             nil))))
 
 (defun versor-display-modal-levels (&optional label marked)
   "Display which levels are currently used for each mode.

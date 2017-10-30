@@ -13,7 +13,7 @@
   :defines org-capture-templates
 
   :init
-  (customize-set-variable 'org-export-backends '(html s5))
+  (customize-set-variable 'org-export-backends '(org html s5 publish))
   
   :config
   (customize-set-variable
@@ -27,6 +27,8 @@
      ("DONE" . (:foreground "olivedrab3" :weight bold))
      ("HOLD" . (:foreground "dodger blue" :weight bold))
      ("CANCELED" . (:foreground "dim grey" :weight bold))))
+
+  (customize-set-variable 'org-todo-repeat-to-state "TODO")
   
   (customize-set-variable 'org-lowest-priority ?F)
   (customize-set-variable 'org-default-priority ?D)

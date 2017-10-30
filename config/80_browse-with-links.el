@@ -1,2 +1,1 @@
-(setq-default browse-url-browser-function 'browse-url-generic)
-(setq-default browse-url-generic-program "links")
+(customize-set-variable browse-url-browser-function #'eww)

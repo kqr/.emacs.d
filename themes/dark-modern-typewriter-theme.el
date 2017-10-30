@@ -167,7 +167,8 @@
            (((t :foreground ,theme-strong-diminuitive))
             font-lock-string-face
             undo-tree-visualizer-unmodified-face
-            notmuch-wash-cited-text)
+            notmuch-wash-cited-text
+            message-cited-text)
 
            (((t :foreground ,theme-strong-diminuitive
                 :inverse-video t))
@@ -184,6 +185,8 @@
             message-header-cc
             message-header-name
             message-header-other
+            message-header-xheader
+            message-separator
             message-header-to
             message-mml
             notmuch-message-summary-face
