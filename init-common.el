@@ -37,12 +37,13 @@
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
 
-  (set-fontset-font "fontset-startup" 'unicode
-                    (font-spec :name "Whitman" :size 16.0))
-  (set-fontset-font "fontset-default" 'unicode
-                    (font-spec :name "Symbola" :size 16.0))
-  (add-to-list 'initial-frame-alist '(line-spacing . 1))
-  (add-to-list 'default-frame-alist '(line-spacing . 1))
+  (when (display-graphic-p)
+    (set-fontset-font "fontset-startup" 'unicode
+                      (font-spec :name "Whitman" :size 16.0))
+    (set-fontset-font "fontset-default" 'unicode
+                      (font-spec :name "Symbola" :size 16.0))
+    (add-to-list 'initial-frame-alist '(line-spacing . 1))
+    (add-to-list 'default-frame-alist '(line-spacing . 1)))
   
   ;; We like our theme (although it's now become a light-modern-thing...)
   (setcq frame-background-mode 'light)
