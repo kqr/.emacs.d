@@ -84,7 +84,7 @@ Given OLD-BUFFER as a calling convention, but doesn't use it."
   (when versor-per-buffer
     (condition-case evar
 	(progn
-          (when (get-buffer old-buffer)
+          (when (and (bound-and-true-p old-buffer) (get-buffer old-buffer))
             (save-excursion
               (set-buffer old-buffer)
               (setq versor-this-buffer-meta-level versor-meta-level

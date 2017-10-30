@@ -1,22 +1,22 @@
 ;;; dark-modern-typewriter --- A sparsely but tastefully coloured dark theme.
 ;;; Commentary:
-;;;
-;;; I've used a syntax highlighting theme similar to this since the beginning of
-;;; time.  The primary motivating underlying idea is that syntax highlighting
-;;; *isn't actually that great*.  It may help with discerning the code
-;;; structure, but beyond that it is simply in the way and distracting you from
-;;; reading the code.
-;;;
-;;; At the start, only comments and strings had their own colour, because they
-;;; can be very irrelevant to the logic and just prevent you from seeing what's
-;;; important.  After a while, I decided to give keywords and types their own
-;;; colour as well, because that helps with showing you the code structure.
-;;;
-;;; Other than that, important text should use the default face, and less
-;;; important text should use a darker gray to disappear into the shadows.
-;;;
+;;
+;; I've used a syntax highlighting theme similar to this since the beginning of
+;; time.  The underlying idea is that syntax highlighting
+;; *isn't actually that great*.  It may help with discerning the code
+;; structure, but beyond that it is simply in the way and distracting you from
+;; reading the code.
+;;
+;; This is why only strings and comments (and lately, keywords and type names)
+;; get their own highlighting colour.
+;;
+;; Other than that, important text should use the default face, and less
+;; important text should use a darker gray to disappear into the shadows.
+;;
 ;;; Code:
 
+(deftheme dark-modern-typewriter
+  "A sparsely but tastefully coloured dark theme.")
 
 (defun from-faces-map (faces-map)
   "Convert FACES-MAP into the correct faces spec for theme-set-faces."
@@ -29,21 +29,26 @@
                              real-faces)))
                  faces-map)))
 
-(deftheme dark-modern-typewriter
-  "A sparsely but tastefully coloured dark theme.")
+(defun buffer-status-indicator ()
+  "Indicate buffer status with letters instead of symbols."
+  (if (buffer-local-value buffer-read-only (window-buffer))
+      "(read-only) "
+    (if (buffer-modified-p)
+        "(***) "
+      " ")))
 
-(let* ((theme-light-version? (equal 'light frame-background-mode))
-       (theme-default-color (if theme-light-version? "black" "antiquewhite2"))
-       (theme-background-color (if theme-light-version? "#fbf1e4" "black"))
-       (theme-strong-highlight (if theme-light-version? "antiquewhite4" "antiquewhite3"))
-       (theme-medium-highlight (if theme-light-version? "antiquewhite3" "gray20"))
-       (theme-weak-highlight (if theme-light-version? "antiquewhite2" "gray11"))
+(let* ((light? (equal 'light frame-background-mode))
+       (theme-default-color (if light? "black" "antiquewhite2"))
+       (theme-background-color (if light? "#fbf1e4" "black"))
+       (theme-strong-highlight (if light? "antiquewhite4" "antiquewhite3"))
+       (theme-medium-highlight (if light? "antiquewhite3" "gray20"))
+       (theme-weak-highlight (if light? "antiquewhite2" "gray11"))
        (theme-error-color "red")
-       (theme-primary-accent (if theme-light-version? "chocolate3" "sienna3"))
-       (theme-secondary-accent (if theme-light-version? "dodgerblue3" "dodgerblue"))
-       (theme-strong-diminuitive (if theme-light-version? "forest green" "palegreen3"))
+       (theme-primary-accent (if light? "chocolate3" "sienna3"))
+       (theme-secondary-accent (if light? "dodgerblue3" "dodgerblue"))
+       (theme-strong-diminuitive (if light? "forest green" "palegreen3"))
        (theme-weak-diminuitive "peachpuff4")
-       
+
        (theme-faces
         (from-faces-map
          `(
@@ -64,7 +69,7 @@
             org-code
             org-block
             org-block-background)
-           
+
            ;; Faces that inherit the pure default face and nothing else
            (((t :foreground ,theme-default-color))
             org-level-1
@@ -88,7 +93,7 @@
 
            (((t :weight bold))
             undo-tree-visualizer-active-branch-face)
-           
+
            (((t :inverse-video t))
             region)
 
@@ -99,10 +104,10 @@
            (((t :background ,theme-medium-highlight))
             show-paren-match
             widget-field)
-           
+
            (((t :background ,theme-weak-highlight))
             highlight)
-           
+
            (((t :foreground ,theme-error-color
                 :weight bold))
             error
@@ -111,11 +116,11 @@
             whitespace-trailing
             isearch-fail
             flycheck-fringe-error)
-           
+
            (((t :underline
                 (:color ,theme-error-color :style wave)))
             flycheck-error)
-           
+
            (((t :foreground ,theme-primary-accent))
             warning
             org-scheduled-previously
@@ -123,12 +128,12 @@
             undo-tree-visualizer-current-face
             notmuch-search-matching-authors
             notmuch-search-non-matching-authors)
-           
+
            (((t :underline
                 (:color ,theme-primary-accent :style wave)))
             font-lock-warning-face
             flycheck-warning)
-           
+
            (((t :foreground ,theme-primary-accent
                 :weight bold))
             minibuffer-prompt
@@ -140,7 +145,7 @@
            (((t :foreground ,theme-primary-accent
                 :inverse-video t))
             match)
-           
+
            (((t :foreground ,theme-secondary-accent))
             org-priority
             org-agenda-structure
@@ -149,11 +154,11 @@
             notmuch-tag-face
             notmuch-tree-match-tag-face
             notmuch-tree-no-match-tag-face)
-           
+
            (((t :underline
                 (:color ,theme-secondary-accent :style wave)))
             flycheck-info)
-           
+
            (((t :foreground ,theme-secondary-accent
                 :underline t))
             link
@@ -163,7 +168,7 @@
            (((t :foreground ,theme-secondary-accent
                 :inverse-video t))
             lazy-highlight)
-           
+
            (((t :foreground ,theme-strong-diminuitive))
             font-lock-string-face
             undo-tree-visualizer-unmodified-face
@@ -173,7 +178,7 @@
            (((t :foreground ,theme-strong-diminuitive
                 :inverse-video t))
             escape-glyph)
-           
+
            (((t :foreground ,theme-weak-diminuitive))
             mode-line-inactive
             org-specissal-keyword
@@ -211,9 +216,30 @@
             (ivy-cursor ((t :inherit cursor)))
             (ivy-match-required-face ((t :inherit isearch-fail))))))
 
+
   (custom-theme-set-variables
    'dark-modern-typewriter
    '(cursor-type 'bar)
+   
+   '(mode-line-format (list "%e"
+                            '(:eval (when (buffer-local-value buffer-read-only
+                                                              (window-buffer))
+                                      "(read-only)"))
+                            '(:eval (when (buffer-modified-p)
+                                      "(***)"))
+                            " "
+                            #'mode-line-buffer-identification
+                            ":"
+                            '(:eval (propertize "(%l,%c)"))
+                            " [%["
+                            '(:eval mode-name)
+                            " ("
+                            '(:eval minor-mode-alist)
+                            " )"
+                            '(:eval (propertize "%n"))
+                            "%]]"
+                            #'mode-line-misc-info))
+   
    '(org-priority-faces '((65 . theme-error-color)
                           (66 . theme-primary-accent)
                           (67 . theme-secondary-accent)

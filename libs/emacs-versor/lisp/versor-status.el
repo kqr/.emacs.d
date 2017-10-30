@@ -71,9 +71,11 @@ buffer."
 	  (versor-level-name versor-level))
 	versor-current-meta-level-name
 	(versor-meta-level-name versor-meta-level))
-  (when (and (eq major-mode 'emacs-lisp-mode)
-	     (eq versor-level 1)
-	     (eq versor-meta-level 1))
+  ;; this looks like some sort of debug output so I'm going to disable it...
+  (when (and versor-display-underlying-commands
+             (eq major-mode 'emacs-lisp-mode)
+             (eq versor-level 1)
+             (eq versor-meta-level 1))
     (message "Warning! wrong dimensions for emacs-lisp-mode: %d:%d" versor-level versor-meta-level)
     (backtrace))
   ;; pop up a message (possibly multi-line)
