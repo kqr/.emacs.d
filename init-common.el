@@ -49,14 +49,15 @@
   (setcq frame-background-mode 'light)
   (load-theme 'modern-minik)
 
-  ;; Set a column limit at 80 characters  
+  ;; Set a column limit at 80 characters
   (setcq fill-column 80)
   ;; Don't soft wrap lines, simply let them extend beyond the window width
   (setcq truncate-lines t)
   (set-display-table-slot standard-display-table 0 ?›)
   ;; Automatically hard-wrap when text extends beyond fill column
-  (auto-fill-mode)
-  (diminish 'auto-fill-function)
+  (define-globalized-minor-mode global-auto-fill-mode auto-fill-mode
+    turn-on-auto-fill)
+  (global-auto-fill-mode +1)
 
   ;; Copy stuff to the X11 primary selection
   (setcq select-enable-primary t)
@@ -71,14 +72,14 @@
 
   (setcq user-full-name "Christoffer Stjernlöf")
   (setcq user-mail-address "k@rdw.se")
-  
+
   ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
   (unbind-key "C-z")
 
   ;; <f1> defaults to duplicate the functionality provided by C-h
   ;; By unbinding C-h we open it up to be used for better things
   (unbind-key "C-h")
-  
+
   ;; Allow us to keep ctrl held down for common chords
   (bind-key* "C-x C-0" #'delete-window)
   (bind-key* "C-x C-1" #'delete-other-windows)
@@ -99,7 +100,10 @@
 
 
 ;; Highlight text extending beyond 80 characters
-(use-package column-enforce-mode :diminish column-enforce-mode :init
+(use-package column-enforce-mode :diminish column-enforce-mode :config
+  ;; inherit fill-column
+  (setq column-enforce-column nil)
+  (setcq column-enforce-should-enable-p (lambda () t))
   (global-column-enforce-mode +1))
 
 
@@ -337,7 +341,7 @@
   :defines org-capture-templates
 
   :init
-  (setcq org-export-backends '(org html s5 publish))
+  (setcq org-export-backends '(org html latex s5 publish))
   
   :config
   (setcq org-todo-keywords
@@ -418,7 +422,7 @@
 
 ;; We do tihs here because apparently use-package will override it otherwise
 (dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
-  (unless (member mode '(flycheck-mode auto-indent-mode auto-fill-function))
+  (unless (member mode '(flycheck-mode))
     (diminish mode (modern-minik-mode-icon mode))))
 
 
