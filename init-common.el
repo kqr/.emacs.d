@@ -354,6 +354,18 @@
   (setcq org-export-backends '(org html latex s5 publish))
   
   :config
+  (require 'ox-latex)
+  (add-to-list
+   'org-latex-classes
+   '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")))
+
+  (setcar (nthcdr 4 org-emphasis-regexp-components) 8)
+  (org-set-emph-re
+   'org-emphasis-regexp-components
+   org-emphasis-regexp-components)
+  
   (setcq org-todo-keywords
          '((sequence "NEW" "HOLD" "TODO" "|" "DONE" "CANCELED")))
   
