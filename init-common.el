@@ -29,7 +29,7 @@
   (add-to-list 'default-frame-alist '(left-fringe . 40))
   (add-to-list 'initial-frame-alist '(right-fringe . 80))
   (add-to-list 'default-frame-alist '(right-fringe . 80))
-  
+
   (setcq cursor-in-non-selected-windows nil)
   (global-linum-mode -1)
 
@@ -49,16 +49,15 @@
   (setcq frame-background-mode 'light)
   (load-theme 'modern-minik)
 
-  ;; Set a column limit at 80 characters
-  (setcq fill-column 80)
   ;; Don't soft wrap lines, simply let them extend beyond the window width
   (setcq truncate-lines t)
   (set-display-table-slot standard-display-table 0 ?›)
-  ;; Automatically hard-wrap when text extends beyond fill column
-  (define-globalized-minor-mode global-auto-fill-mode auto-fill-mode
-    turn-on-auto-fill)
-  (global-auto-fill-mode +1)
-
+  
+  ;; Set a column limit at 80 characters
+  (setcq fill-column 80)
+  ;; Automatically wrap content extending beyond this
+  (setq-default auto-fill-function 'do-auto-fill)
+  
   ;; Copy stuff to the X11 primary selection
   (setcq select-enable-primary t)
 
@@ -102,7 +101,7 @@
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :config
   ;; inherit fill-column
-  (setq column-enforce-column nil)
+  (setcq column-enforce-column nil)
   (setcq column-enforce-should-enable-p (lambda () t))
   (global-column-enforce-mode +1))
 
@@ -223,22 +222,24 @@
   :demand t
 
   :init
-  (setcq god-exempt-predicates '(god-exempt-mode-p))
+  (setcq god-exempt-predicates '(god-exempt-mode-p god-special-mode-p))
   (setcq god-exempt-major-modes
-         '(magit-mode
-           magit-status-mode
-           magit-popup-mode
-           magit-diff-mode
-           org-agenda-mode
-           help-mode
+         '(org-agenda-mode
            dired-mode
-           sr-mode
+           doc-view-mode
+           magit-popup-mode
            Custom-mode
            notmuch-hello-mode
            notmuch-search-mode
            notmuch-show-mode
            notmuch-tree-mode))
-
+  
+  (defun god-exempt-mode-p ()
+    "Return non-nil if major-mode is exempt or inherits from exempt mode."
+    (or (memq major-mode god-exempt-major-modes)
+        (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
+                  god-exempt-major-modes)))
+  
   :config
   (god-mode-all)
   (require 'god-mode-isearch)
@@ -262,7 +263,16 @@
   (add-hook 'window-configuration-change-hook #'god-mode-update-cursor)
   (add-hook 'mode-selection-hook (lambda (_) (god-mode-update-cursor)))
   (add-hook 'buffer-selection-hook (lambda (_) (god-mode-update-cursor)))
-  (add-hook 'find-file-hook #'god-mode-update-cursor))
+  (add-hook 'find-file-hook #'god-mode-update-cursor)
+
+  (defun god-has-priority ()
+    "Try to ensure that god mode keeps priority over other minor modes."
+    (unless (and (consp (car minor-mode-map-alist))
+                 (eq (caar minor-mode-map-alist) 'god-local-mode-map))
+      (let ((godkeys (assq 'god-local-mode minor-mode-map-alist)))
+        (assq-delete-all 'god-local-mode minor-mode-map-alist)
+        (add-to-list 'minor-mode-map-alist godkeys))))
+  (add-hook 'god-mode-enabled-hook #'god-has-priority))
 
 
 (use-package tab-as-escape :diminish tab-as-escape-mode
