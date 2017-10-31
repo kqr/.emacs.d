@@ -169,6 +169,7 @@
            (((t :foreground ,theme-strong-diminuitive))
             font-lock-string-face
             undo-tree-visualizer-unmodified-face
+            org-footnote
             notmuch-wash-cited-text
             message-cited-text)
 
@@ -178,7 +179,7 @@
 
            (((t :foreground ,theme-weak-diminuitive))
             mode-line-inactive
-            org-specissal-keyword
+            org-special-keyword
             org-scheduled
             org-done
             org-agenda-done
