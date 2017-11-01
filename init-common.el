@@ -226,6 +226,8 @@
   (setcq god-exempt-major-modes
          '(org-agenda-mode
            dired-mode
+           sr-mode
+           eshell-mode
            doc-view-mode
            magit-popup-mode
            Custom-mode
