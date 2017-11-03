@@ -353,7 +353,7 @@
   :defines org-capture-templates
 
   :init
-  (setcq org-export-backends '(org html latex s5 publish))
+  (setcq org-export-backends '(org html s5 latex publish))
   
   :config
   (require 'ox-latex)
@@ -444,11 +444,15 @@
   (use-package counsel-projectile :config
     (counsel-projectile-on)))
 
+;; Being able to export nice html of code is neat
+(use-package htmlize
+  :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
+
+
 ;; We do tihs here because apparently use-package will override it otherwise
 (dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
   (unless (member mode '(flycheck-mode))
     (diminish mode (modern-minik-mode-icon mode))))
-
 
 
 ;;; init-common.el ends here
