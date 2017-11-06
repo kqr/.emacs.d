@@ -184,6 +184,10 @@
             org-done
             org-agenda-done
             font-lock-comment-face
+            outshine-level-1
+            outshine-level-2
+            outshine-level-3
+            outshine-level-4
             undo-tree-visualizer-default-face
             message-header-cc
             message-header-name
@@ -256,7 +260,8 @@
         (mml-mode (" 🖃" . " M"))
         (aggressive-indent-mode (" ↹" . " AI"))
         (auto-fill-function (" ∃" . " |"))
-        (isearch-mode (" 🔍" . " S"))))
+        (isearch-mode (" 🔍" . " S"))
+        (outline-minor-mode (" 𝈞" . " O"))))
 
 (defun modern-minik-mode-icon (mode)
   "Return either unicode or ascii icon for MODE.

@@ -4,6 +4,7 @@
 ;;
 ;;; Code:
 
+;;;; Built-in emacs config
 (use-package emacs
   :init
   (setcq inhibit-startup-screen t)
@@ -72,6 +73,8 @@
   (setcq user-full-name "Christoffer Stjernlöf")
   (setcq user-mail-address "k@rdw.se")
 
+;;;;; Basic keybind setup
+  
   ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
   (unbind-key "C-z")
 
@@ -107,8 +110,9 @@
 
 
 ;; Highlight FIXME TODO etc. in comments
-(use-package fic-mode :config
+(use-package fic-mode :init
   (fic-mode +1)
+  :config
   (setcq fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 
 
@@ -282,6 +286,14 @@
   :config
   (require 'tab-as-escape)
   (tab-as-escape-mode +1))
+
+
+(use-package outshine
+  :init
+  (defvar outline-minor-mode-prefix (kbd "C-#"))
+  :config
+  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+  (add-hook 'prog-mode-hook #'outline-minor-mode))
 
 
 (use-package versor
