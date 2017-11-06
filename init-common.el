@@ -86,12 +86,12 @@
   (bind-key* "C-x C-o" #'other-window)
 
   ;; This is neat to quickly go back to the previous buffer
-  (bind-key* "C-q" 'bury-buffer)
+  (bind-key* "C-q" #'kill-this-buffer)
   ;; But then we also need this...
-  (bind-key* "C-S-q" 'quoted-insert)
+  (bind-key* "C-S-q" #'quoted-insert)
 
   ;; Make "join this line to the one above" a bit more convenient to perform
-  (bind-key* "C-J" 'delete-indentation))
+  (bind-key* "C-J" #'delete-indentation))
 
 
 ;; Enable easy troubleshooting of init file
