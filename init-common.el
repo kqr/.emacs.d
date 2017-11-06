@@ -289,11 +289,18 @@
 
 
 (use-package outshine
+  :bind (("M-n" . outshine-narrow-to-subtree)
+         ("M-h" . widen))
   :init
-  (defvar outline-minor-mode-prefix (kbd "C-#"))
+  (setcq outline-minor-mode-prefix (kbd "C-#"))
   :config
   (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
-  (add-hook 'prog-mode-hook #'outline-minor-mode))
+  (add-hook 'prog-mode-hook #'outline-minor-mode)
+
+  ;; Allow narrowing to subtree even when inside subtree
+  (advice-add 'outshine-narrow-to-subtree :before
+              (lambda (&rest args) (unless (outline-on-heading-p t)
+                                     (outline-previous-visible-heading 1)))))
 
 
 (use-package versor
