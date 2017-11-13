@@ -3,8 +3,7 @@
 ;;; Commentary:
 ;;
 ;;; Code:
-
-;;;; Built-in emacs config
+;;; Built-in emacs config
 (use-package emacs
   :init
   (setcq inhibit-startup-screen t)
@@ -33,7 +32,6 @@
 
   (setcq cursor-in-non-selected-windows nil)
   (global-linum-mode -1)
-
   ;; Enable column numbers in mode line (probably unnecessary with my
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
@@ -73,8 +71,8 @@
   (setcq user-full-name "Christoffer Stjernlöf")
   (setcq user-mail-address "k@rdw.se")
 
-;;;;; Basic keybind setup
-  
+  ;;;;; Basic keybind setup
+
   ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
   (unbind-key "C-z")
 
@@ -97,10 +95,10 @@
   (bind-key* "C-J" #'delete-indentation))
 
 
-;; Enable easy troubleshooting of init file
+;;; External packages
+;;;; Enable easy troubleshooting of init file
 (use-package bug-hunter :commands bug-hunter-init-file)
-
-
+;;;; UI configuration should appear early
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :config
   ;; inherit fill-column
@@ -108,13 +106,12 @@
   (setcq column-enforce-should-enable-p (lambda () t))
   (global-column-enforce-mode +1))
 
-
 ;; Highlight FIXME TODO etc. in comments
 (use-package fic-mode :init
+  ;; This needs to be made globalized
   (fic-mode +1)
   :config
   (setcq fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
-
 
 ;; Highlight the stuff between matching parentheses ;; Currently disabled
 ;; because versor-mode does this so much better
@@ -128,181 +125,32 @@
   ;; This is in order for region to take priority over show-paren highlighting
   (setcq show-paren-priority -200))
 
-
 ;; Try to keep the buffer scrolled so the cursor is centered
 (use-package centered-cursor-mode :diminish centered-cursor-mode :config
   (global-centered-cursor-mode +1))
 
 
-(use-package cc-mode :config
-  (setcq c-default-style "stroustrup")
-  (setcq c-basic-offset 4))
 
-
-(use-package autorevert :config
-  ;; Don't automatically reload files from disk without asking
-  (global-auto-revert-mode -1))
-
-
-(use-package aggressive-indent :diminish aggressive-indent-mode :config
-  (electric-indent-mode -1)
-  (global-aggressive-indent-mode +1))
-
-
-(use-package whitespace :bind
-  ("C-=" . whitespace-mode)
-
-  :init
-  (defvar ws-show-paren-mode-active nil)
-  
-  :config
-  (defun toggle-showparen-with-whitespace (arg)
-    "Ensures show-paren-mode is off when whitespace-mode is turned on."
-    ;; Initialise variable
-    (unless (boundp 'ws-show-paren-mode-active)
-      (setq ws-show-paren-mode-active (bound-and-true-p show-paren-mode)))
-
-    ;; Do check
-    (if (not (bound-and-true-p whitespace-mode))
-        ;; Whitespace mode turned off
-        (when ws-show-paren-mode-active (show-paren-mode +1))
-      
-      ;; Whitespace mode turned on, check if paren-mode is active
-      (setq ws-show-paren-mode-active (bound-and-true-p show-paren-mode))
-      (when ws-show-paren-mode-active (show-paren-mode -1))))
-
-  (advice-add 'whitespace-mode :after #'toggle-showparen-with-whitespace)
-
-  (setcq whitespace-style
-         '(face trailing tabs spaces newline space-mark tab-mark newline-mark))
-  (setcq whitespace-display-mappings
-         '((space-mark 32 [183] [46])
-           (tab-mark 9 [187 9] [92 9])
-           (newline-mark 10 [182 10]))))
-
-
-;; Ivy is great for fuzzy matching in a bunch of places
+(use-package popup)
+;;;; Navigation and fuzzy finding
 (use-package ivy :diminish ivy-mode :config (ivy-mode +1))
 (use-package counsel :bind
   (("M-x" . counsel-M-x)))
-
-
-;; Not using paredit anymore since versor-mode does what it does except better
-(use-package paredit
-  :disabled
-  :diminish paredit-mode :config
-  ;; Fixes to make paredit more convenient to work with in other languages
-  (setcq paredit-space-for-delimiter-predicates
-         (list (lambda (&rest args) nil)))
-  (unbind-key "\\" paredit-mode-map)
-  (unbind-key "M-q" paredit-mode-map)
-  
-  (add-hook 'text-mode-hook #'paredit-mode)
-  (add-hook 'prog-mode-hook #'paredit-mode))
-
-
-(use-package undo-tree :diminish undo-tree-mode :config
-  (global-undo-tree-mode)
-  (setcq undo-tree-visualizer-diff t))
-
-
-(use-package dabbrev :config
-  (bind-key* "C-M-i" 'dabbrev-expand)
-  (setcq dabbrev-case-fold-search nil))
-
-
-(use-package flycheck :diminish flycheck-mode :config
-  (global-flycheck-mode 1))
-
-
-;; Modal editing *is* the greatest. This reduces hand-strain in an Emacs
-;; default friendly sort of way. Very cool, actually.
-(use-package god-mode
-  :defines god-mode-isearch-map
-  :bind (("<escape>" . god-local-mode)
-         :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
-         :map god-mode-isearch-map ("<escape>" . god-mode-isearch-disable))
-
-  :demand t
-
-  :init
-  (setcq god-exempt-predicates '(god-exempt-mode-p god-special-mode-p))
-  (setcq god-exempt-major-modes
-         '(org-agenda-mode
-           dired-mode
-           sr-mode
-           eshell-mode
-           doc-view-mode
-           magit-popup-mode
-           Custom-mode
-           notmuch-hello-mode
-           notmuch-search-mode
-           notmuch-show-mode
-           notmuch-tree-mode))
-  
-  (defun god-exempt-mode-p ()
-    "Return non-nil if major-mode is exempt or inherits from exempt mode."
-    (or (memq major-mode god-exempt-major-modes)
-        (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
-                  god-exempt-major-modes)))
-  
-  :config
-  (god-mode-all)
-  (require 'god-mode-isearch)
-
-  (defun god-mode-update-cursor ()
-    "Make sure the modeline and cursor is updated with god mode state."
-    (if (or god-local-mode buffer-read-only) (setq cursor-type 'box)
-      (setq cursor-type 'bar))
-    (if god-local-mode
-        (set-face-background 'mode-line
-                             (face-attribute 'font-lock-type-face :foreground))
-      (mapc #'enable-theme custom-enabled-themes)))
-
-  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
-  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
-  (add-hook 'read-only-mode-hook #'god-mode-update-cursor)
-
-  ;; I have barely any idea what I'm doing here... I'm just spamming these
-  ;; to ensure the modeline is updated timely...
-  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor)
-  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor)
-  (add-hook 'mode-selection-hook (lambda (_) (god-mode-update-cursor)))
-  (add-hook 'buffer-selection-hook (lambda (_) (god-mode-update-cursor)))
-  (add-hook 'find-file-hook #'god-mode-update-cursor)
-
-  (defun god-has-priority ()
-    "Try to ensure that god mode keeps priority over other minor modes."
-    (unless (and (consp (car minor-mode-map-alist))
-                 (eq (caar minor-mode-map-alist) 'god-local-mode-map))
-      (let ((godkeys (assq 'god-local-mode minor-mode-map-alist)))
-        (assq-delete-all 'god-local-mode minor-mode-map-alist)
-        (add-to-list 'minor-mode-map-alist godkeys))))
-  (add-hook 'god-mode-enabled-hook #'god-has-priority))
-
-
-(use-package tab-as-escape :diminish tab-as-escape-mode
-  :ensure nil :load-path "~/.emacs.d/libs"
-  :config
-  (require 'tab-as-escape)
-  (tab-as-escape-mode +1))
-
-
+;;;;; Org-like structuring of any document
 (use-package outshine
   :bind (("M-n" . outshine-narrow-to-subtree)
          ("M-h" . widen))
+  :commands (outline-minor-mode)
   :init
-  (setcq outline-minor-mode-prefix (kbd "C-#"))
-  :config
   (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   (add-hook 'prog-mode-hook #'outline-minor-mode)
-
+  :config
   ;; Allow narrowing to subtree even when inside subtree
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
                                      (outline-previous-visible-heading 1)))))
 
-
+;;;;; Versor-mode for convenient navigation
 (use-package versor
   :ensure nil :load-path "~/.emacs.d/config/libs/emacs-versor/lisp"
   :config
@@ -344,7 +192,175 @@
         (versor-define-move movemap 'color color)
         (versor-define-move movemap :background color)))))
 
+;;;; God mode
+;; Modal editing *is* the greatest. This reduces hand-strain in an Emacs
+;; default friendly sort of way. Very cool, actually.
+(use-package god-mode
+  :defines god-mode-isearch-map
+  :bind (("<escape>" . god-local-mode)
+         :map isearch-mode-map ("<escape>" . god-mode-isearch-activate)
+         :map god-mode-isearch-map ("<escape>" . god-mode-isearch-disable))
 
+  :demand t
+
+  :init
+  (setcq god-exempt-predicates '(god-exempt-mode-p god-special-mode-p))
+  (setcq god-exempt-major-modes
+         '(org-agenda-mode
+           dired-mode
+           sr-mode
+           eshell-mode
+           doc-view-mode
+           magit-popup-mode
+           Custom-mode
+           notmuch-hello-mode
+           notmuch-search-mode
+           notmuch-show-mode
+           notmuch-tree-mode))
+  
+  (defun god-exempt-mode-p ()
+    "Return non-nil if major-mode is exempt or inherits from exempt mode."
+    (or (memq major-mode god-exempt-major-modes)
+        (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
+                  god-exempt-major-modes)))
+  
+  :config
+  (god-mode-all)
+  (require 'god-mode-isearch)
+
+  (defun god-mode-update-cursor (&optional _)
+    "Make sure the modeline and cursor is updated with god mode state."
+    (if (or god-local-mode buffer-read-only) (setq cursor-type 'box)
+      (setq cursor-type 'bar))
+    (if god-local-mode
+        (set-face-background 'mode-line
+                             (face-attribute 'font-lock-type-face :foreground))
+      (mapc #'enable-theme custom-enabled-themes)))
+
+  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
+  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
+  (add-hook 'read-only-mode-hook #'god-mode-update-cursor)
+
+  ;; I have barely any idea what I'm doing here... I'm just spamming these
+  ;; to ensure the modeline is updated timely...
+  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor)
+  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor)
+  (add-hook 'mode-selection-hook #'god-mode-update-cursor)
+  (add-hook 'buffer-selection-hook #'god-mode-update-cursor)
+  (add-hook 'find-file-hook #'god-mode-update-cursor)
+
+  (defun god-has-priority ()
+    "Try to ensure that god mode keeps priority over other minor modes."
+    (unless (and (consp (car minor-mode-map-alist))
+                 (eq (caar minor-mode-map-alist) 'god-local-mode-map))
+      (let ((godkeys (assq 'god-local-mode minor-mode-map-alist)))
+        (assq-delete-all 'god-local-mode minor-mode-map-alist)
+        (add-to-list 'minor-mode-map-alist godkeys))))
+  (add-hook 'god-mode-enabled-hook #'god-has-priority))
+
+(use-package tab-as-escape :diminish tab-as-escape-mode
+  :ensure nil :load-path "~/.emacs.d/libs"
+  :config
+  (require 'tab-as-escape)
+  (tab-as-escape-mode +1))
+
+;;;; Editing, general
+(use-package autorevert :config
+  ;; Don't automatically reload files from disk without asking
+  ;; TODO: This needs to be included in a bunch of hooks
+  (global-auto-revert-mode -1))
+
+(use-package undo-tree :diminish undo-tree-mode :config
+  (global-undo-tree-mode)
+  (setcq undo-tree-visualizer-diff t))
+
+(use-package dabbrev :config
+  (bind-key* "C-M-i" 'dabbrev-expand)
+  (setcq dabbrev-case-fold-search nil))
+
+;;;; Programming, general
+;;;;; Edit by balanced parentheses
+(use-package paredit
+  :disabled
+  :diminish paredit-mode :config
+  ;; Fixes to make paredit more convenient to work with in other languages
+  (setcq paredit-space-for-delimiter-predicates
+         (list (lambda (&rest args) nil)))
+  (unbind-key "\\" paredit-mode-map)
+  (unbind-key "M-q" paredit-mode-map)
+  
+  (add-hook 'text-mode-hook #'paredit-mode)
+  (add-hook 'prog-mode-hook #'paredit-mode))
+
+;;;;; Indentation/whitespace stuff
+(use-package aggressive-indent :diminish aggressive-indent-mode :config
+  (electric-indent-mode -1)
+  (global-aggressive-indent-mode +1))
+
+(use-package whitespace :bind
+  ("C-=" . whitespace-mode)
+
+  :init
+  (defvar ws-show-paren-mode-active nil)
+  
+  :config
+  (defun toggle-showparen-with-whitespace (arg)
+    "Ensures show-paren-mode is off when whitespace-mode is turned on."
+    ;; Initialise variable
+    (unless (boundp 'ws-show-paren-mode-active)
+      (setq ws-show-paren-mode-active (bound-and-true-p show-paren-mode)))
+
+    ;; Do check
+    (if (not (bound-and-true-p whitespace-mode))
+        ;; Whitespace mode turned off
+        (when ws-show-paren-mode-active (show-paren-mode +1))
+      
+      ;; Whitespace mode turned on, check if paren-mode is active
+      (setq ws-show-paren-mode-active (bound-and-true-p show-paren-mode))
+      (when ws-show-paren-mode-active (show-paren-mode -1))))
+
+  (advice-add 'whitespace-mode :after #'toggle-showparen-with-whitespace)
+
+  (setcq whitespace-style
+         '(face trailing tabs spaces newline space-mark tab-mark newline-mark))
+  (setcq whitespace-display-mappings
+         '((space-mark 32 [183] [46])
+           (tab-mark 9 [187 9] [92 9])
+           (newline-mark 10 [182 10]))))
+
+(use-package flycheck :diminish flycheck-mode :config
+  (global-flycheck-mode 1))
+
+;;;;; Project management of source code etc.
+(use-package projectile
+  :config
+  (projectile-mode)
+  (use-package counsel-projectile :config
+    (counsel-projectile-on)))
+
+;;;; Programming, language-specific
+(use-package cc-mode :config
+  (setcq c-default-style "stroustrup")
+  (setcq c-basic-offset 4))
+
+(use-package nxml-mode :mode "\\.html"
+  :ensure nil :config
+  (use-package html5-schema))
+
+;;;; Prose
+(use-package synosaurus :bind
+  (("C-@" . synosaurus-choose-and-replace))
+  :config
+  (setcq synosaurus-choose-method 'popup)
+  (add-hook 'text-mode-hook #'synosaurus-mode))
+
+;;;; Miscellaneous
+;;;;; Export window contents to neat HTML
+(use-package htmlize
+  :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
+
+;;;; EAAS = Emacs-As-An-(operating)-System
+;;;;; File manager
 (unbind-key "<f2>")
 (add-to-list 'package-archives
              '("sunrise" . "http://joseito.republika.pl/sunrise-commander/"))
@@ -354,11 +370,11 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.srvm\\'" . sr-virtual-mode)))
 
-
+;;;;; Git integration
 (use-package magit :bind
   (("<f3>" . magit-status)))
 
-
+;;;;; Organizer, planner, note taking etc.
 (unbind-key "<f4>")
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (use-package org
@@ -372,7 +388,7 @@
   :defines org-capture-templates
 
   :init
-  (setcq org-export-backends '(org html s5 latex publish))
+  (setcq org-export-backends '(org html publish s5 latex rss))
   
   :config
   (require 'ox-latex)
@@ -386,6 +402,13 @@
   (org-set-emph-re
    'org-emphasis-regexp-components
    org-emphasis-regexp-components)
+
+  (add-to-list 'org-structure-template-alist
+               (list "b" (concat
+                          "#+TITLE: ?\n"
+                          "#+AUTHOR: kqr\n"
+                          "#+DATE: \n"
+                          "#+FILETAGS: :draft:\n")))
   
   (setcq org-todo-keywords
          '((sequence "NEW" "HOLD" "TODO" "|" "DONE" "CANCELED")))
@@ -401,7 +424,7 @@
   
   (setcq org-lowest-priority ?F)
   (setcq org-default-priority ?D)
-
+  
   (setcq org-capture-templates
          '(("n" "NEW" entry (file "") "* NEW [#D] %?\n  SCHEDULED: %t")))
 
@@ -410,6 +433,7 @@
   (setcq org-default-notes-file "~/Dropbox/Orgzly/brain.org"))
 
 
+;;;;; Email client
 (use-package notmuch
   ;; Load the locally installed notmuch mode to ensure versions match
   :ensure nil
@@ -457,17 +481,8 @@
   (setcq notmuch-show-indent-messages-width 4))
 
 
-(use-package projectile
-  :config
-  (projectile-mode)
-  (use-package counsel-projectile :config
-    (counsel-projectile-on)))
 
-;; Being able to export nice html of code is neat
-(use-package htmlize
-  :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
-
-
+;;;; Diminish a bunch of modes according to the theme
 ;; We do tihs here because apparently use-package will override it otherwise
 (dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
   (unless (member mode '(flycheck-mode))
