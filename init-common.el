@@ -347,6 +347,9 @@
   :ensure nil :config
   (use-package html5-schema))
 
+(use-package intero :config
+  (add-hook 'haskell-mode-hook #'intero-mode))
+
 ;;;; Prose
 (use-package synosaurus :bind
   (("C-@" . synosaurus-choose-and-replace))
