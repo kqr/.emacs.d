@@ -396,7 +396,8 @@
   :ensure org-plus-contrib
   :bind (("<f4> a" . org-agenda)
          ("<f4> c" . org-capture)
-         ("<f4> o" . org-cycle-agenda-files))
+         ("<f4> o" . org-cycle-agenda-files)
+         ("<f4> l" . org-store-link))
   :demand t
   :mode ("\\.org\\'" . org-mode)
 
