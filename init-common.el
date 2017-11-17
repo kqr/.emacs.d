@@ -36,13 +36,18 @@
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
 
+
+  ;;;; Set variable width font for most things (but not quite all of them!)
   (when (display-graphic-p)
     (set-fontset-font "fontset-startup" 'unicode
                       (font-spec :name "Whitman" :size 16.0))
     (set-fontset-font "fontset-default" 'unicode
                       (font-spec :name "Symbola" :size 16.0))
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
-    (add-to-list 'default-frame-alist '(line-spacing . 1)))
+    (add-to-list 'default-frame-alist '(line-spacing . 1))
+
+    (custom-theme-set-faces 'user '(fixed-pitch
+                                    ((t :family "Luxi Mono" :height 0.8)))))
   
   ;; We like our theme (although it's now become a light-modern-thing...)
   (setcq frame-background-mode 'light)
@@ -99,6 +104,12 @@
 ;;;; Enable easy troubleshooting of init file
 (use-package bug-hunter :commands bug-hunter-init-file)
 ;;;; UI configuration should appear early
+;; Attempt to set fixed with fonts for buffers that need them...
+(use-package face-remap :config
+  (setcq buffer-face-mode-face '(:inherit fixed-pitch))
+
+  (add-hook 'calendar-mode-hook #'buffer-face-mode))
+
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :config
   ;; inherit fill-column
@@ -128,8 +139,6 @@
 ;; Try to keep the buffer scrolled so the cursor is centered
 (use-package centered-cursor-mode :diminish centered-cursor-mode :config
   (global-centered-cursor-mode +1))
-
-
 
 (use-package popup)
 ;;;; Navigation and fuzzy finding
@@ -378,6 +387,9 @@
   (("<f3>" . magit-status)))
 
 ;;;;; Organizer, planner, note taking etc.
+(use-package calendar :config
+  (setcq calendar-date-style 'iso))
+
 (unbind-key "<f4>")
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (use-package org
