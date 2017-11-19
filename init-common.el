@@ -108,7 +108,8 @@
 (use-package face-remap :config
   (setcq buffer-face-mode-face '(:inherit fixed-pitch))
 
-  (add-hook 'calendar-mode-hook #'buffer-face-mode))
+  (add-hook 'calendar-mode-hook #'buffer-face-mode)
+  (add-hook 'notmuch-tree-mode-hook #'buffer-face-mode))
 
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :config
@@ -401,23 +402,24 @@
   :demand t
   :mode ("\\.org\\'" . org-mode)
 
-  :defines org-capture-templates
+  :defines org-capture-templates org-latex-classes
 
   :init
   (setcq org-export-backends '(org html publish s5 latex rss))
   
   :config
-  (require 'ox-latex)
-  (add-to-list
-   'org-latex-classes
-   '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")))
-
+  (setcq org-return-follows-link t)
+  
+  ;; Allow longer sections of italics
   (setcar (nthcdr 4 org-emphasis-regexp-components) 8)
-  (org-set-emph-re
-   'org-emphasis-regexp-components
-   org-emphasis-regexp-components)
+  (org-set-emph-re 'org-emphasis-regexp-components
+                   org-emphasis-regexp-components)
+
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+               '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")))
 
   (add-to-list 'org-structure-template-alist
                (list "b" (concat
@@ -427,33 +429,77 @@
                           "#+FILETAGS: :draft:\n")))
   
   (setcq org-todo-keywords
-         '((sequence "NEW" "HOLD" "TODO" "|" "DONE" "CANCELED")))
+         '((sequence "HOLD" "TODO" "|" "DONE" "CANCELED")))
   
   (setcq org-todo-keyword-faces
-         '(("NEW" . (:foreground "red" :weight bold))
+         '(("HOLD" . (:foreground "dodger blue" :weight bold))
            ("TODO" . (:foreground "dark orange" :weight bold))
            ("DONE" . (:foreground "olivedrab3" :weight bold))
-           ("HOLD" . (:foreground "dodger blue" :weight bold))
            ("CANCELED" . (:foreground "dim grey" :weight bold))))
 
+  ;; Normally we'd want tasks to reset to HOLD, but since this is a
+  ;; repeated task it also has a new scheduled date so it's okay if it
+  ;; becomes a todo because it won't clutter until scheduled anyway!
   (setcq org-todo-repeat-to-state "TODO")
-  
-  (setcq org-lowest-priority ?F)
-  (setcq org-default-priority ?D)
+
+  ;; Let's simplify this...
+  ;; A = screamingly important
+  ;; B = normal day-to-day "you should do this or bad things will happen"
+  ;; C = fine if rescheduled
+  (setcq org-lowest-priority ?C)
+  (setcq org-default-priority ?B)
   
   (setcq org-capture-templates
-         '(("n" "NEW" entry (file "") "* NEW [#D] %?\n  SCHEDULED: %t")))
-
-  ;; I must come up with a better way to do this synchronization...
-  (setcq org-agenda-files '("~/Dropbox/Orgzly/brain.org"))
-  (setcq org-default-notes-file "~/Dropbox/Orgzly/brain.org"))
+         '(("i" ">inbox" entry (file "") "* %?\n")))
+  (setcq org-default-notes-file "~/org/inbox.org")
+  (setcq org-refile-targets '(("~/org/projects.org" :maxlevel 3)))
+  (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
+  (setcq org-archive-location "~/org/archive.org::* %s")
+  
+  ;; TODO: set custom agenda commands for various contexts
+  )
 
 
 ;;;;; Email client
 (use-package notmuch
   ;; Load the locally installed notmuch mode to ensure versions match
-  :ensure nil
+  :ensure nil :init
+  (defun notmuch-toggle-deleted-tag (&optional beg end)
+    (interactive (notmuch-search-interactive-region))
+    (if (member "deleted" (notmuch-search-get-tags))
+        (notmuch-search-tag (list "-deleted") beg end)
+      (notmuch-search-tag (list "+deleted") beg end)))
+  
   :config
+  (setcq notmuch-search-line-faces '(("unread" :weight bold)))
+  (setcq notmuch-show-indent-messages-width 4)
+  (setcq notmuch-search-oldest-first nil)
+
+  (setcq notmuch-archive-tags '("-inbox" "-unread"))
+  (define-key notmuch-search-mode-map "k" #'notmuch-toggle-deleted-tag)
+
+  (setcq notmuch-poll-script nil)
+
+  (setcq notmuch-hello-sections
+         '(notmuch-hello-insert-saved-searches
+           notmuch-hello-insert-search
+           notmuch-hello-insert-recent-searches
+           notmuch-hello-insert-alltags
+           notmuch-hello-insert-footer))
+
+  (setcq notmuch-saved-searches
+         '((:name "inbox" :query "tag:inbox" :key "i")
+           (:name "sent" :query "tag:sent" :key "s")
+           (:name "all mail" :query "*" :key "a")))
+
+  ;;;;;; Message mode for composing emails
+  (setcq message-cite-function 'message-cite-original-without-signature)
+  (setcq message-citation-line-function 'message-insert-formatted-citation-line)
+  (setcq message-cite-reply-position 'traditional)
+  (setcq message-yank-prefix "> ")
+  (setcq message-yank-cited-prefix ">")
+  (setcq message-yank-empty-prefix ">")
+  (setcq message-citation-line-format "%N (%n) %Y-%m-%d:")
   (setcq message-auto-save-directory "~/mail/drafts")
   (setcq message-default-mail-headers "Cc: \nBcc: \n")
   (setcq message-kill-buffer-on-exit t)
@@ -462,39 +508,13 @@
   (setcq message-confirm-send t)
   (setcq message-hidden-headers
          '("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From"))
-
   (setcq mail-specify-envelope-from t)
-  (setcq mail-envelope-from 'header)
-
   (setcq send-mail-function 'smtpmail-send-it)
-  (setcq sendmail-program "/usr/bin/msmtp")
 
-  (setcq notmuch-archive-tags '("-inbox" "-unread"))
-
-  (defun notmuch-toggle-deleted-tag (&optional beg end)
-    (interactive (notmuch-search-interactive-region))
-    (if (member "deleted" (notmuch-search-get-tags))
-        (notmuch-search-tag (list "-deleted") beg end)
-      (notmuch-search-tag (list "+deleted") beg end)))
-  (define-key notmuch-search-mode-map "k" #'notmuch-toggle-deleted-tag)
-
-  (setcq notmuch-hello-sections
-         '(notmuch-hello-insert-saved-searches
-           notmuch-hello-insert-search
-           notmuch-hello-insert-recent-searches
-           notmuch-hello-insert-alltags
-           notmuch-hello-insert-footer))
-  (setcq notmuch-poll-script nil)
-
-  (setcq notmuch-saved-searches
-         '((:name "inbox" :query "tag:inbox" :key "i")
-           (:name "sent" :query "tag:sent" :key "s")
-           (:name "all mail" :query "*" :key "a")))
-
-  (setcq notmuch-search-line-faces '(("unread" :weight bold)))
-
-  (setcq notmuch-search-oldest-first nil)
-  (setcq notmuch-show-indent-messages-width 4))
+  ;;;;;; Sendmail integration
+  (use-package sendmail :config
+    (setcq mail-envelope-from 'header)
+    (setcq sendmail-program "/usr/bin/msmtp")))
 
 
 
