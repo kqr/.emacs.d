@@ -39,10 +39,15 @@
 
   ;;;; Set variable width font for most things (but not quite all of them!)
   (when (display-graphic-p)
+    ;; TODO: Set a different font for #x2500–#x2580: box drawing characters
+    ;; TODO: Also set a different font for #x005e: circumflex accent...
     (set-fontset-font "fontset-startup" 'unicode
                       (font-spec :name "Whitman" :size 16.0))
+
+    ;; Use variable-width symbol font for all other weird glyphs
     (set-fontset-font "fontset-default" 'unicode
                       (font-spec :name "Symbola" :size 16.0))
+    
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
     (add-to-list 'default-frame-alist '(line-spacing . 1))
 
@@ -80,6 +85,8 @@
 
   ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
   (unbind-key "C-z")
+  ;; ...but that means we can use it for this!
+  (bind-key "C-z" #'quick-calc)
 
   ;; <f1> defaults to duplicate the functionality provided by C-h
   ;; By unbinding C-h we open it up to be used for better things
@@ -359,6 +366,8 @@
 
 (use-package intero :config
   (add-hook 'haskell-mode-hook #'intero-mode))
+
+(use-package ada-mode)
 
 ;;;; Prose
 (use-package synosaurus :bind
