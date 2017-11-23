@@ -85,8 +85,6 @@
 
   ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
   (unbind-key "C-z")
-  ;; ...but that means we can use it for this!
-  (bind-key "C-z" #'quick-calc)
 
   ;; <f1> defaults to duplicate the functionality provided by C-h
   ;; By unbinding C-h we open it up to be used for better things
@@ -103,6 +101,12 @@
   ;; But then we also need this...
   (bind-key* "C-S-q" #'quoted-insert)
 
+  ;; ...this is pretty neat!
+  (use-package calc
+    :bind (("C-=" . quick-calc))
+    :config
+    (setcq calc-multiplication-has-precedence nil))
+  
   ;; Make "join this line to the one above" a bit more convenient to perform
   (bind-key* "C-J" #'delete-indentation))
 
@@ -315,7 +319,7 @@
   (global-aggressive-indent-mode +1))
 
 (use-package whitespace :bind
-  ("C-=" . whitespace-mode)
+  ("C-z" . whitespace-mode)
 
   :init
   (defvar ws-show-paren-mode-active nil)
@@ -369,6 +373,8 @@
 
 (use-package ada-mode)
 
+(use-package ess :init (require 'ess-site))
+
 ;;;; Prose
 (use-package synosaurus :bind
   (("C-@" . synosaurus-choose-and-replace))
@@ -381,6 +387,10 @@
 (use-package htmlize
   :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
 
+;;;;; Analyse command usage frequency to optimise config
+(use-package keyfreq :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
 ;;;; EAAS = Emacs-As-An-(operating)-System
 ;;;;; File manager
 (unbind-key "<f2>")
@@ -424,6 +434,10 @@
   (org-set-emph-re 'org-emphasis-regexp-components
                    org-emphasis-regexp-components)
 
+  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t)))
+  
   (require 'ox-latex)
   (add-to-list 'org-latex-classes
                '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
