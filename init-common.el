@@ -36,13 +36,23 @@
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
 
+
+  ;;;; Set variable width font for most things (but not quite all of them!)
   (when (display-graphic-p)
+    ;; TODO: Set a different font for #x2500–#x2580: box drawing characters
+    ;; TODO: Also set a different font for #x005e: circumflex accent...
     (set-fontset-font "fontset-startup" 'unicode
                       (font-spec :name "Whitman" :size 16.0))
+
+    ;; Use variable-width symbol font for all other weird glyphs
     (set-fontset-font "fontset-default" 'unicode
                       (font-spec :name "Symbola" :size 16.0))
+    
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
-    (add-to-list 'default-frame-alist '(line-spacing . 1)))
+    (add-to-list 'default-frame-alist '(line-spacing . 1))
+
+    (custom-theme-set-faces 'user '(fixed-pitch
+                                    ((t :family "Luxi Mono" :height 0.8)))))
   
   ;; We like our theme (although it's now become a light-modern-thing...)
   (setcq frame-background-mode 'light)
@@ -91,6 +101,12 @@
   ;; But then we also need this...
   (bind-key* "C-S-q" #'quoted-insert)
 
+  ;; ...this is pretty neat!
+  (use-package calc
+    :bind (("C-=" . quick-calc))
+    :config
+    (setcq calc-multiplication-has-precedence nil))
+  
   ;; Make "join this line to the one above" a bit more convenient to perform
   (bind-key* "C-J" #'delete-indentation))
 
@@ -99,6 +115,13 @@
 ;;;; Enable easy troubleshooting of init file
 (use-package bug-hunter :commands bug-hunter-init-file)
 ;;;; UI configuration should appear early
+;; Attempt to set fixed with fonts for buffers that need them...
+(use-package face-remap :config
+  (setcq buffer-face-mode-face '(:inherit fixed-pitch))
+
+  (add-hook 'calendar-mode-hook #'buffer-face-mode)
+  (add-hook 'notmuch-tree-mode-hook #'buffer-face-mode))
+
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :config
   ;; inherit fill-column
@@ -128,8 +151,6 @@
 ;; Try to keep the buffer scrolled so the cursor is centered
 (use-package centered-cursor-mode :diminish centered-cursor-mode :config
   (global-centered-cursor-mode +1))
-
-
 
 (use-package popup)
 ;;;; Navigation and fuzzy finding
@@ -298,7 +319,7 @@
   (global-aggressive-indent-mode +1))
 
 (use-package whitespace :bind
-  ("C-=" . whitespace-mode)
+  ("C-z" . whitespace-mode)
 
   :init
   (defvar ws-show-paren-mode-active nil)
@@ -347,6 +368,13 @@
   :ensure nil :config
   (use-package html5-schema))
 
+(use-package intero :config
+  (add-hook 'haskell-mode-hook #'intero-mode))
+
+(use-package ada-mode)
+
+(use-package ess :init (require 'ess-site))
+
 ;;;; Prose
 (use-package synosaurus :bind
   (("C-@" . synosaurus-choose-and-replace))
@@ -359,6 +387,10 @@
 (use-package htmlize
   :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
 
+;;;;; Analyse command usage frequency to optimise config
+(use-package keyfreq :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
 ;;;; EAAS = Emacs-As-An-(operating)-System
 ;;;;; File manager
 (unbind-key "<f2>")
@@ -375,33 +407,42 @@
   (("<f3>" . magit-status)))
 
 ;;;;; Organizer, planner, note taking etc.
+(use-package calendar :config
+  (setcq calendar-date-style 'iso))
+
 (unbind-key "<f4>")
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (use-package org
   :ensure org-plus-contrib
   :bind (("<f4> a" . org-agenda)
          ("<f4> c" . org-capture)
-         ("<f4> o" . org-cycle-agenda-files))
+         ("<f4> o" . org-cycle-agenda-files)
+         ("<f4> l" . org-store-link))
   :demand t
   :mode ("\\.org\\'" . org-mode)
 
-  :defines org-capture-templates
+  :defines org-capture-templates org-latex-classes
 
   :init
   (setcq org-export-backends '(org html publish s5 latex rss))
   
   :config
-  (require 'ox-latex)
-  (add-to-list
-   'org-latex-classes
-   '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")))
-
+  (setcq org-return-follows-link t)
+  
+  ;; Allow longer sections of italics
   (setcar (nthcdr 4 org-emphasis-regexp-components) 8)
-  (org-set-emph-re
-   'org-emphasis-regexp-components
-   org-emphasis-regexp-components)
+  (org-set-emph-re 'org-emphasis-regexp-components
+                   org-emphasis-regexp-components)
+
+  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t)))
+  
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+               '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")))
 
   (add-to-list 'org-structure-template-alist
                (list "b" (concat
@@ -411,33 +452,77 @@
                           "#+FILETAGS: :draft:\n")))
   
   (setcq org-todo-keywords
-         '((sequence "NEW" "HOLD" "TODO" "|" "DONE" "CANCELED")))
+         '((sequence "HOLD" "TODO" "|" "DONE" "CANCELED")))
   
   (setcq org-todo-keyword-faces
-         '(("NEW" . (:foreground "red" :weight bold))
+         '(("HOLD" . (:foreground "dodger blue" :weight bold))
            ("TODO" . (:foreground "dark orange" :weight bold))
            ("DONE" . (:foreground "olivedrab3" :weight bold))
-           ("HOLD" . (:foreground "dodger blue" :weight bold))
            ("CANCELED" . (:foreground "dim grey" :weight bold))))
 
+  ;; Normally we'd want tasks to reset to HOLD, but since this is a
+  ;; repeated task it also has a new scheduled date so it's okay if it
+  ;; becomes a todo because it won't clutter until scheduled anyway!
   (setcq org-todo-repeat-to-state "TODO")
-  
-  (setcq org-lowest-priority ?F)
-  (setcq org-default-priority ?D)
+
+  ;; Let's simplify this...
+  ;; A = screamingly important
+  ;; B = normal day-to-day "you should do this or bad things will happen"
+  ;; C = fine if rescheduled
+  (setcq org-lowest-priority ?C)
+  (setcq org-default-priority ?B)
   
   (setcq org-capture-templates
-         '(("n" "NEW" entry (file "") "* NEW [#D] %?\n  SCHEDULED: %t")))
-
-  ;; I must come up with a better way to do this synchronization...
-  (setcq org-agenda-files '("~/Dropbox/Orgzly/brain.org"))
-  (setcq org-default-notes-file "~/Dropbox/Orgzly/brain.org"))
+         '(("i" ">inbox" entry (file "") "* %?\n")))
+  (setcq org-default-notes-file "~/org/inbox.org")
+  (setcq org-refile-targets '(("~/org/projects.org" :maxlevel 3)))
+  (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
+  (setcq org-archive-location "~/org/archive.org::* %s")
+  
+  ;; TODO: set custom agenda commands for various contexts
+  )
 
 
 ;;;;; Email client
 (use-package notmuch
   ;; Load the locally installed notmuch mode to ensure versions match
-  :ensure nil
+  :ensure nil :init
+  (defun notmuch-toggle-deleted-tag (&optional beg end)
+    (interactive (notmuch-search-interactive-region))
+    (if (member "deleted" (notmuch-search-get-tags))
+        (notmuch-search-tag (list "-deleted") beg end)
+      (notmuch-search-tag (list "+deleted") beg end)))
+  
   :config
+  (setcq notmuch-search-line-faces '(("unread" :weight bold)))
+  (setcq notmuch-show-indent-messages-width 4)
+  (setcq notmuch-search-oldest-first nil)
+
+  (setcq notmuch-archive-tags '("-inbox" "-unread"))
+  (define-key notmuch-search-mode-map "k" #'notmuch-toggle-deleted-tag)
+
+  (setcq notmuch-poll-script nil)
+
+  (setcq notmuch-hello-sections
+         '(notmuch-hello-insert-saved-searches
+           notmuch-hello-insert-search
+           notmuch-hello-insert-recent-searches
+           notmuch-hello-insert-alltags
+           notmuch-hello-insert-footer))
+
+  (setcq notmuch-saved-searches
+         '((:name "inbox" :query "tag:inbox" :key "i")
+           (:name "sent" :query "tag:sent" :key "s")
+           (:name "all mail" :query "*" :key "a")))
+
+  ;;;;;; Message mode for composing emails
+  (setcq message-cite-function 'message-cite-original-without-signature)
+  (setcq message-citation-line-function 'message-insert-formatted-citation-line)
+  (setcq message-cite-reply-position 'traditional)
+  (setcq message-yank-prefix "> ")
+  (setcq message-yank-cited-prefix ">")
+  (setcq message-yank-empty-prefix ">")
+  (setcq message-citation-line-format "%N (%n) %Y-%m-%d:")
   (setcq message-auto-save-directory "~/mail/drafts")
   (setcq message-default-mail-headers "Cc: \nBcc: \n")
   (setcq message-kill-buffer-on-exit t)
@@ -446,39 +531,13 @@
   (setcq message-confirm-send t)
   (setcq message-hidden-headers
          '("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From"))
-
   (setcq mail-specify-envelope-from t)
-  (setcq mail-envelope-from 'header)
-
   (setcq send-mail-function 'smtpmail-send-it)
-  (setcq sendmail-program "/usr/bin/msmtp")
 
-  (setcq notmuch-archive-tags '("-inbox" "-unread"))
-
-  (defun notmuch-toggle-deleted-tag (&optional beg end)
-    (interactive (notmuch-search-interactive-region))
-    (if (member "deleted" (notmuch-search-get-tags))
-        (notmuch-search-tag (list "-deleted") beg end)
-      (notmuch-search-tag (list "+deleted") beg end)))
-  (define-key notmuch-search-mode-map "k" #'notmuch-toggle-deleted-tag)
-
-  (setcq notmuch-hello-sections
-         '(notmuch-hello-insert-saved-searches
-           notmuch-hello-insert-search
-           notmuch-hello-insert-recent-searches
-           notmuch-hello-insert-alltags
-           notmuch-hello-insert-footer))
-  (setcq notmuch-poll-script nil)
-
-  (setcq notmuch-saved-searches
-         '((:name "inbox" :query "tag:inbox" :key "i")
-           (:name "sent" :query "tag:sent" :key "s")
-           (:name "all mail" :query "*" :key "a")))
-
-  (setcq notmuch-search-line-faces '(("unread" :weight bold)))
-
-  (setcq notmuch-search-oldest-first nil)
-  (setcq notmuch-show-indent-messages-width 4))
+  ;;;;;; Sendmail integration
+  (use-package sendmail :config
+    (setcq mail-envelope-from 'header)
+    (setcq sendmail-program "/usr/bin/msmtp")))
 
 
 

@@ -99,7 +99,8 @@
 
            (((t :background ,theme-medium-highlight))
             show-paren-match
-            widget-field)
+            widget-field
+            secondary-selection)
 
            (((t :background ,theme-weak-highlight))
             fringe
