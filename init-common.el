@@ -142,9 +142,9 @@
          ("M-h" . widen))
   :commands (outline-minor-mode)
   :init
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   (add-hook 'prog-mode-hook #'outline-minor-mode)
   :config
+  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   ;; Allow narrowing to subtree even when inside subtree
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
