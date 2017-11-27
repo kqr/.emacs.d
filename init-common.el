@@ -475,7 +475,9 @@
   (setcq org-capture-templates
          '(("i" ">inbox" entry (file "") "* %?\n")))
   (setcq org-default-notes-file "~/org/inbox.org")
-  (setcq org-refile-targets '(("~/org/projects.org" :maxlevel 3)))
+  (setcq org-refile-targets
+         '(("~/org/projects.org" :maxlevel . 3)
+           ("~/org/notes.org" :maxlevel . 2)))
   (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
   (setcq org-archive-location "~/org/archive.org::* %s")
   
