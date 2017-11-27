@@ -1,6 +1,7 @@
 ;;; init-common.el --- Configuration common to all my Emacs installations
 ;;
 ;;; Commentary:
+;; Testing I18N: Räksmörgås
 ;;
 ;;; Code:
 ;;; Built-in emacs config
@@ -36,28 +37,17 @@
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
 
-
-  ;;;; Set variable width font for most things (but not quite all of them!)
-  (when (display-graphic-p)
-    ;; TODO: Set a different font for #x2500–#x2580: box drawing characters
-    ;; TODO: Also set a different font for #x005e: circumflex accent...
-    (set-fontset-font "fontset-startup" 'unicode
-                      (font-spec :name "Whitman" :size 16.0))
-
-    ;; Use variable-width symbol font for all other weird glyphs
-    (set-fontset-font "fontset-default" 'unicode
-                      (font-spec :name "Symbola" :size 16.0))
-    
-    (add-to-list 'initial-frame-alist '(line-spacing . 1))
-    (add-to-list 'default-frame-alist '(line-spacing . 1))
-
-    (custom-theme-set-faces 'user '(fixed-pitch
-                                    ((t :family "Luxi Mono" :height 0.8)))))
-  
-  ;; We like our theme (although it's now become a light-modern-thing...)
+  ;; We like our theme
   (setcq frame-background-mode 'light)
   (load-theme 'modern-minik)
 
+  ;;;; Set variable width font for most things (but not quite all of them!)
+  (when (display-graphic-p)
+    (set-frame-font (font-spec :name "Linux Libertine O" :size 16.0) t t)
+    (set-face-attribute 'fixed-pitch t :family "Luxi Mono" :height 0.8)
+    (add-to-list 'initial-frame-alist '(line-spacing . 1))
+    (add-to-list 'default-frame-alist '(line-spacing . 1)))
+  
   ;; Don't soft wrap lines, simply let them extend beyond the window width
   (setcq truncate-lines t)
   (set-display-table-slot standard-display-table 0 ?›)
@@ -115,6 +105,17 @@
 ;;;; Enable easy troubleshooting of init file
 (use-package bug-hunter :commands bug-hunter-init-file)
 ;;;; UI configuration should appear early
+
+;; Use variable-width fonts yeaah
+(use-package unicode-fonts :init
+  (use-package persistent-soft :config
+    (unicode-fonts-setup))
+  :config
+  (setcq unicode-fonts-overrides-mapping
+         (append
+          '((#x0000 #xffff ("Linux Libertine O" "Symbola")))
+          unicode-fonts-overrides-mapping)))
+
 ;; Attempt to set fixed with fonts for buffers that need them...
 (use-package face-remap :config
   (setcq buffer-face-mode-face '(:inherit fixed-pitch))
@@ -465,6 +466,10 @@
   ;; becomes a todo because it won't clutter until scheduled anyway!
   (setcq org-todo-repeat-to-state "TODO")
 
+  ;; When closing an item, ask for a note – just in case there's an
+  ;; important thought there that may otherwise not get recorded
+  (setcq org-log-done 'note)
+  
   ;; Let's simplify this...
   ;; A = screamingly important
   ;; B = normal day-to-day "you should do this or bad things will happen"

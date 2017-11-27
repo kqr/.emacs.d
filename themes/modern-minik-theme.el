@@ -73,6 +73,11 @@
             org-level-2
             org-level-3
             org-level-4
+            org-level-5
+            org-level-6
+            org-level-7
+            org-level-8
+            org-level-9
             org-scheduled-today
             org-agenda-date
             org-agenda-date-today
