@@ -44,7 +44,8 @@
   ;;;; Set variable width font for most things (but not quite all of them!)
   (when (display-graphic-p)
     (set-frame-font (font-spec :name "Linux Libertine O" :size 16.0) t t)
-    (set-face-attribute 'fixed-pitch t :family "Luxi Mono" :height 0.8)
+    (custom-theme-set-faces 'user '(fixed-pitch
+                                    ((t :family "Luxi Mono" :height 0.8))))
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
     (add-to-list 'default-frame-alist '(line-spacing . 1)))
   
@@ -429,6 +430,7 @@
   
   :config
   (setcq org-return-follows-link t)
+  (setcq org-list-allow-alphabetical t)
   
   ;; Allow longer sections of italics
   (setcar (nthcdr 4 org-emphasis-regexp-components) 8)
