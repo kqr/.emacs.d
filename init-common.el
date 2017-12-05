@@ -438,24 +438,11 @@
                    org-emphasis-regexp-components)
 
   ;; allow execution of R code in org (for neat graphs and tables and stuff!)
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t) (R . t)))
-  
-  (require 'ox-latex)
-  (add-to-list 'org-latex-classes
-               '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")))
-
-  (add-to-list 'org-structure-template-alist
-               (list "b" (concat
-                          "#+TITLE: ?\n"
-                          "#+AUTHOR: kqr\n"
-                          "#+DATE: \n"
-                          "#+FILETAGS: :draft:\n")))
-  
+  ;; separate sets to avoid accidentally completing something (for example)
   (setcq org-todo-keywords
-         '((sequence "HOLD" "TODO" "|" "DONE" "CANCELED")))
+         '((sequence "HOLD(h)" "TODO(t)" "|")
+           (sequence "|" "DONE(d)")
+           (sequence "|" "CANCELED(c)")))
   
   (setcq org-todo-keyword-faces
          '(("HOLD" . (:foreground "dodger blue" :weight bold))
@@ -468,6 +455,8 @@
   ;; becomes a todo because it won't clutter until scheduled anyway!
   (setcq org-todo-repeat-to-state "TODO")
 
+  (setcq org-hierarchical-todo-statistics nil)
+  
   ;; When closing an item, ask for a note – just in case there's an
   ;; important thought there that may otherwise not get recorded
   (setcq org-log-done 'note)
@@ -489,6 +478,23 @@
   (setcq org-archive-location "~/org/archive.org::* %s")
   
   ;; TODO: set custom agenda commands for various contexts
+
+  ;; Org export stuff
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t)))
+  
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+               '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")))
+
+  (add-to-list 'org-structure-template-alist
+               (list "b" (concat
+                          "#+TITLE: ?\n"
+                          "#+AUTHOR: kqr\n"
+                          "#+DATE: \n"
+                          "#+FILETAGS: :draft:\n"))) 
   )
 
 
