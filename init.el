@@ -7,7 +7,21 @@
 ;; - find a way to list the defines in current buffer?
 ;;
 ;;; Code:
-;;
+
+;; Find and load existing custom-file since I use customize-set-variable a lot
+(setq custom-file "~/.emacs.d/var/custom.el")
+(unless (file-exists-p custom-file)
+  (unless (file-directory-p (file-name-directory custom-file))
+    (make-directory (file-name-directory custom-file)))
+  (write-region "" nil custom-file))
+(load custom-file)
+
+(defmacro setcq (symbol &rest args)
+  "A convenient wrapper around (customize-set-variable 'SYMBOL ARGS)."
+  (append `(customize-set-variable (quote ,symbol)) args))
+
+;;; ----
+
 ;; Set up the package system
 (require 'package)
 (push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
@@ -23,19 +37,7 @@
 (require 'diminish)
 (require 'bind-key)
 
-(setcq use-package-always-ensure t)
-
-;;; ----
-
-;; Find and load existing custom-file since I use customize-set-variable a lot
-(setq custom-file "~/.emacs.d/var/custom.el")
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file))
-(load custom-file)
-
-(defmacro setcq (symbol &rest args)
-  "A convenient wrapper around (customize-set-variable 'SYMBOL ARGS)."
-  (append `(customize-set-variable (quote ,symbol)) args))
+(setq use-package-always-ensure t)
 
 ;;; ----
 
