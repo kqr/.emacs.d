@@ -14,12 +14,18 @@
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'diminish)
+  (package-install 'bind-key))
 
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
+
+(setcq use-package-always-ensure t)
+
+;;; ----
 
 ;; Find and load existing custom-file since I use customize-set-variable a lot
 (setq custom-file "~/.emacs.d/var/custom.el")
@@ -31,16 +37,17 @@
   "A convenient wrapper around (customize-set-variable 'SYMBOL ARGS)."
   (append `(customize-set-variable (quote ,symbol)) args))
 
+;;; ----
+
 ;; Location of my themes
 (setcq custom-theme-directory "~/.emacs.d/etc/theme/")
+
+;;; ----
 
 ;; Where to put temp files
 (setcq temporary-file-directory "~/.emacs.d/tmp/")
 (unless (file-directory-p temporary-file-directory)
   (make-directory temporary-file-directory))
-
-;; What's the point of specifying packages if you're not going to use them?
-(setcq use-package-always-ensure t)
 
 ;; Use this as early as possible
 (use-package no-littering :init
@@ -48,6 +55,8 @@
   ;; temporary/soon to be overwritten files elsewhere
   (setcq backup-directory-alist `((".*" . ,temporary-file-directory)))
   (setcq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))))
+
+;;; ----
 
 (load "~/.emacs.d/etc/init-common.el")
 (load "~/.emacs.d/etc/init-local.el")
