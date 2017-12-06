@@ -262,6 +262,7 @@
         (whitespace-mode (" ⬚" . " W"))
         (god-local-mode (" ⇪" . " G"))
         (projectile-mode (" ⎘" . " P"))
+        (yas-minor-mode (" ⋯" . " ..."))
         (flycheck-mode (" ᪶" . " FC"))
         (mml-mode (" 🖃" . " M"))
         (aggressive-indent-mode (" ↹" . " AI"))

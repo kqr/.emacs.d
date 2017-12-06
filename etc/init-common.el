@@ -114,7 +114,8 @@
   :config
   (setcq unicode-fonts-overrides-mapping
          (append
-          '((#x0000 #xffff ("Linux Libertine O" "Symbola")))
+          '((#x0000 #x21ff ("Linux Libertine O" "Symbola"))
+            (#x2200 #xffff ("Symbola")))
           unicode-fonts-overrides-mapping)))
 
 ;; Attempt to set fixed with fonts for buffers that need them...
