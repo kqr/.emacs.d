@@ -32,17 +32,24 @@
   (append `(customize-set-variable (quote ,symbol)) args))
 
 ;; Location of my themes
-(setcq custom-theme-directory "~/.emacs.d/themes/")
+(setcq custom-theme-directory "~/.emacs.d/etc/theme/")
+
+;; Where to put temp files
+(setcq temporary-file-directory "~/.emacs.d/tmp/")
+(unless (file-directory-p temporary-file-directory)
+  (make-directory temporary-file-directory))
 
 ;; What's the point of specifying packages if you're not going to use them?
 (setcq use-package-always-ensure t)
 
 ;; Use this as early as possible
 (use-package no-littering :init
-  (setcq backup-inhibited t)
-  (setcq auto-save-default nil))
+  ;; Avoid littering in working directory and ~/.emacs.d/ by moving
+  ;; temporary/soon to be overwritten files elsewhere
+  (setcq backup-directory-alist `((".*" . ,temporary-file-directory)))
+  (setcq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))))
 
-(load "~/.emacs.d/init-common.el")
-(load "~/.emacs.d/init-local.el")
+(load "~/.emacs.d/etc/init-common.el")
+(load "~/.emacs.d/etc/init-local.el")
 
 ;;; init.el ends here

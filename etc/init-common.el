@@ -165,9 +165,9 @@
          ("M-h" . widen))
   :commands (outline-minor-mode)
   :init
+  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   (add-hook 'prog-mode-hook #'outline-minor-mode)
   :config
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   ;; Allow narrowing to subtree even when inside subtree
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
@@ -175,7 +175,7 @@
 
 ;;;;; Versor-mode for convenient navigation
 (use-package versor
-  :ensure nil :load-path "~/.emacs.d/config/libs/emacs-versor/lisp"
+  :ensure nil :load-path "~/.emacs.d/config/lib/emacs-versor/lisp"
   :config
   (require 'versor)
   (setcq versor-auto-change-for-modes nil)
@@ -282,7 +282,7 @@
   (add-hook 'god-mode-enabled-hook #'god-has-priority))
 
 (use-package tab-as-escape :diminish tab-as-escape-mode
-  :ensure nil :load-path "~/.emacs.d/libs"
+  :ensure nil :load-path "~/.emacs.d/lib"
   :config
   (require 'tab-as-escape)
   (tab-as-escape-mode +1))
@@ -300,6 +300,10 @@
 (use-package dabbrev :config
   (bind-key* "C-M-i" 'dabbrev-expand)
   (setcq dabbrev-case-fold-search nil))
+
+(use-package yasnippet :config
+  (setcq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
+  (yas-global-mode 1))
 
 ;;;; Programming, general
 ;;;;; Edit by balanced parentheses
