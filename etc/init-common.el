@@ -176,6 +176,8 @@
   (ivy-mode +1))
 (use-package counsel :bind
   (("M-x" . counsel-M-x)))
+
+(use-package smex)
 ;;;;; Org-like structuring of any document
 (use-package outshine
   :bind (("M-n" . outshine-narrow-to-subtree)
