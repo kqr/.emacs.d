@@ -302,8 +302,9 @@
   (bind-key* "C-M-i" 'dabbrev-expand)
   (setcq dabbrev-case-fold-search nil))
 
-(use-package yasnippet :config
+(use-package yasnippet :init
   (setcq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
+  :config
   (yas-global-mode 1))
 
 ;;;; Programming, general
@@ -434,6 +435,7 @@
   (setcq org-export-backends '(org html publish s5 latex rss))
   
   :config
+  ;;;;;; Regular Org operation
   (setcq org-return-follows-link t)
   (setcq org-list-allow-alphabetical t)
   
@@ -442,6 +444,7 @@
   (org-set-emph-re 'org-emphasis-regexp-components
                    org-emphasis-regexp-components)
 
+  ;;;;;; Using Org as a planner
   ;; allow execution of R code in org (for neat graphs and tables and stuff!)
   ;; separate sets to avoid accidentally completing something (for example)
   (setcq org-todo-keywords
@@ -484,22 +487,25 @@
   
   ;; TODO: set custom agenda commands for various contexts
 
-  ;; Org export stuff
+  ;;;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t) (R . t)))
-  
-  (require 'ox-latex)
-  (add-to-list 'org-latex-classes
-               '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")))
 
-  (add-to-list 'org-structure-template-alist
-               (list "b" (concat
-                          "#+TITLE: ?\n"
-                          "#+AUTHOR: kqr\n"
-                          "#+DATE: \n"
-                          "#+FILETAGS: :draft:\n"))) 
+  (require 'ox-latex)
+  (setcq org-latex-classes
+         (cons '("tufte-handout"
+                 "\\documentclass[a4paper,11pt]{tufte-handout}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}"))
+               org-latex-classes))
+
+  (setcq org-latex-compiler "xelatex")
+  (setcq org-latex-default-class "tufte-handout")
+  (setcq org-latex-packages-alist
+         ;; These depend on xelatex, so be careful with that!
+         '(("" "fontspec" t)
+           "\\setmainfont[Numbers=OldStyle]{Whitman}"
+           ("AUTO" "polyglossia" t)))
   )
 
 

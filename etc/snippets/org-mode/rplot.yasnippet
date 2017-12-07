@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: #+BEGIN_SRC R :exports both :results graphics
+# key: rplot
+# --
+#+NAME: src:${1:name}
+#+HEADER: :file image/$1.svg
+#+HEADER: :R-dev-args bg="transparent" :width 7 :height 3.5
+#+BEGIN_SRC R :session :exports both :results graphics
+$0
+#+END_SRC
