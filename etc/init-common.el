@@ -158,7 +158,9 @@
 
 (use-package popup)
 ;;;; Navigation and fuzzy finding
-(use-package ivy :diminish ivy-mode :config (ivy-mode +1))
+(use-package ivy :diminish ivy-mode :config
+  (setcq ivy-initial-inputs-alist nil)
+  (ivy-mode +1))
 (use-package counsel :bind
   (("M-x" . counsel-M-x)))
 ;;;;; Org-like structuring of any document
@@ -486,6 +488,12 @@
   (setcq org-refile-targets
          '(("~/org/projects.org" :maxlevel . 3)
            ("~/org/notes.org" :maxlevel . 2)))
+  (setcq org-refile-allow-creating-parent-nodes 'confirm)
+  (setcq org-refile-use-outline-path t)
+  (setcq org-outline-path-complete-in-steps nil)
+  (setcq org-log-refile 'time)
+  (setcq org-reverse-note-order t)
+
   (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
   (setcq org-archive-location "~/org/archive.org::* %s")
   
