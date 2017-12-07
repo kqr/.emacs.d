@@ -148,6 +148,8 @@
 (use-package fic-mode :init
   ;; This needs to be made globalized
   (fic-mode +1)
+  ;; Temporary solution...
+  (add-hook 'find-file-hook #'fic-mode)
   :config
   (setcq fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 

@@ -118,7 +118,8 @@
             column-enforce-face
             whitespace-trailing
             isearch-fail
-            flycheck-fringe-error)
+            flycheck-fringe-error
+            fic-face)
 
            (((t :underline
                 (:color ,theme-error-color :style wave)))
@@ -142,7 +143,6 @@
             minibuffer-prompt
             font-lock-keyword-face
             org-todo
-            fic-face
             fic-author-face)
 
            (((t :foreground ,theme-primary-accent
