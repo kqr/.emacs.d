@@ -24,13 +24,22 @@
 
 ;; Set up the package system
 (require 'package)
-(push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
+(mapc (lambda (elt) (push elt package-archives))
+      '(("melpa" . "http://melpa.milkbox.net/packages/")
+        ("org" . "http://orgmode.org/elpa/")
+        ("sunrise" . "http://joseito.republika.pl/sunrise-commander/")))
+(mapc (lambda (elt)
+        (push (file-name-as-directory (expand-file-name elt)) load-path))
+      '("~/.emacs.d/lib" "~/.emacs.d/lib/emacs-versor/lisp"))
+
 (package-initialize)
 (unless (package-installed-p 'use-package)
+  ;; Bootstrap installation with packages that can't be handled by use-package
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'diminish)
-  (package-install 'bind-key))
+  (package-install 'bind-key)
+  (package-install 'org))
 
 (eval-when-compile
   (require 'use-package))

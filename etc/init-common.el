@@ -129,7 +129,8 @@
 (use-package column-enforce-mode :diminish column-enforce-mode :config
   ;; inherit fill-column
   (setcq column-enforce-column nil)
-  (setcq column-enforce-should-enable-p (lambda () t))
+  (setcq column-enforce-should-enable-p
+         (lambda () (string-match "^notmuch" (symbol-name major-mode))))
   (global-column-enforce-mode +1))
 
 ;; Highlight FIXME TODO etc. in comments
@@ -176,7 +177,7 @@
 
 ;;;;; Versor-mode for convenient navigation
 (use-package versor
-  :ensure nil :load-path "~/.emacs.d/config/lib/emacs-versor/lisp"
+  :ensure nil
   :config
   (require 'versor)
   (setcq versor-auto-change-for-modes nil)
@@ -283,7 +284,7 @@
   (add-hook 'god-mode-enabled-hook #'god-has-priority))
 
 (use-package tab-as-escape :diminish tab-as-escape-mode
-  :ensure nil :load-path "~/.emacs.d/lib"
+  :ensure nil
   :config
   (require 'tab-as-escape)
   (tab-as-escape-mode +1))
@@ -402,8 +403,6 @@
 ;;;; EAAS = Emacs-As-An-(operating)-System
 ;;;;; File manager
 (unbind-key "<f2>")
-(add-to-list 'package-archives
-             '("sunrise" . "http://joseito.republika.pl/sunrise-commander/"))
 (use-package sunrise-commander :bind
   (("<f2>" . sunrise-cd))
 
@@ -419,7 +418,6 @@
   (setcq calendar-date-style 'iso))
 
 (unbind-key "<f4>")
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (use-package org
   :ensure org-plus-contrib
   :bind (("<f4> a" . org-agenda)
