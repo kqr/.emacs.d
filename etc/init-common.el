@@ -99,7 +99,18 @@
     (setcq calc-multiplication-has-precedence nil))
   
   ;; Make "join this line to the one above" a bit more convenient to perform
-  (bind-key* "C-J" #'delete-indentation))
+  (bind-key* "C-J" #'delete-indentation)
+
+  ;; This is so neat too! Automatically highlight conflicts in files :3
+  (use-package smerge-mode :config
+    (defun sm-try-smerge ()
+      "Start smerge-mode when a git conflict is detected."
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^<<<<<<< " nil t)
+          (smerge-mode 1))))
+
+    (add-hook 'find-file-hook 'sm-try-smerge t)))
 
 
 ;;; External packages
