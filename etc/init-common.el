@@ -299,6 +299,12 @@
   (global-undo-tree-mode)
   (setcq undo-tree-visualizer-diff t))
 
+(use-package visual-regexp :config
+  (use-package visual-regexp-steroids :bind
+    ("C-%" . #'vr/query-replace)
+    ("C-s" . #'vr/isearch-forward)
+    ("C-r" . #'vr/isearch-backward)))
+
 (use-package dabbrev :config
   (bind-key* "C-M-i" 'dabbrev-expand)
   (setcq dabbrev-case-fold-search nil))
