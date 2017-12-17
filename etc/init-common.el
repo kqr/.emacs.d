@@ -97,6 +97,10 @@
     :bind (("C-=" . quick-calc))
     :config
     (setcq calc-multiplication-has-precedence nil))
+
+  ;; this could be even more neat...
+  (use-package calc
+    :bind (("<f12>" . calc)))
   
   ;; Make "join this line to the one above" a bit more convenient to perform
   (bind-key* "C-J" #'delete-indentation)
@@ -255,6 +259,7 @@
            eshell-mode
            doc-view-mode
            magit-popup-mode
+           calc-mode
            Custom-mode
            notmuch-hello-mode
            notmuch-search-mode
@@ -486,10 +491,12 @@
   (setcq org-todo-repeat-to-state "TODO")
 
   (setcq org-hierarchical-todo-statistics nil)
-  
+
   ;; When closing an item, ask for a note – just in case there's an
   ;; important thought there that may otherwise not get recorded
   (setcq org-log-done 'note)
+  ;; Don't ask for a log message if cycling through with shift-arrow keys
+  (setcq org-treat-S-cursor-todo-selection-as-state-change nil)
   
   ;; Let's simplify this...
   ;; A = screamingly important
@@ -497,7 +504,8 @@
   ;; C = fine if rescheduled
   (setcq org-lowest-priority ?C)
   (setcq org-default-priority ?B)
-  
+
+  ;; Capturing and refiling
   (setcq org-capture-templates
          '(("i" ">inbox" entry (file "") "* %?\n")))
   (setcq org-default-notes-file "~/org/inbox.org")
@@ -510,35 +518,61 @@
   (setcq org-log-refile 'time)
   (setcq org-reverse-note-order t)
 
+  ;; Agenda and archiving
   (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
   (setcq org-archive-location "~/org/archive.org::* %s")
   
-  ;; TODO: set custom agenda commands for various contexts
-
+  ;; TODO: set more/better custom agenda commands for various contexts
+  (setcq org-agenda-span 'day)
+  (setcq org-agenda-custom-commands
+         '((" " "Agenda"
+            ((tags "FILE={inbox.org}"
+                   ((org-agenda-overriding-header "Inbox")))
+             (agenda "" nil)
+             (todo "TODO"
+                   ((org-agenda-overriding-header "To do (not scheduled)")
+                    (org-agenda-todo-ignore-scheduled t)))))))
+  
   ;;;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t) (R . t)))
 
   (require 'ox-latex)
   (setcq org-latex-classes
-         (cons '("tufte-handout"
-                 "\\documentclass[a4paper,11pt]{tufte-handout}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}"))
-               org-latex-classes))
+         (append '(("tufte-handout"
+                    "\\documentclass[a4paper,11pt]{tufte-handout}"
+                    ("\\section{%s}" . "\\section*{%s}")
+                    ("\\subsection{%s}" . "\\subsection*{%s}"))
+                   ("tufte-book"
+                    "\\documentclass[a4paper,10pt]{tufte-book}"))
+                 org-latex-classes))
 
   (setcq org-latex-compiler "xelatex")
   (setcq org-latex-default-class "tufte-handout")
   (setcq org-latex-packages-alist
          ;; These depend on xelatex, so be careful with that!
-         '(("" "fontspec" t)
+         `(("" "fontspec" t)
            "\\setmainfont[Numbers=OldStyle]{Whitman}"
-           ("AUTO" "polyglossia" t)))
+           ("AUTO" "polyglossia" t)
+           ("" "pdflscape" t)
+           ;; tufte-handout xelatex shim
+           ,(concat
+             "\\ifxetex\n"
+             "  \\newcommand{\\textls}[2][5]{%\n"
+             "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
+             "  }\n"
+             "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
+             "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
+             "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
+             " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
+             " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
+             "\\fi\n")))
   )
 
 
 ;;;;; Email client
 (use-package notmuch
+  :bind (("<f5>" . notmuch))
   ;; Load the locally installed notmuch mode to ensure versions match
   :ensure nil :init
   (defun notmuch-toggle-deleted-tag (&optional beg end)

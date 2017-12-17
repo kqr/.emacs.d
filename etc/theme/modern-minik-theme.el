@@ -67,6 +67,10 @@
             org-block
             org-block-background)
 
+           ;; Where we need to override silly defaults...
+           (((t :inherit unspecified))
+            ess-backquoted-face)
+           
            ;; Faces that inherit the pure default face and nothing else
            (((t :foreground ,theme-default-color))
             org-level-1

@@ -20,7 +20,7 @@
   "A convenient wrapper around (customize-set-variable 'SYMBOL ARGS)."
   (append `(customize-set-variable (quote ,symbol)) args))
 
-;;; ----
+;;; Package system
 
 ;; Set up the package system
 (require 'package)
@@ -48,15 +48,15 @@
 
 (setq use-package-always-ensure t)
 
-;;; ----
+;;; Theming
 
 ;; Location of my themes
 (setcq custom-theme-directory "~/.emacs.d/etc/theme/")
 
-;;; ----
+;;; No littering
 
 ;; Where to put temp files
-(setcq temporary-file-directory "~/.emacs.d/tmp/")
+(setcq temporary-file-directory "/tmp/")
 (unless (file-directory-p temporary-file-directory)
   (make-directory temporary-file-directory))
 
@@ -67,7 +67,7 @@
   (setcq backup-directory-alist `((".*" . ,temporary-file-directory)))
   (setcq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))))
 
-;;; ----
+;;; Load other config
 
 (load "~/.emacs.d/etc/init-common.el")
 (load "~/.emacs.d/etc/init-local.el")
