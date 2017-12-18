@@ -466,10 +466,16 @@
   (setcq org-return-follows-link t)
   (setcq org-list-allow-alphabetical t)
   
-  ;; Allow longer sections of italics
-  (setcar (nthcdr 4 org-emphasis-regexp-components) 8)
-  (org-set-emph-re 'org-emphasis-regexp-components
-                   org-emphasis-regexp-components)
+  ;; Allow longer sections of italics, and italicise mid-word with
+  ;; zero width no break space
+  (let ((pre (concat "﻿" (nth 0 org-emphasis-regexp-components)))
+        (post (nth 1 org-emphasis-regexp-components))
+        (border (nth 2 org-emphasis-regexp-components))
+        (body-regexp (nth 3 org-emphasis-regexp-components))
+        (newline 8))
+    (setcq org-emphasis-regexp-components (list pre post border body-regexp newline))
+    (org-set-emph-re 'org-emphasis-regexp-components
+                     org-emphasis-regexp-components))
 
   ;;;;;; Using Org as a planner
   ;; allow execution of R code in org (for neat graphs and tables and stuff!)
