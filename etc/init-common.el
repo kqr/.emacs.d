@@ -1,6 +1,7 @@
 ;;; init-common.el --- Configuration common to all my Emacs installations
 ;;
 ;;; Commentary:
+;; Testing I18N: Räksmörgås
 ;;
 ;;; Code:
 ;;; Built-in emacs config
@@ -36,28 +37,18 @@
   ;; theme since it overrides the mode line anyway...)
   (column-number-mode +1)
 
-
-  ;;;; Set variable width font for most things (but not quite all of them!)
-  (when (display-graphic-p)
-    ;; TODO: Set a different font for #x2500–#x2580: box drawing characters
-    ;; TODO: Also set a different font for #x005e: circumflex accent...
-    (set-fontset-font "fontset-startup" 'unicode
-                      (font-spec :name "Whitman" :size 16.0))
-
-    ;; Use variable-width symbol font for all other weird glyphs
-    (set-fontset-font "fontset-default" 'unicode
-                      (font-spec :name "Symbola" :size 16.0))
-    
-    (add-to-list 'initial-frame-alist '(line-spacing . 1))
-    (add-to-list 'default-frame-alist '(line-spacing . 1))
-
-    (custom-theme-set-faces 'user '(fixed-pitch
-                                    ((t :family "Luxi Mono" :height 0.8)))))
-  
-  ;; We like our theme (although it's now become a light-modern-thing...)
+  ;; We like our theme
   (setcq frame-background-mode 'light)
   (load-theme 'modern-minik)
 
+  ;;;; Set variable width font for most things (but not quite all of them!)
+  (when (display-graphic-p)
+    (set-frame-font (font-spec :name "Linux Libertine O" :size 16.0) t t)
+    (custom-theme-set-faces 'user '(fixed-pitch
+                                    ((t :family "Luxi Mono" :height 0.8))))
+    (add-to-list 'initial-frame-alist '(line-spacing . 1))
+    (add-to-list 'default-frame-alist '(line-spacing . 1)))
+  
   ;; Don't soft wrap lines, simply let them extend beyond the window width
   (setcq truncate-lines t)
   (set-display-table-slot standard-display-table 0 ?›)
@@ -106,15 +97,42 @@
     :bind (("C-=" . quick-calc))
     :config
     (setcq calc-multiplication-has-precedence nil))
+
+  ;; this could be even more neat...
+  (use-package calc
+    :bind (("<f12>" . calc)))
   
   ;; Make "join this line to the one above" a bit more convenient to perform
-  (bind-key* "C-J" #'delete-indentation))
+  (bind-key* "C-J" #'delete-indentation)
+
+  ;; This is so neat too! Automatically highlight conflicts in files :3
+  (use-package smerge-mode :config
+    (defun sm-try-smerge ()
+      "Start smerge-mode when a git conflict is detected."
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^<<<<<<< " nil t)
+          (smerge-mode 1))))
+
+    (add-hook 'find-file-hook 'sm-try-smerge t)))
 
 
 ;;; External packages
 ;;;; Enable easy troubleshooting of init file
 (use-package bug-hunter :commands bug-hunter-init-file)
 ;;;; UI configuration should appear early
+
+;; Use variable-width fonts yeaah
+(use-package unicode-fonts :init
+  (use-package persistent-soft :config
+    (unicode-fonts-setup))
+  :config
+  (setcq unicode-fonts-overrides-mapping
+         (append
+          '((#x0000 #x21ff ("Linux Libertine O" "Symbola"))
+            (#x2200 #xffff ("Symbola")))
+          unicode-fonts-overrides-mapping)))
+
 ;; Attempt to set fixed with fonts for buffers that need them...
 (use-package face-remap :config
   (setcq buffer-face-mode-face '(:inherit fixed-pitch))
@@ -126,13 +144,16 @@
 (use-package column-enforce-mode :diminish column-enforce-mode :config
   ;; inherit fill-column
   (setcq column-enforce-column nil)
-  (setcq column-enforce-should-enable-p (lambda () t))
+  (setcq column-enforce-should-enable-p
+         (lambda () (string-match "^notmuch" (symbol-name major-mode))))
   (global-column-enforce-mode +1))
 
 ;; Highlight FIXME TODO etc. in comments
 (use-package fic-mode :init
   ;; This needs to be made globalized
   (fic-mode +1)
+  ;; Temporary solution...
+  (add-hook 'find-file-hook #'fic-mode)
   :config
   (setcq fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 
@@ -154,18 +175,23 @@
 
 (use-package popup)
 ;;;; Navigation and fuzzy finding
-(use-package ivy :diminish ivy-mode :config (ivy-mode +1))
+(use-package ivy :diminish ivy-mode :config
+  (setcq ivy-initial-inputs-alist nil)
+  (ivy-mode +1))
 (use-package counsel :bind
   (("M-x" . counsel-M-x)))
+
+(use-package smex)
 ;;;;; Org-like structuring of any document
 (use-package outshine
   :bind (("M-n" . outshine-narrow-to-subtree)
          ("M-h" . widen))
   :commands (outline-minor-mode)
   :init
+  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   (add-hook 'prog-mode-hook #'outline-minor-mode)
   :config
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+  (setcq outshine-startup-folded-p t)
   ;; Allow narrowing to subtree even when inside subtree
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
@@ -173,7 +199,7 @@
 
 ;;;;; Versor-mode for convenient navigation
 (use-package versor
-  :ensure nil :load-path "~/.emacs.d/config/libs/emacs-versor/lisp"
+  :ensure nil
   :config
   (require 'versor)
   (setcq versor-auto-change-for-modes nil)
@@ -233,6 +259,7 @@
            eshell-mode
            doc-view-mode
            magit-popup-mode
+           calc-mode
            Custom-mode
            notmuch-hello-mode
            notmuch-search-mode
@@ -280,7 +307,7 @@
   (add-hook 'god-mode-enabled-hook #'god-has-priority))
 
 (use-package tab-as-escape :diminish tab-as-escape-mode
-  :ensure nil :load-path "~/.emacs.d/libs"
+  :ensure nil
   :config
   (require 'tab-as-escape)
   (tab-as-escape-mode +1))
@@ -295,9 +322,20 @@
   (global-undo-tree-mode)
   (setcq undo-tree-visualizer-diff t))
 
+(use-package visual-regexp :config
+  (use-package visual-regexp-steroids :bind
+    ("C-%" . #'vr/query-replace)
+    ("C-s" . #'vr/isearch-forward)
+    ("C-r" . #'vr/isearch-backward)))
+
 (use-package dabbrev :config
   (bind-key* "C-M-i" 'dabbrev-expand)
   (setcq dabbrev-case-fold-search nil))
+
+(use-package yasnippet :init
+  (setcq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
+  :config
+  (yas-global-mode 1))
 
 ;;;; Programming, general
 ;;;;; Edit by balanced parentheses
@@ -394,8 +432,6 @@
 ;;;; EAAS = Emacs-As-An-(operating)-System
 ;;;;; File manager
 (unbind-key "<f2>")
-(add-to-list 'package-archives
-             '("sunrise" . "http://joseito.republika.pl/sunrise-commander/"))
 (use-package sunrise-commander :bind
   (("<f2>" . sunrise-cd))
 
@@ -411,7 +447,6 @@
   (setcq calendar-date-style 'iso))
 
 (unbind-key "<f4>")
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (use-package org
   :ensure org-plus-contrib
   :bind (("<f4> a" . org-agenda)
@@ -427,32 +462,28 @@
   (setcq org-export-backends '(org html publish s5 latex rss))
   
   :config
+  ;;;;;; Regular Org operation
   (setcq org-return-follows-link t)
+  (setcq org-list-allow-alphabetical t)
   
-  ;; Allow longer sections of italics
-  (setcar (nthcdr 4 org-emphasis-regexp-components) 8)
-  (org-set-emph-re 'org-emphasis-regexp-components
-                   org-emphasis-regexp-components)
+  ;; Allow longer sections of italics, and italicise mid-word with
+  ;; zero width no break space
+  (let ((pre (concat "﻿" (nth 0 org-emphasis-regexp-components)))
+        (post (nth 1 org-emphasis-regexp-components))
+        (border (nth 2 org-emphasis-regexp-components))
+        (body-regexp (nth 3 org-emphasis-regexp-components))
+        (newline 8))
+    (setcq org-emphasis-regexp-components (list pre post border body-regexp newline))
+    (org-set-emph-re 'org-emphasis-regexp-components
+                     org-emphasis-regexp-components))
 
+  ;;;;;; Using Org as a planner
   ;; allow execution of R code in org (for neat graphs and tables and stuff!)
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t) (R . t)))
-  
-  (require 'ox-latex)
-  (add-to-list 'org-latex-classes
-               '("tufte-handout" "\\documentclass[11pt]{tufte-handout}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")))
-
-  (add-to-list 'org-structure-template-alist
-               (list "b" (concat
-                          "#+TITLE: ?\n"
-                          "#+AUTHOR: kqr\n"
-                          "#+DATE: \n"
-                          "#+FILETAGS: :draft:\n")))
-  
+  ;; separate sets to avoid accidentally completing something (for example)
   (setcq org-todo-keywords
-         '((sequence "HOLD" "TODO" "|" "DONE" "CANCELED")))
+         '((sequence "HOLD(h)" "TODO(t)" "|")
+           (sequence "|" "DONE(d)")
+           (sequence "|" "CANCELED(c)")))
   
   (setcq org-todo-keyword-faces
          '(("HOLD" . (:foreground "dodger blue" :weight bold))
@@ -465,26 +496,89 @@
   ;; becomes a todo because it won't clutter until scheduled anyway!
   (setcq org-todo-repeat-to-state "TODO")
 
+  (setcq org-hierarchical-todo-statistics nil)
+
+  ;; When closing an item, ask for a note – just in case there's an
+  ;; important thought there that may otherwise not get recorded
+  (setcq org-log-done 'note)
+  ;; Don't ask for a log message if cycling through with shift-arrow keys
+  (setcq org-treat-S-cursor-todo-selection-as-state-change nil)
+  
   ;; Let's simplify this...
   ;; A = screamingly important
   ;; B = normal day-to-day "you should do this or bad things will happen"
   ;; C = fine if rescheduled
   (setcq org-lowest-priority ?C)
   (setcq org-default-priority ?B)
-  
+
+  ;; Capturing and refiling
   (setcq org-capture-templates
          '(("i" ">inbox" entry (file "") "* %?\n")))
   (setcq org-default-notes-file "~/org/inbox.org")
-  (setcq org-refile-targets '(("~/org/projects.org" :maxlevel 3)))
+  (setcq org-refile-targets
+         '(("~/org/projects.org" :maxlevel . 3)
+           ("~/org/notes.org" :maxlevel . 2)))
+  (setcq org-refile-allow-creating-parent-nodes 'confirm)
+  (setcq org-refile-use-outline-path t)
+  (setcq org-outline-path-complete-in-steps nil)
+  (setcq org-log-refile 'time)
+  (setcq org-reverse-note-order t)
+
+  ;; Agenda and archiving
   (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
   (setcq org-archive-location "~/org/archive.org::* %s")
   
-  ;; TODO: set custom agenda commands for various contexts
+  ;; TODO: set more/better custom agenda commands for various contexts
+  (setcq org-agenda-span 'day)
+  (setcq org-agenda-custom-commands
+         '((" " "Agenda"
+            ((tags "FILE={inbox.org}"
+                   ((org-agenda-overriding-header "Inbox")))
+             (agenda "" nil)
+             (todo "TODO"
+                   ((org-agenda-overriding-header "To do (not scheduled)")
+                    (org-agenda-todo-ignore-scheduled t)))))))
+  
+  ;;;;;; Using Org to publish documents
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t)))
+
+  (require 'ox-latex)
+  (setcq org-latex-classes
+         (append '(("tufte-handout"
+                    "\\documentclass[a4paper,11pt]{tufte-handout}"
+                    ("\\section{%s}" . "\\section*{%s}")
+                    ("\\subsection{%s}" . "\\subsection*{%s}"))
+                   ("tufte-book"
+                    "\\documentclass[a4paper,10pt]{tufte-book}"))
+                 org-latex-classes))
+
+  (setcq org-latex-compiler "xelatex")
+  (setcq org-latex-default-class "tufte-handout")
+  (setcq org-latex-packages-alist
+         ;; These depend on xelatex, so be careful with that!
+         `(("" "fontspec" t)
+           "\\setmainfont[Numbers=OldStyle]{Whitman}"
+           ("AUTO" "polyglossia" t)
+           ("" "pdflscape" t)
+           ;; tufte-handout xelatex shim
+           ,(concat
+             "\\ifxetex\n"
+             "  \\newcommand{\\textls}[2][5]{%\n"
+             "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
+             "  }\n"
+             "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
+             "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
+             "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
+             " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
+             " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
+             "\\fi\n")))
   )
 
 
 ;;;;; Email client
 (use-package notmuch
+  :bind (("<f5>" . notmuch))
   ;; Load the locally installed notmuch mode to ensure versions match
   :ensure nil :init
   (defun notmuch-toggle-deleted-tag (&optional beg end)

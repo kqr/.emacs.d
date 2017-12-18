@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: my preferred default layout for continuous plots
+# key: kplot
+# --
+ggplot(${1:data}, aes(${2:mapping})) +
+    $0
+    scale_x_continuous("X",
+                       expand=c(0,0)) +
+    scale_y_continuous("",
+                       expand=c(0,0)) +
+    labs(title="Y") +
+    theme_classic() +
+    theme(legend.position="none",
+          plot.title=element_text(family="Palatino", size=11),
+          axis.title=element_text(family="Palatino", size=11),
+          axis.text=element_text(family="Palatino", size=11),
+          panel.background=element_blank(),
+          plot.background=element_blank(),
+          axis.ticks=element_blank())

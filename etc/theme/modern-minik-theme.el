@@ -67,12 +67,21 @@
             org-block
             org-block-background)
 
+           ;; Where we need to override silly defaults...
+           (((t :inherit unspecified))
+            ess-backquoted-face)
+           
            ;; Faces that inherit the pure default face and nothing else
            (((t :foreground ,theme-default-color))
             org-level-1
             org-level-2
             org-level-3
             org-level-4
+            org-level-5
+            org-level-6
+            org-level-7
+            org-level-8
+            org-level-9
             org-scheduled-today
             org-agenda-date
             org-agenda-date-today
@@ -113,7 +122,8 @@
             column-enforce-face
             whitespace-trailing
             isearch-fail
-            flycheck-fringe-error)
+            flycheck-fringe-error
+            fic-face)
 
            (((t :underline
                 (:color ,theme-error-color :style wave)))
@@ -137,7 +147,6 @@
             minibuffer-prompt
             font-lock-keyword-face
             org-todo
-            fic-face
             fic-author-face)
 
            (((t :foreground ,theme-primary-accent
@@ -257,6 +266,7 @@
         (whitespace-mode (" ⬚" . " W"))
         (god-local-mode (" ⇪" . " G"))
         (projectile-mode (" ⎘" . " P"))
+        (yas-minor-mode (" ⋯" . " ..."))
         (flycheck-mode (" ᪶" . " FC"))
         (mml-mode (" 🖃" . " M"))
         (aggressive-indent-mode (" ↹" . " AI"))
