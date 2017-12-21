@@ -539,58 +539,57 @@
     (let ((subtree-end (save-excursion (org-end-of-subtree t))))
       (if (re-search-forward "TODO" subtree-end t)
           subtree-end
-        nil))))
+        nil)))
 
-(setcq org-agenda-custom-commands
-       '((" " "Agenda"
-          ((tags "FILE={inbox.org}"
-                 ((org-agenda-overriding-header "Inbox")))
-           (agenda "" nil)
-           (todo "TODO"
-                 ((org-agenda-overriding-header "To do (not scheduled)")
-                  (org-agenda-todo-ignore-scheduled t)))
-           (tags "FILE={projects.org}+LEVEL=1"
-                 ((org-agenda-overriding-header "Stuck projects")
-                  (org-agenda-skip-function #'skip-living-projects)))))))
+  (setcq org-agenda-custom-commands
+         '((" " "Agenda"
+            ((tags "FILE={inbox.org}"
+                   ((org-agenda-overriding-header "Inbox")))
+             (agenda "" nil)
+             (todo "TODO"
+                   ((org-agenda-overriding-header "To do (not scheduled)")
+                    (org-agenda-todo-ignore-scheduled t)))
+             (tags "FILE={projects.org}+LEVEL=1-noproject"
+                   ((org-agenda-overriding-header "Stuck projects")
+                    (org-agenda-skip-function #'skip-living-projects)))))))
 
-;; TODO: set more/better custom agenda commands for various contexts
+  ;; TODO: set more/better custom agenda commands for various contexts
 
 
   ;;;;;; Using Org to publish documents
-(org-babel-do-load-languages 'org-babel-load-languages
-                             '((emacs-lisp . t) (R . t)))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t)))
 
-(require 'ox-latex)
-(setcq org-latex-classes
-       (append '(("tufte-handout"
-                  "\\documentclass[a4paper,11pt]{tufte-handout}"
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}"))
-                 ("tufte-book"
-                  "\\documentclass[a4paper,10pt]{tufte-book}"))
-               org-latex-classes))
+  (require 'ox-latex)
+  (setcq org-latex-classes
+         (append '(("tufte-handout"
+                    "\\documentclass[a4paper,11pt]{tufte-handout}"
+                    ("\\section{%s}" . "\\section*{%s}")
+                    ("\\subsection{%s}" . "\\subsection*{%s}"))
+                   ("tufte-book"
+                    "\\documentclass[a4paper,10pt]{tufte-book}"))
+                 org-latex-classes))
 
-(setcq org-latex-compiler "xelatex")
-(setcq org-latex-default-class "tufte-handout")
-(setcq org-latex-packages-alist
-       ;; These depend on xelatex, so be careful with that!
-       `(("" "fontspec" t)
-         "\\setmainfont[Numbers=OldStyle]{Whitman}"
-         ("AUTO" "polyglossia" t)
-         ("" "pdflscape" t)
-         ;; tufte-handout xelatex shim
-         ,(concat
-           "\\ifxetex\n"
-           "  \\newcommand{\\textls}[2][5]{%\n"
-           "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
-           "  }\n"
-           "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
-           "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
-           "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
-           " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
-           " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
-           "\\fi\n")))
-)
+  (setcq org-latex-compiler "xelatex")
+  (setcq org-latex-default-class "tufte-handout")
+  (setcq org-latex-packages-alist
+         ;; These depend on xelatex, so be careful with that!
+         `(("" "fontspec" t)
+           "\\setmainfont[Numbers=OldStyle]{Whitman}"
+           ("AUTO" "polyglossia" t)
+           ("" "pdflscape" t)
+           ;; tufte-handout xelatex shim
+           ,(concat
+             "\\ifxetex\n"
+             "  \\newcommand{\\textls}[2][5]{%\n"
+             "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
+             "  }\n"
+             "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
+             "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
+             "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
+             " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
+             " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
+             "\\fi\n"))))
 
 
 ;;;;; Email client
