@@ -174,6 +174,10 @@
   (global-centered-cursor-mode +1))
 
 (use-package popup)
+
+;; Avoid the built-in Emacs window manager and try to use the real one
+(use-package frames-only-mode :config
+  (frames-only-mode))
 ;;;; Navigation and fuzzy finding
 (use-package ivy :diminish ivy-mode :config
   (setcq ivy-initial-inputs-alist nil)
@@ -468,12 +472,12 @@
   
   ;; Allow longer sections of italics, and italicise mid-word with
   ;; zero width no break space
-  (let ((pre (concat "﻿" (nth 0 org-emphasis-regexp-components)))
-        (post (nth 1 org-emphasis-regexp-components))
-        (border (nth 2 org-emphasis-regexp-components))
-        (body-regexp (nth 3 org-emphasis-regexp-components))
-        (newline 8))
-    (setcq org-emphasis-regexp-components (list pre post border body-regexp newline))
+  (let ((pre (nth 0 org-emphasis-regexp-components)))
+    ;; If non-breaking space is in pre, don't bother adding it
+    (setcar (nthcdr 0 org-emphasis-regexp-components)
+            (if (string-match "﻿" pre) pre (concat pre "﻿")))
+    (setcar (nthcdr 4 org-emphasis-regexp-components)
+            8)
     (org-set-emph-re 'org-emphasis-regexp-components
                      org-emphasis-regexp-components))
 
@@ -484,7 +488,7 @@
          '((sequence "HOLD(h)" "TODO(t)" "|")
            (sequence "|" "DONE(d)")
            (sequence "|" "CANCELED(c)")))
-  
+
   (setcq org-todo-keyword-faces
          '(("HOLD" . (:foreground "dodger blue" :weight bold))
            ("TODO" . (:foreground "dark orange" :weight bold))
@@ -503,7 +507,7 @@
   (setcq org-log-done 'note)
   ;; Don't ask for a log message if cycling through with shift-arrow keys
   (setcq org-treat-S-cursor-todo-selection-as-state-change nil)
-  
+
   ;; Let's simplify this...
   ;; A = screamingly important
   ;; B = normal day-to-day "you should do this or bad things will happen"
@@ -559,6 +563,11 @@
   ;;;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t) (R . t)))
+
+  (setcq org-export-with-smart-quotes t)
+  (setcq org-export-with-emphasize t)
+  (setcq org-export-with-sub-superscripts nil)
+  (setcq org-export-with-footnotes t)
 
   (require 'ox-latex)
   (setcq org-latex-classes
