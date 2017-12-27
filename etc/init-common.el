@@ -635,6 +635,7 @@
   (setcq notmuch-saved-searches
          '((:name "inbox" :query "tag:inbox" :key "i")
            (:name "unread" :query "tag:unread" :key "u")
+           (:name "spam" :query "tag:spam" :key "m")
            (:name "sent" :query "tag:sent" :key "s")
            (:name "all mail" :query "*" :key "a")))
 
