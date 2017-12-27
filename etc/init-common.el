@@ -482,6 +482,9 @@
                      org-emphasis-regexp-components))
 
   ;;;;;; Using Org as a planner
+  ;; Let me copy emails as links in Org
+  (require 'org-notmuch)
+  
   ;; allow execution of R code in org (for neat graphs and tables and stuff!)
   ;; separate sets to avoid accidentally completing something (for example)
   (setcq org-todo-keywords
@@ -631,6 +634,7 @@
 
   (setcq notmuch-saved-searches
          '((:name "inbox" :query "tag:inbox" :key "i")
+           (:name "unread" :query "tag:unread" :key "u")
            (:name "sent" :query "tag:sent" :key "s")
            (:name "all mail" :query "*" :key "a")))
 
