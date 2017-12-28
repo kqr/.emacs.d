@@ -658,6 +658,9 @@
   (setcq mail-specify-envelope-from t)
   (setcq send-mail-function 'smtpmail-send-it)
 
+  ;; Always sign outgoing messages
+  (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
+
   ;;;;;; Sendmail integration
   (use-package sendmail :config
     (setcq mail-envelope-from 'header)
