@@ -399,7 +399,7 @@
   :config
   (projectile-mode)
   (use-package counsel-projectile :config
-    (counsel-projectile-on)))
+    (counsel-projectile-mode)))
 
 ;;;; Programming, language-specific
 (use-package cc-mode :config
