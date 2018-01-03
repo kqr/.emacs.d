@@ -555,7 +555,7 @@
             ((tags "FILE={inbox.org}"
                    ((org-agenda-overriding-header "Inbox")))
              (agenda "" nil)
-             (todo "TODO"
+             (tags "-@out/TODO"
                    ((org-agenda-overriding-header "To do (not scheduled)")
                     (org-agenda-todo-ignore-scheduled t)))
              (todo "WAIT"
