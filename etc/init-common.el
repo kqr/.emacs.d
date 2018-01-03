@@ -485,15 +485,15 @@
   ;; Let me copy emails as links in Org
   (require 'org-notmuch)
   
-  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
   ;; separate sets to avoid accidentally completing something (for example)
   (setcq org-todo-keywords
-         '((sequence "HOLD(h)" "TODO(t)" "|")
+         '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
            (sequence "|" "DONE(d)")
            (sequence "|" "CANCELED(c)")))
 
   (setcq org-todo-keyword-faces
          '(("HOLD" . (:foreground "dodger blue" :weight bold))
+           ("WAIT" . (:foreground "black" :weight bold))
            ("TODO" . (:foreground "dark orange" :weight bold))
            ("DONE" . (:foreground "olivedrab3" :weight bold))
            ("CANCELED" . (:foreground "dim grey" :weight bold))))
@@ -540,11 +540,13 @@
   (setcq org-enforce-todo-dependencies t)
   (setcq org-agenda-dim-blocked-tasks 'invisible)
   (setcq org-agenda-span 'day)
+  (setcq org-agenda-skip-scheduled-if-done t)
 
   (defun skip-living-projects ()
-    "Skip top level trees that do have a TODO child item"
-    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-      (if (re-search-forward "TODO" subtree-end t)
+    "Skip top level trees that do have a TODO or WAIT child item"
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (case-fold-search nil))
+      (if (re-search-forward "TODO\\|WAIT" subtree-end t)
           subtree-end
         nil)))
 
@@ -556,6 +558,9 @@
              (todo "TODO"
                    ((org-agenda-overriding-header "To do (not scheduled)")
                     (org-agenda-todo-ignore-scheduled t)))
+             (todo "WAIT"
+                   ((org-agenda-overriding-header "Waiting")
+                    (org-agenda-todo-ignore-scheduled t)))
              (tags "FILE={projects.org}+LEVEL=1-noproject"
                    ((org-agenda-overriding-header "Stuck projects")
                     (org-agenda-skip-function #'skip-living-projects)))))))
@@ -564,6 +569,7 @@
 
 
   ;;;;;; Using Org to publish documents
+  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t) (R . t)))
 
