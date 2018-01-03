@@ -43,7 +43,7 @@
 
   ;;;; Set variable width font for most things (but not quite all of them!)
   (when (display-graphic-p)
-    (set-frame-font (font-spec :name "Linux Libertine O" :size 16.0) t t)
+    (set-frame-font (font-spec :name "Linux Libertine O" :size 11.0) t t)
     (custom-theme-set-faces 'user '(fixed-pitch
                                     ((t :family "Luxi Mono" :height 0.8))))
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
@@ -399,7 +399,7 @@
   :config
   (projectile-mode)
   (use-package counsel-projectile :config
-    (counsel-projectile-on)))
+    (counsel-projectile-mode)))
 
 ;;;; Programming, language-specific
 (use-package cc-mode :config

@@ -38,7 +38,7 @@
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'diminish)
-  (package-install 'bind-key)
+;;  (package-install 'bind-key)
   (package-install 'org))
 
 (eval-when-compile
