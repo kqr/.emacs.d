@@ -16,9 +16,11 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-(defmacro setcq (symbol &rest args)
-  "A convenient wrapper around (customize-set-variable 'SYMBOL ARGS)."
-  (append `(customize-set-variable (quote ,symbol)) args))
+(mapc (lambda (elt)
+        (push (file-name-as-directory (expand-file-name elt)) load-path))
+      '("~/.emacs.d/etc" "~/.emacs.d/lib" "~/.emacs.d/lib/emacs-versor/lisp"))
+
+(require 'setcq)
 
 ;;; Package system
 
@@ -28,9 +30,6 @@
       '(("melpa" . "http://melpa.milkbox.net/packages/")
         ("org" . "http://orgmode.org/elpa/")
         ("sunrise" . "http://joseito.republika.pl/sunrise-commander/")))
-(mapc (lambda (elt)
-        (push (file-name-as-directory (expand-file-name elt)) load-path))
-      '("~/.emacs.d/lib" "~/.emacs.d/lib/emacs-versor/lisp"))
 
 (package-initialize)
 (unless (package-installed-p 'use-package)
@@ -38,7 +37,7 @@
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'diminish)
-  (package-install 'bind-key)
+;;  (package-install 'bind-key)
   (package-install 'org))
 
 (eval-when-compile

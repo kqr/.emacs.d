@@ -43,7 +43,7 @@
 
   ;;;; Set variable width font for most things (but not quite all of them!)
   (when (display-graphic-p)
-    (set-frame-font (font-spec :name "Linux Libertine O" :size 16.0) t t)
+    (set-frame-font (font-spec :name "Linux Libertine O" :size 11.0) t t)
     (custom-theme-set-faces 'user '(fixed-pitch
                                     ((t :family "Luxi Mono" :height 0.8))))
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
@@ -103,7 +103,7 @@
     :bind (("<f12>" . calc)))
   
   ;; Make "join this line to the one above" a bit more convenient to perform
-  (bind-key* "C-J" #'delete-indentation)
+  (bind-key* "C-S-j" #'delete-indentation)
 
   ;; This is so neat too! Automatically highlight conflicts in files :3
   (use-package smerge-mode :config
@@ -174,6 +174,10 @@
   (global-centered-cursor-mode +1))
 
 (use-package popup)
+
+;; Avoid the built-in Emacs window manager and try to use the real one
+(use-package frames-only-mode :config
+  (frames-only-mode))
 ;;;; Navigation and fuzzy finding
 (use-package ivy :diminish ivy-mode :config
   (setcq ivy-initial-inputs-alist nil)
@@ -395,7 +399,7 @@
   :config
   (projectile-mode)
   (use-package counsel-projectile :config
-    (counsel-projectile-on)))
+    (counsel-projectile-mode)))
 
 ;;;; Programming, language-specific
 (use-package cc-mode :config
@@ -462,30 +466,38 @@
   ;; For some reason these things need to be set before org is loaded?
   (setcq org-export-backends '(org html publish s5 latex rss))
 
+  (let ((pre (nth 0 org-emphasis-regexp-components))
+        (post (nth 1 org-emphasis-regexp-components)))
+    ;; If non-breaking space is in pre, don't bother adding it
+    (setcar (nthcdr 0 org-emphasis-regexp-components)
+            (if (string-match "﻿" pre) pre (concat pre "﻿")))
+    (setcar (nthcdr 1 org-emphasis-regexp-components)
+            (if (string-match "﻿" post) pre (concat post "﻿")))
+    (setcar (nthcdr 4 org-emphasis-regexp-components)
+            8)
+    (org-set-emph-re 'org-emphasis-regexp-components
+                     org-emphasis-regexp-components))
+
   ;; Allow longer sections of italics, and italicise mid-word with
   ;; zero width no break space
-  (let ((pre (concat "﻿" (nth 0 org-emphasis-regexp-components)))
-        (post (nth 1 org-emphasis-regexp-components))
-        (border (nth 2 org-emphasis-regexp-components))
-        (body-regexp (nth 3 org-emphasis-regexp-components))
-        (newline 8))
-    (setcq org-emphasis-regexp-components (list pre post border body-regexp newline)))
-  
   :config
   ;;;;;; Regular Org operation
   (setcq org-return-follows-link t)
   (setcq org-list-allow-alphabetical t)
   
   ;;;;;; Using Org as a planner
-  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
+  ;; Let me copy emails as links in Org
+  (require 'org-notmuch)
+  
   ;; separate sets to avoid accidentally completing something (for example)
   (setcq org-todo-keywords
-         '((sequence "HOLD(h)" "TODO(t)" "|")
+         '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
            (sequence "|" "DONE(d)")
            (sequence "|" "CANCELED(c)")))
-  
+
   (setcq org-todo-keyword-faces
          '(("HOLD" . (:foreground "dodger blue" :weight bold))
+           ("WAIT" . (:foreground "black" :weight bold))
            ("TODO" . (:foreground "dark orange" :weight bold))
            ("DONE" . (:foreground "olivedrab3" :weight bold))
            ("CANCELED" . (:foreground "dim grey" :weight bold))))
@@ -502,7 +514,7 @@
   (setcq org-log-done 'note)
   ;; Don't ask for a log message if cycling through with shift-arrow keys
   (setcq org-treat-S-cursor-todo-selection-as-state-change nil)
-  
+
   ;; Let's simplify this...
   ;; A = screamingly important
   ;; B = normal day-to-day "you should do this or bad things will happen"
@@ -516,6 +528,8 @@
   (setcq org-default-notes-file "~/org/inbox.org")
   (setcq org-refile-targets
          '(("~/org/projects.org" :maxlevel . 3)
+           ("~/org/tickler.org" :maxlevel . 1)
+           ("~/org/someday.org" :maxlevel . 3)
            ("~/org/notes.org" :maxlevel . 2)))
   (setcq org-refile-allow-creating-parent-nodes 'confirm)
   (setcq org-refile-use-outline-path t)
@@ -524,24 +538,54 @@
   (setcq org-reverse-note-order t)
 
   ;; Agenda and archiving
-  (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org"))
+  (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org" "~/org/tickler.org"))
   (setcq org-archive-location "~/org/archive.org::* %s")
-  
-  ;; TODO: set more/better custom agenda commands for various contexts
+
+  (setcq org-enforce-todo-dependencies t)
+  (setcq org-agenda-dim-blocked-tasks 'invisible)
   (setcq org-agenda-span 'day)
+  (setcq org-agenda-skip-scheduled-if-done t)
+
+  (defun skip-living-projects ()
+    "Skip top level trees that do have a TODO or WAIT child item"
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (case-fold-search nil))
+      (and (re-search-forward "TODO\\|WAIT" subtree-end t)
+           subtree-end)))
+
   (setcq org-agenda-custom-commands
          '((" " "Agenda"
             ((tags "FILE={inbox.org}"
                    ((org-agenda-overriding-header "Inbox")))
              (agenda "" nil)
-             (todo "TODO"
+             (tags "-@out/TODO"
                    ((org-agenda-overriding-header "To do (not scheduled)")
-                    (org-agenda-todo-ignore-scheduled t)))))))
-  
+                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
+             (todo "WAIT"
+                   ((org-agenda-overriding-header "Waiting")
+                    (org-agenda-todo-ignore-scheduled t)))
+             (tags "FILE={projects.org}+LEVEL=1-noproject"
+                   ((org-agenda-overriding-header "Stuck projects")
+                    (org-agenda-skip-function #'skip-living-projects)))))))
+
+  ;; TODO: set more/better custom agenda commands for various contexts
+
+
   ;;;;;; Using Org to publish documents
+<<<<<<< HEAD
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t) (R . t)))
+=======
+  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t)))
+>>>>>>> bde6fa22a5ec492fc4772d7d75112409652da30b
+
+  (setcq org-export-with-smart-quotes t)
+  (setcq org-export-with-emphasize t)
+  (setcq org-export-with-sub-superscripts nil)
+  (setcq org-export-with-footnotes t)
 
   (require 'ox-latex)
   (setcq org-latex-classes
@@ -572,8 +616,7 @@
              "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
              " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
              " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
-             "\\fi\n")))
-  )
+             "\\fi\n"))))
 
 
 ;;;;; Email client
@@ -606,6 +649,8 @@
 
   (setcq notmuch-saved-searches
          '((:name "inbox" :query "tag:inbox" :key "i")
+           (:name "unread" :query "tag:unread" :key "u")
+           (:name "spam" :query "tag:spam" :key "m")
            (:name "sent" :query "tag:sent" :key "s")
            (:name "all mail" :query "*" :key "a")))
 
@@ -627,6 +672,9 @@
          '("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From"))
   (setcq mail-specify-envelope-from t)
   (setcq send-mail-function 'smtpmail-send-it)
+
+  ;; Always sign outgoing messages
+  (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
 
   ;;;;;; Sendmail integration
   (use-package sendmail :config
