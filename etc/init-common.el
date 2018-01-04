@@ -324,7 +324,7 @@
 
 (use-package visual-regexp :config
   (use-package visual-regexp-steroids :bind
-    (("C-%" . #'vr/query-replace)
+    (("C-\%" . #'vr/query-replace)
      ("C-s" . #'vr/isearch-forward)
      ("C-r" . #'vr/isearch-backward))))
 
@@ -357,7 +357,7 @@
   (global-aggressive-indent-mode +1))
 
 (use-package whitespace :bind
-  ("C-z" . whitespace-mode)
+  (("C-z" . whitespace-mode))
 
   :init
   (defvar ws-show-paren-mode-active nil)
@@ -459,13 +459,9 @@
   :defines org-capture-templates org-latex-classes
 
   :init
+  ;; For some reason these things need to be set before org is loaded?
   (setcq org-export-backends '(org html publish s5 latex rss))
-  
-  :config
-  ;;;;;; Regular Org operation
-  (setcq org-return-follows-link t)
-  (setcq org-list-allow-alphabetical t)
-  
+
   ;; Allow longer sections of italics, and italicise mid-word with
   ;; zero width no break space
   (let ((pre (concat "﻿" (nth 0 org-emphasis-regexp-components)))
@@ -473,10 +469,13 @@
         (border (nth 2 org-emphasis-regexp-components))
         (body-regexp (nth 3 org-emphasis-regexp-components))
         (newline 8))
-    (setcq org-emphasis-regexp-components (list pre post border body-regexp newline))
-    (org-set-emph-re 'org-emphasis-regexp-components
-                     org-emphasis-regexp-components))
-
+    (setcq org-emphasis-regexp-components (list pre post border body-regexp newline)))
+  
+  :config
+  ;;;;;; Regular Org operation
+  (setcq org-return-follows-link t)
+  (setcq org-list-allow-alphabetical t)
+  
   ;;;;;; Using Org as a planner
   ;; allow execution of R code in org (for neat graphs and tables and stuff!)
   ;; separate sets to avoid accidentally completing something (for example)
@@ -540,8 +539,9 @@
                     (org-agenda-todo-ignore-scheduled t)))))))
   
   ;;;;;; Using Org to publish documents
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t) (R . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t) (R . t)))
 
   (require 'ox-latex)
   (setcq org-latex-classes
