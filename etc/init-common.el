@@ -472,10 +472,13 @@
   
   ;; Allow longer sections of italics, and italicise mid-word with
   ;; zero width no break space
-  (let ((pre (nth 0 org-emphasis-regexp-components)))
+  (let ((pre (nth 0 org-emphasis-regexp-components))
+        (post (nth 1 org-emphasis-regexp-components)))
     ;; If non-breaking space is in pre, don't bother adding it
     (setcar (nthcdr 0 org-emphasis-regexp-components)
             (if (string-match "﻿" pre) pre (concat pre "﻿")))
+    (setcar (nthcdr 1 org-emphasis-regexp-components)
+            (if (string-match "﻿" post) pre (concat post "﻿")))
     (setcar (nthcdr 4 org-emphasis-regexp-components)
             8)
     (org-set-emph-re 'org-emphasis-regexp-components
