@@ -572,16 +572,9 @@
 
 
   ;;;;;; Using Org to publish documents
-<<<<<<< HEAD
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t) (R . t)))
-=======
-  ;; allow execution of R code in org (for neat graphs and tables and stuff!)
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t) (R . t)))
->>>>>>> bde6fa22a5ec492fc4772d7d75112409652da30b
-
   (setcq org-export-with-smart-quotes t)
   (setcq org-export-with-emphasize t)
   (setcq org-export-with-sub-superscripts nil)
