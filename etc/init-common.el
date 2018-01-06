@@ -395,7 +395,9 @@
   (global-flycheck-mode 1))
 
 ;;;;; Project management of source code etc.
-(use-package projectile
+(unbind-key "<f8>")
+(use-package projectile :bind-keymap
+  ("<f8>" . projectile-command-map)
   :config
   (projectile-mode)
   (use-package counsel-projectile :config
