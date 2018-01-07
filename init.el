@@ -14,13 +14,10 @@
   (unless (file-directory-p (file-name-directory custom-file))
     (make-directory (file-name-directory custom-file)))
   (write-region "" nil custom-file))
-(load custom-file)
+(load-file custom-file)
 
-(mapc (lambda (elt)
-        (push (file-name-as-directory (expand-file-name elt)) load-path))
-      '("~/.emacs.d/etc" "~/.emacs.d/lib" "~/.emacs.d/lib/emacs-versor/lisp"))
-
-(require 'setcq)
+(eval-and-compile (push "~/.emacs.d/etc" load-path))
+(require 'kqr-load-path)
 
 ;;; Package system
 
@@ -37,7 +34,6 @@
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'diminish)
-;;  (package-install 'bind-key)
   (package-install 'org))
 
 (eval-when-compile
@@ -45,7 +41,9 @@
 (require 'diminish)
 (require 'bind-key)
 
-(setq use-package-always-ensure t)
+(require 'setcq)
+
+(setcq use-package-always-ensure t)
 
 ;;; Theming
 
@@ -67,8 +65,7 @@
   (setcq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))))
 
 ;;; Load other config
-
-(load "~/.emacs.d/etc/init-common.el")
-(load "~/.emacs.d/etc/init-local.el")
+(require 'init-common)
+(require 'init-local)
 
 ;;; init.el ends here

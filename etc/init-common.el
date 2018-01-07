@@ -5,17 +5,21 @@
 ;;
 ;;; Code:
 ;;; Built-in emacs config
+(eval-and-compile (push "~/.emacs.d/etc" load-path))
+(require 'kqr-load-path)
+(require 'setcq)
+
 (use-package emacs
+  :custom
+  (inhibit-startup-screen t)
+  (initial-scratch-message "")
+  (major-mode 'text-mode)
+  (make-backup-files nil)
+  (large-file-warning-threshold 100000000)
+
+  (indent-tabs-mode nil "Prevent Emacs from mixing tabs and spaces.")
+
   :init
-  (setcq inhibit-startup-screen t)
-  (setcq initial-scratch-message "")
-  (setcq major-mode 'text-mode)
-  (setcq make-backup-files nil)
-  (setcq large-file-warning-threshold 100000000)
-
-  ;; Prevent Emacs from mixing tabs and spaces...
-  (setcq indent-tabs-mode nil)
-
   ;; Remove a bunch of distracting, unnecessary, silly graphic components
   (when (display-graphic-p)
     (scroll-bar-mode -1)
@@ -154,8 +158,8 @@
   (fic-mode +1)
   ;; Temporary solution...
   (add-hook 'find-file-hook #'fic-mode)
-  :config
-  (setcq fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
+  :custom
+  (fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 
 ;; Highlight the stuff between matching parentheses ;; Currently disabled
 ;; because versor-mode does this so much better
@@ -202,46 +206,54 @@
                                      (outline-previous-visible-heading 1)))))
 
 ;;;;; Versor-mode for convenient navigation
-(use-package versor
-  :ensure nil
-  :config
-  (require 'versor)
-  (setcq versor-auto-change-for-modes nil)
-  (setcq versor-move-out-when-at-end nil)
-  (setcq versor-level-wrap nil)
-  (setcq versor-meta-level-wrap nil)
-  (setcq versor-text-level 2)
-  (setcq versor-text-meta-level 4)
-  (setcq versor-non-text-level 2)
-  (setcq versor-non-text-meta-level 6)
 
-  (setcq versor-meta-dimensions-valid-for-modes
-         '((t t "cartesian" "structural" "text" "structured text" "program")))
+(require 'versor)
+;;(autoload 'versor-setup "versor")
+;;(versor-setup 'arrows 'quiet-underlying)
 
-  (setcq versor-mode-current-levels
-         (mapcar #'versor-mode-levels-triplet
-                 '((emacs-lisp-mode "structural" "exprs")
-                   (lisp-interaction-mode "structural" "exprs")
-                   (c-mode "program" "statement-parts")
-                   (text-mode "text" "words")
-                   (message-mode "text" "words")
-                   (org-mode "text" "words"))))
 
-  (versor-setup
-   'arrows
-   'arrows-misc
-   'meta
-   'ctrl-x
-   'text-in-code
-   'quiet-underlying
-   'local)
+;;(use-package versor
+;;  :ensure nil
+;;  :init
+;;  (require 'versor)
+;;:config
+;;  (versor-setup
+;;   'arrows
+;;   'arrows-misc
+;;   'meta
+;;   'ctrl-x
+;;   'text-in-code
+;;   'quiet-underlying
+;;   'local)
 
-  (let ((color (face-attribute 'show-paren-match :background)))
-    (set-face-attribute 'versor-item-face nil :inherit 'unspecified :background color)
-    (seq-doseq (metamovemap (seq-subseq moves-moves 1))
-      (seq-doseq (movemap (seq-subseq metamovemap 1))
-        (versor-define-move movemap 'color color)
-        (versor-define-move movemap :background color)))))
+;;  (setcq versor-auto-change-for-modes nil)
+;;  (setcq versor-move-out-when-at-end nil)
+;;  (setcq versor-level-wrap nil)
+;;  (setcq versor-meta-level-wrap nil)
+;;  (setcq versor-text-level 2)
+;;  (setcq versor-text-meta-level 4)
+;;  (setcq versor-non-text-level 2)
+;;  (setcq versor-non-text-meta-level 6)
+;;
+;;  (setcq versor-meta-dimensions-valid-for-modes
+;;         '((t t "cartesian" "structural" "text" "structured text" "program")))
+;;  
+;;  (setcq versor-mode-current-levels
+;;         (mapcar #'versor-mode-levels-triplet
+;;                 '((emacs-lisp-mode "structural" "exprs")
+;;                   (lisp-interaction-mode "structural" "exprs")
+;;                   (c-mode "program" "statement-parts")
+;;                   (text-mode "text" "words")
+;;                   (message-mode "text" "words")
+;;                   (org-mode "text" "words"))))
+;;
+;;  (let ((color (face-attribute 'show-paren-match :background)))
+;;    (set-face-attribute 'versor-item-face nil :inherit 'unspecified :background color)
+;;    (seq-doseq (metamovemap (seq-subseq moves-moves 1))
+;;      (seq-doseq (movemap (seq-subseq metamovemap 1))
+;;        (versor-define-move movemap 'color color)
+;;        (versor-define-move movemap :background color))))
+;;)
 
 ;;;; God mode
 ;; Modal editing *is* the greatest. This reduces hand-strain in an Emacs
@@ -467,19 +479,13 @@
   :init
   ;; For some reason these things need to be set before org is loaded?
   (setcq org-export-backends '(org html publish s5 latex rss))
-
-  (let ((pre (nth 0 org-emphasis-regexp-components))
-        (post (nth 1 org-emphasis-regexp-components)))
-    ;; If non-breaking space is in pre, don't bother adding it
-    (setcar (nthcdr 0 org-emphasis-regexp-components)
-            (if (string-match "﻿" pre) pre (concat pre "﻿")))
-    (setcar (nthcdr 1 org-emphasis-regexp-components)
-            (if (string-match "﻿" post) pre (concat post "﻿")))
-    (setcar (nthcdr 4 org-emphasis-regexp-components)
-            8)
-    (org-set-emph-re 'org-emphasis-regexp-components
-                     org-emphasis-regexp-components))
-
+  (setcq org-emphasis-regexp-components
+         '("﻿- \t('\"{"
+           "﻿- \t.,:!?;'\")}\\["
+           " \t\r\n"
+           "."
+           8))
+  
   ;; Allow longer sections of italics, and italicise mid-word with
   ;; zero width no break space
   :config
@@ -685,4 +691,5 @@
     (diminish mode (modern-minik-mode-icon mode))))
 
 
+(provide 'init-common)
 ;;; init-common.el ends here
