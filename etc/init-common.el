@@ -490,8 +490,8 @@
   ;; For some reason these things need to be set before org is loaded?
   (setcq org-export-backends '(org html publish s5 latex rss))
   (setcq org-emphasis-regexp-components
-         '("﻿- \t('\"{"
-           "﻿- \t.,:!?;'\")}\\["
+         '("- ﻿\t('\"{"
+           "- ﻿\t.,:!?;'\")}\\["
            " \t\r\n"
            "."
            8))
