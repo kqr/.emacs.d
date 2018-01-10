@@ -476,6 +476,10 @@
 
   :defines org-capture-templates org-latex-classes
 
+  :custom
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-use-time-grid nil)
+  
   :init
   ;; For some reason these things need to be set before org is loaded?
   (setcq org-export-backends '(org html publish s5 latex rss))
@@ -489,6 +493,9 @@
   ;; Allow longer sections of italics, and italicise mid-word with
   ;; zero width no break space
   :config
+  (org-set-emph-re 'org-emphasis-regexp-components
+                   org-emphasis-regexp-components)
+  
   ;;;;;; Regular Org operation
   (setcq org-return-follows-link t)
   (setcq org-list-allow-alphabetical t)
