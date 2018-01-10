@@ -615,7 +615,7 @@
   (setcq org-latex-default-class "tufte-handout")
   (setcq org-latex-packages-alist
          ;; These depend on xelatex, so be careful with that!
-         `(("" "fontspec" t)
+         `(("Ligatures=TeX" "fontspec" t)
            "\\setmainfont[Numbers=OldStyle]{Whitman}"
            ("AUTO" "polyglossia" t)
            ("" "pdflscape" t)
