@@ -181,7 +181,13 @@
 
 ;; Avoid the built-in Emacs window manager and try to use the real one
 (use-package frames-only-mode :config
-  (frames-only-mode))
+  (frames-only-mode)
+
+  ;; A new frame for each LaTeX refresh gets annoying
+  (push
+   '(".*Org PDF LaTeX Output.*" . (display-buffer-no-window . ((allow-no-window . t))))
+   display-buffer-alist))
+
 ;;;; Navigation and fuzzy finding
 (use-package ivy :diminish ivy-mode :config
   (setcq ivy-initial-inputs-alist nil)
