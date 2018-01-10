@@ -961,6 +961,16 @@ With optional OFFSET, return the OFFSET...OFFSET+N entries instead."
 		 (assoc 'begin-end statement-descr)
 	       nil)))))
 
+;; insertion of regular verbatim strings (e.g. for markdown formatting)
+(defun versor-insertion-verbatim-string (n)
+  "Ask user for string to insert N times.."
+  (let ((beforeafter (read-string "What to insert?" nil
+                                  'versor-insertion-verbatim-string-history)))
+    (make-list n beforeafter)))
+
+(versor-define-insertion "c" #'versor-insertion-verbatim-string)
+
+
 ;; todo: we could also do some using something similar to tempo-insert-template (set tempo-region-stop etc first) to insert specific constructs?
 
 ;; now some fancy ones
