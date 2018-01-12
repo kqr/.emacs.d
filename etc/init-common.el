@@ -4,21 +4,41 @@
 ;; Testing I18N: Räksmörgås
 ;;
 ;;; Code:
-;;; Built-in emacs config
 (eval-and-compile (push "~/.emacs.d/etc" load-path))
 (require 'kqr-load-path)
 (require 'setcq)
 
+;;; Built-in emacs config
 (use-package emacs
   :custom
   (inhibit-startup-screen t)
   (initial-scratch-message "")
-  (major-mode 'text-mode)
+  (major-mode 'org-mode "Org is useful default for scratch buffers")
   (make-backup-files nil)
   (large-file-warning-threshold 100000000)
 
   (indent-tabs-mode nil "Prevent Emacs from mixing tabs and spaces.")
+  (sentence-end-double-space nil "No need to fake typesetting.")
 
+  (cursor-in-non-selected-windows nil "Hide cursor in inactive windows")
+
+  (fill-column 80 "Set a column limit at 80 characters")
+  (truncate-lines t "Let text extend beyond the window width")
+  (auto-fill-function 'do-auto-fill "Automatically hard wrap content instead")
+  
+  (select-enable-primary t "Copy stuff to the X11 primary selection")
+  (delete-selection-mode 1 "Typing stuff with active region replaces region")
+
+  (text-scale-mode-step 1.05 "Make available smaller changes in text size")
+
+  (help-window-select t "Focus on newly opened help windows")
+
+  (browse-url-browser-function #'eww)
+
+  (user-full-name "Christoffer Stjernlöf")
+  (user-mail-address "k@rdw.se")
+
+  
   :init
   ;; Remove a bunch of distracting, unnecessary, silly graphic components
   (when (display-graphic-p)
@@ -35,7 +55,6 @@
   (add-to-list 'initial-frame-alist '(right-fringe . 80))
   (add-to-list 'default-frame-alist '(right-fringe . 80))
 
-  (setcq cursor-in-non-selected-windows nil)
   (global-linum-mode -1)
   ;; Enable column numbers in mode line (probably unnecessary with my
   ;; theme since it overrides the mode line anyway...)
@@ -52,32 +71,12 @@
                                     ((t :family "Luxi Mono" :height 0.8))))
     (add-to-list 'initial-frame-alist '(line-spacing . 1))
     (add-to-list 'default-frame-alist '(line-spacing . 1)))
-  
-  ;; Don't soft wrap lines, simply let them extend beyond the window width
-  (setcq truncate-lines t)
+
+  ;; Replace the default line-extends-beyond-window symbol
   (set-display-table-slot standard-display-table 0 ?›)
   
-  ;; Set a column limit at 80 characters
-  (setcq fill-column 80)
-  ;; Automatically wrap content extending beyond this
-  (setq-default auto-fill-function 'do-auto-fill)
-  
-  ;; Copy stuff to the X11 primary selection
-  (setcq select-enable-primary t)
-
-  ;; Make available smaller changes in text size
-  (setcq text-scale-mode-step 1.05)
-
-  ;; Focus on newly opened help windows
-  (setcq help-window-select t)
-
-  (setcq browse-url-browser-function #'eww)
-
-  (setcq user-full-name "Christoffer Stjernlöf")
-  (setcq user-mail-address "k@rdw.se")
 
   ;;;;; Basic keybind setup
-
   ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
   (unbind-key "C-z")
 
@@ -85,47 +84,18 @@
   ;; By unbinding C-h we open it up to be used for better things
   (unbind-key "C-h")
 
-  ;; Allow us to keep ctrl held down for common chords
-  (bind-key* "C-x C-0" #'delete-window)
-  (bind-key* "C-x C-1" #'delete-other-windows)
-  (bind-key* "C-x C-b" #'switch-to-buffer)
-  (bind-key* "C-x C-o" #'other-window)
-
   ;; This is neat to quickly go back to the previous buffer
   (bind-key* "C-q" #'kill-this-buffer)
   ;; But then we also need this...
   (bind-key* "C-S-q" #'quoted-insert)
 
-  ;; ...this is pretty neat!
-  (use-package calc
-    :bind (("C-=" . quick-calc))
-    :config
-    (setcq calc-multiplication-has-precedence nil))
-
-  ;; this could be even more neat...
-  (use-package calc
-    :bind (("<f12>" . calc)))
-  
   ;; Make "join this line to the one above" a bit more convenient to perform
-  (bind-key* "C-S-j" #'delete-indentation)
+  (bind-key* "C-S-j" #'delete-indentation))
 
-  ;; This is so neat too! Automatically highlight conflicts in files :3
-  (use-package smerge-mode :config
-    (defun sm-try-smerge ()
-      "Start smerge-mode when a git conflict is detected."
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "^<<<<<<< " nil t)
-          (smerge-mode 1))))
-
-    (add-hook 'find-file-hook 'sm-try-smerge t)))
-
-
-;;; External packages
-;;;; Enable easy troubleshooting of init file
+;;; Config troubleshooting
 (use-package bug-hunter :commands bug-hunter-init-file)
-;;;; UI configuration should appear early
 
+;;; UI configuration (should appear early)
 ;; Use variable-width fonts yeaah
 (use-package unicode-fonts :init
   (use-package persistent-soft :config
@@ -144,12 +114,17 @@
   (add-hook 'calendar-mode-hook #'buffer-face-mode)
   (add-hook 'notmuch-tree-mode-hook #'buffer-face-mode))
 
+;; Let's see how this feels! Replace keywords with Unicode counterpart
+(global-prettify-symbols-mode +1)
+(setq prettify-symbols-unprettify-at-point 'right-edge)
+
 ;; Highlight text extending beyond 80 characters
-(use-package column-enforce-mode :diminish column-enforce-mode :config
-  ;; inherit fill-column
-  (setcq column-enforce-column nil)
-  (setcq column-enforce-should-enable-p
-         (lambda () (string-match "^notmuch" (symbol-name major-mode))))
+(use-package column-enforce-mode :diminish column-enforce-mode :custom
+  (column-enforce-column nil "inherit fill-column")
+  (column-enforce-should-enable-p
+   (lambda () (not (string-match "^notmuch"
+                                 (symbol-name major-mode)))))
+  :config
   (global-column-enforce-mode +1))
 
 ;; Highlight FIXME TODO etc. in comments
@@ -185,9 +160,11 @@
 
   ;; A new frame for each LaTeX refresh gets annoying
   (push
-   '(".*Org PDF LaTeX Output.*" . (display-buffer-no-window . ((allow-no-window . t))))
+   '(".*Org PDF LaTeX Output.*" .
+     (display-buffer-no-window . ((allow-no-window . t))))
    display-buffer-alist))
 
+;;; Interaction
 ;;;; Navigation and fuzzy finding
 (use-package ivy :diminish ivy-mode :config
   (setcq ivy-initial-inputs-alist nil)
@@ -196,6 +173,19 @@
   (("M-x" . counsel-M-x)))
 
 (use-package smex)
+
+(use-package recentf
+  :bind ("C-x C-r" . counsel-recentf)
+  :custom
+  (recentf-max-saved-items 100)
+  :init
+  (recentf-mode t))
+
+(use-package saveplace
+  :custom
+  (save-place t)
+  (save-place-file (expand-file-name "var/.places" user-emacs-directory)))
+
 ;;;;; Org-like structuring of any document
 (use-package outshine
   :bind (("M-n" . outshine-narrow-to-subtree)
@@ -334,15 +324,32 @@
   (require 'tab-as-escape)
   (tab-as-escape-mode +1))
 
-;;;; Editing, general
+;;;; Miscellaneous
+;;;;; Export window contents to neat HTML
+(use-package htmlize
+  :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
+
+;;;;; Analyse command usage frequency to optimise config
+(use-package keyfreq :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+;;; Editing
 (use-package autorevert :config
-  ;; Don't automatically reload files from disk without asking
-  ;; TODO: This needs to be included in a bunch of hooks
-  (global-auto-revert-mode -1))
+  (global-auto-revert-mode 1))
 
 (use-package undo-tree :diminish undo-tree-mode :config
   (global-undo-tree-mode)
   (setcq undo-tree-visualizer-diff t))
+
+(use-package smerge-mode :config
+  (defun sm-try-smerge ()
+    "Start smerge-mode automatically when a git conflict is detected."
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^<<<<<<< " nil t)
+        (smerge-mode 1))))
+
+  (add-hook 'find-file-hook 'sm-try-smerge t))
 
 (use-package visual-regexp :config
   (use-package visual-regexp-steroids :bind
@@ -444,17 +451,14 @@
   (setcq synosaurus-choose-method 'popup)
   (add-hook 'text-mode-hook #'synosaurus-mode))
 
-;;;; Miscellaneous
-;;;;; Export window contents to neat HTML
-(use-package htmlize
-  :commands (htmlize-buffer htmlize-file htmlize-many-files htmlize-region))
+;;; EAAS = Emacs-As-An-(operating)-System
+;;;; Calculator
+(use-package calc
+  :bind (("<f12>" . calc))
+  :custom
+  (calc-display-trail ()))
 
-;;;;; Analyse command usage frequency to optimise config
-(use-package keyfreq :config
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
-;;;; EAAS = Emacs-As-An-(operating)-System
-;;;;; File manager
+;;;; File manager
 (unbind-key "<f2>")
 (use-package sunrise-commander :bind
   (("<f2>" . sunrise-cd))
@@ -462,11 +466,11 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.srvm\\'" . sr-virtual-mode)))
 
-;;;;; Git integration
+;;;; Git integration
 (use-package magit :bind
   (("<f3>" . magit-status)))
 
-;;;;; Organizer, planner, note taking etc.
+;;;; Organizer, planner, note taking etc.
 (use-package calendar :config
   (setcq calendar-date-style 'iso))
 
@@ -474,98 +478,145 @@
 (use-package org
   :ensure org-plus-contrib
   :bind (("<f4> a" . org-agenda)
-         ("<f4> c" . org-capture)
+         ("<f4> i" . capture-general-inbox)
+         ("<f4> m" . capture-mail-inbox)
          ("<f4> o" . org-cycle-agenda-files)
-         ("<f4> l" . org-store-link))
+         ("<f4> l" . org-store-link)
+         ("<f4> RET" . narrow-or-widen-dwim))
   :demand t
   :mode ("\\.org\\'" . org-mode)
 
   :defines org-capture-templates org-latex-classes
 
   :custom
-  (org-agenda-skip-deadline-if-done t)
-  (org-agenda-use-time-grid nil)
-  
-  :init
-  ;; For some reason these things need to be set before org is loaded?
-  (setcq org-export-backends '(org html publish s5 latex rss))
-  (setcq org-emphasis-regexp-components
-         '("- ﻿\t('\"{"
-           "- ﻿\t.,:!?;'\")}\\["
-           " \t\r\n"
-           "."
-           8))
-  
-  ;; Allow longer sections of italics, and italicise mid-word with
-  ;; zero width no break space
-  :config
-  (org-set-emph-re 'org-emphasis-regexp-components
-                   org-emphasis-regexp-components)
-  
   ;;;;;; Regular Org operation
-  (setcq org-return-follows-link t)
-  (setcq org-list-allow-alphabetical t)
+  (org-return-follows-link t)
+  (org-list-allow-alphabetical t)
+  (org-ellipsis "↴")
   
   ;;;;;; Using Org as a planner
-  ;; Let me copy emails as links in Org
-  (require 'org-notmuch)
-  
-  ;; separate sets to avoid accidentally completing something (for example)
-  (setcq org-todo-keywords
-         '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
-           (sequence "|" "DONE(d)")
-           (sequence "|" "CANCELED(c)")))
+  (org-todo-keywords
+   '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
+     (sequence "|" "DONE(d)")
+     (sequence "|" "CANCELED(c)")))
 
-  (setcq org-todo-keyword-faces
-         '(("HOLD" . (:foreground "dodger blue" :weight bold))
-           ("WAIT" . (:foreground "black" :weight bold))
-           ("TODO" . (:foreground "dark orange" :weight bold))
-           ("DONE" . (:foreground "olivedrab3" :weight bold))
-           ("CANCELED" . (:foreground "dim grey" :weight bold))))
+  (org-todo-keyword-faces
+   '(("HOLD" . (:foreground "dodger blue" :weight bold))
+     ("WAIT" . (:foreground "black" :weight bold))
+     ("TODO" . (:foreground "dark orange" :weight bold))
+     ("DONE" . (:foreground "olivedrab3" :weight bold))
+     ("CANCELED" . (:foreground "dim grey" :weight bold))))
 
   ;; Normally we'd want tasks to reset to HOLD, but since this is a
   ;; repeated task it also has a new scheduled date so it's okay if it
   ;; becomes a todo because it won't clutter until scheduled anyway!
-  (setcq org-todo-repeat-to-state "TODO")
+  (org-todo-repeat-to-state "TODO")
 
-  (setcq org-hierarchical-todo-statistics nil)
+  (org-hierarchical-todo-statistics nil)
 
   ;; When closing an item, ask for a note – just in case there's an
   ;; important thought there that may otherwise not get recorded
-  (setcq org-log-done 'note)
+  (org-log-done 'note)
   ;; Don't ask for a log message if cycling through with shift-arrow keys
-  (setcq org-treat-S-cursor-todo-selection-as-state-change nil)
+  (org-treat-S-cursor-todo-selection-as-state-change nil)
 
   ;; Let's simplify this...
   ;; A = screamingly important
   ;; B = normal day-to-day "you should do this or bad things will happen"
   ;; C = fine if rescheduled
-  (setcq org-lowest-priority ?C)
-  (setcq org-default-priority ?B)
+  (org-lowest-priority ?C)
+  (org-default-priority ?B)
 
   ;; Capturing and refiling
-  (setcq org-capture-templates
-         '(("i" ">inbox" entry (file "") "* %?\n")))
-  (setcq org-default-notes-file "~/org/inbox.org")
-  (setcq org-refile-targets
-         '(("~/org/projects.org" :maxlevel . 3)
-           ("~/org/tickler.org" :maxlevel . 1)
-           ("~/org/someday.org" :maxlevel . 3)
-           ("~/org/notes.org" :maxlevel . 2)))
-  (setcq org-refile-allow-creating-parent-nodes 'confirm)
-  (setcq org-refile-use-outline-path t)
-  (setcq org-outline-path-complete-in-steps nil)
-  (setcq org-log-refile 'time)
-  (setcq org-reverse-note-order t)
+  (org-capture-templates
+   '(("i" ">inbox" entry (file "") "* %?\n")
+     ("m" "mail>inbox" entry (file "") "* %?\n%a\n")))
+  (org-default-notes-file "~/org/inbox.org")
+  (org-refile-targets
+   '(("~/org/projects.org" :maxlevel . 3)
+     ("~/org/tickler.org" :maxlevel . 1)
+     ("~/org/someday.org" :maxlevel . 3)
+     ("~/org/notes.org" :maxlevel . 2)))
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-refile-use-outline-path t)
+  (org-outline-path-complete-in-steps nil)
+  (org-log-refile 'time)
+  (org-reverse-note-order t)
 
   ;; Agenda and archiving
-  (setcq org-agenda-files '("~/org/inbox.org" "~/org/projects.org" "~/org/tickler.org"))
-  (setcq org-archive-location "~/org/archive.org::* %s")
+  (org-agenda-files '("~/org/inbox.org" "~/org/projects.org" "~/org/tickler.org"))
+  (org-archive-location "~/org/archive.org::* %s")
 
-  (setcq org-enforce-todo-dependencies t)
-  (setcq org-agenda-dim-blocked-tasks 'invisible)
-  (setcq org-agenda-span 'day)
-  (setcq org-agenda-skip-scheduled-if-done t)
+  (org-enforce-todo-dependencies t)
+  (org-agenda-dim-blocked-tasks 'invisible)
+  (org-agenda-span 'day)
+  (org-agenda-use-time-grid nil)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+
+  (org-agenda-custom-commands
+   '((" " "Agenda"
+      ((tags "FILE={inbox.org}"
+             ((org-agenda-overriding-header "Inbox")))
+       (agenda "" nil)
+       (tags "-@out/TODO"
+             ((org-agenda-overriding-header "To do (not scheduled)")
+              (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
+       (todo "WAIT"
+             ((org-agenda-overriding-header "Waiting")
+              (org-agenda-todo-ignore-scheduled t)))
+       (tags "FILE={projects.org}+LEVEL=1-noproject"
+             ((org-agenda-overriding-header "Stuck projects")
+              (org-agenda-skip-function #'skip-living-projects)))))))
+
+  ;;;;;; Using Org to publish documents
+  (org-babel-python-command "python3")
+  (org-export-with-smart-quotes t)
+  (org-export-with-emphasize t)
+  (org-export-with-sub-superscripts nil)
+  (org-export-with-footnotes t)
+
+  (org-latex-classes
+   (append '(("tufte-handout"
+              "\\documentclass[a4paper,11pt]{tufte-handout}"
+              ("\\section{%s}" . "\\section*{%s}")
+              ("\\subsection{%s}" . "\\subsection*{%s}"))
+             ("tufte-book"
+              "\\documentclass[a4paper,10pt]{tufte-book}"))
+           org-latex-classes))
+
+  (org-latex-compiler "xelatex")
+  (org-latex-default-class "tufte-handout")
+  (org-latex-packages-alist
+   ;; These depend on xelatex, so be careful with that!
+   `(("" "fontspec" t)
+     "\\setmainfont[Ligatures=TeX,Numbers=OldStyle]{Whitman}"
+     ("AUTO" "polyglossia" t)
+     ("" "pdflscape" t)
+     ;; tufte-handout xelatex shim
+     ,(concat
+       "\\ifxetex\n"
+       "  \\newcommand{\\textls}[2][5]{%\n"
+       "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
+       "  }\n"
+       "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
+       "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
+       "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
+       " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
+       " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
+       "\\fi\n")))
+
+  ;;;;;; Supporting code
+  :init
+  (defun capture-general-inbox (args)
+    "Run i capture with ARGS."
+    (interactive "P")
+    (org-capture args "i"))
+
+  (defun capture-mail-inbox (args)
+    "Run m capture with ARGS."
+    (interactive "P")
+    (org-capture args "m"))
 
   (defun skip-living-projects ()
     "Skip top level trees that do have a TODO or WAIT child item"
@@ -574,68 +625,61 @@
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
            subtree-end)))
 
-  (setcq org-agenda-custom-commands
-         '((" " "Agenda"
-            ((tags "FILE={inbox.org}"
-                   ((org-agenda-overriding-header "Inbox")))
-             (agenda "" nil)
-             (tags "-@out/TODO"
-                   ((org-agenda-overriding-header "To do (not scheduled)")
-                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
-             (todo "WAIT"
-                   ((org-agenda-overriding-header "Waiting")
-                    (org-agenda-todo-ignore-scheduled t)))
-             (tags "FILE={projects.org}+LEVEL=1-noproject"
-                   ((org-agenda-overriding-header "Stuck projects")
-                    (org-agenda-skip-function #'skip-living-projects)))))))
+  (defun narrow-or-widen-dwim (p)
+    "If the buffer is narrowed, it widens. Otherwise, it narrows
+    intelligently.  Intelligently means: region, org-src-block,
+    org-subtree, or defun, whichever applies first.  Narrowing to
+    org-src-block actually calls `org-edit-src-code'.
 
-  ;; TODO: set more/better custom agenda commands for various contexts
+    With prefix P, don't widen, just narrow even if buffer is already
+    narrowed."
+    (interactive "P")
+    (declare (interactive-only))
+    (cond ((and (buffer-narrowed-p) (not p)) (widen))
+          ((and (boundp 'org-src-mode) org-src-mode (not p))
+           (org-edit-src-exit))
+          ((region-active-p)
+           (narrow-to-region (region-beginning) (region-end)))
+          ((derived-mode-p 'org-mode)
+           (cond ((ignore-errors (org-edit-src-code))
+                  (delete-other-windows))
+                 ((org-at-block-p)
+                  (org-narrow-to-block))
+                 (t (org-narrow-to-subtree))))
+          ((derived-mode-p 'prog-mode)
+           (save-excursion
+             (cond ((or (outline-on-heading-p) (outline-previous-heading))
+                    (outshine-narrow-to-subtree))
+                   (t (narrow-to-defun)))))
+          (t (error "Please select a region to narrow to"))))
 
+  ;; For some reason these things need to be set before org is loaded?
+  (setcq org-export-backends '(org html publish s5 latex rss))
+  (setcq org-emphasis-regexp-components
+         '("- ﻿\t('\"{"
+           "- ﻿\t.,:!?;'\")}\\["
+           " \t\r\n"
+           "."
+           8))
 
-  ;;;;;; Using Org to publish documents
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t) (R . t) (python . t)))
-  (setcq org-babel-python-command "python3")
-  
-  (setcq org-export-with-smart-quotes t)
-  (setcq org-export-with-emphasize t)
-  (setcq org-export-with-sub-superscripts nil)
-  (setcq org-export-with-footnotes t)
+  ;; Allow longer sections of italics, and italicise mid-word with
+  ;; zero width no break space
+  :config
+  (use-package org-bullets :init
+    (add-hook 'org-mode-hook
+              (lambda () (org-bullets-mode 1))))
 
+  (require 'org-notmuch)
   (require 'ox-latex)
-  (setcq org-latex-classes
-         (append '(("tufte-handout"
-                    "\\documentclass[a4paper,11pt]{tufte-handout}"
-                    ("\\section{%s}" . "\\section*{%s}")
-                    ("\\subsection{%s}" . "\\subsection*{%s}"))
-                   ("tufte-book"
-                    "\\documentclass[a4paper,10pt]{tufte-book}"))
-                 org-latex-classes))
 
-  (setcq org-latex-compiler "xelatex")
-  (setcq org-latex-default-class "tufte-handout")
-  (setcq org-latex-packages-alist
-         ;; These depend on xelatex, so be careful with that!
-         `(("" "fontspec" t)
-           "\\setmainfont[Ligatures=TeX,Numbers=OldStyle]{Whitman}"
-           ("AUTO" "polyglossia" t)
-           ("" "pdflscape" t)
-           ;; tufte-handout xelatex shim
-           ,(concat
-             "\\ifxetex\n"
-             "  \\newcommand{\\textls}[2][5]{%\n"
-             "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
-             "  }\n"
-             "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
-             "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
-             "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
-             " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
-             " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
-             "\\fi\n"))))
+  (org-set-emph-re 'org-emphasis-regexp-components
+                   org-emphasis-regexp-components)
+
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t) (R . t) (python . t))))
 
 
-;;;;; Email client
+;;;; Email client
 (use-package notmuch
   :bind (("<f5>" . notmuch))
   ;; Load the locally installed notmuch mode to ensure versions match
@@ -699,7 +743,7 @@
 
 
 
-;;;; Diminish a bunch of modes according to the theme
+;;; Diminish a bunch of modes according to the theme
 ;; We do tihs here because apparently use-package will override it otherwise
 (dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
   (unless (member mode '(flycheck-mode))
