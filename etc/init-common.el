@@ -595,7 +595,9 @@
   ;;;;;; Using Org to publish documents
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((emacs-lisp . t) (R . t)))
+   '((emacs-lisp . t) (R . t) (python . t)))
+  (setcq org-babel-python-command "python3")
+  
   (setcq org-export-with-smart-quotes t)
   (setcq org-export-with-emphasize t)
   (setcq org-export-with-sub-superscripts nil)
