@@ -675,7 +675,7 @@ within that mode (such as string literals, and comments).
 To enable the separate handling of embedded text, set
 `versor-text-in-code' non-nil.")
 
-(require 'versor-local) (defvar versor-am-in-text-in-code nil) (versor-display-modal-levels)
+(require 'versor-local)
 
 (defvar versor-equivalent-commands
   '(
