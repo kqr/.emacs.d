@@ -118,6 +118,10 @@
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
 
+;; Limit the visible buffer area to some typographically sound width
+(require 'big-gutters-mode)
+(global-big-gutters-mode +1)
+
 ;; Highlight text extending beyond 80 characters
 (use-package column-enforce-mode :diminish column-enforce-mode :custom
   (column-enforce-column nil "inherit fill-column")
