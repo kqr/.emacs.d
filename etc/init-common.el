@@ -122,8 +122,8 @@
 (use-package column-enforce-mode :diminish column-enforce-mode :custom
   (column-enforce-column nil "inherit fill-column")
   (column-enforce-should-enable-p
-   (lambda () (not (string-match "^notmuch"
-                                 (symbol-name major-mode)))))
+   (lambda () (not (string-match "^notmuch|^org-agenda"
+                            (symbol-name major-mode)))))
   :config
   (global-column-enforce-mode +1))
 
@@ -149,8 +149,9 @@
   (setcq show-paren-priority -200))
 
 ;; Try to keep the buffer scrolled so the cursor is centered
-(use-package centered-cursor-mode :diminish centered-cursor-mode :config
-  (global-centered-cursor-mode +1))
+(require 'simpler-centered-cursor-mode)
+(diminish 'simpler-centered-cursor-mode)
+(global-simpler-centered-cursor-mode +1)
 
 (use-package popup)
 
@@ -488,6 +489,66 @@
 
   :defines org-capture-templates org-latex-classes
 
+  :init
+  (require 'org-notmuch)
+  (require 'ox-latex)
+
+  (defun capture-general-inbox (args)
+    "Run i capture with ARGS."
+    (interactive "P")
+    (org-capture args "i"))
+
+  (defun capture-mail-inbox (args)
+    "Run m capture with ARGS."
+    (interactive "P")
+    (org-capture args "m"))
+
+  (defun skip-living-projects ()
+    "Skip top level trees that do have a TODO or WAIT child item"
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (case-fold-search nil))
+      (and (re-search-forward "TODO\\|WAIT" subtree-end t)
+           subtree-end)))
+
+  (defun narrow-or-widen-dwim (p)
+    "If the buffer is narrowed, it widens. Otherwise, it narrows
+    intelligently.  Intelligently means: region, org-src-block,
+    org-subtree, or defun, whichever applies first.  Narrowing to
+    org-src-block actually calls `org-edit-src-code'.
+
+    With prefix P, don't widen, just narrow even if buffer is already
+    narrowed."
+    (interactive "P")
+    (declare (interactive-only))
+    (cond ((and (buffer-narrowed-p) (not p)) (widen))
+          ((and (boundp 'org-src-mode) org-src-mode (not p))
+           (org-edit-src-exit))
+          ((region-active-p)
+           (narrow-to-region (region-beginning) (region-end)))
+          ((derived-mode-p 'org-mode)
+           (cond ((ignore-errors (org-edit-src-code))
+                  (delete-other-windows))
+                 ((org-at-block-p)
+                  (org-narrow-to-block))
+                 (t (org-narrow-to-subtree))))
+          ((derived-mode-p 'prog-mode)
+           (save-excursion
+             (cond ((or (outline-on-heading-p) (outline-previous-heading))
+                    (outshine-narrow-to-subtree))
+                   (t (narrow-to-defun)))))
+          (t (error "Please select a region to narrow to"))))
+
+  (setcq org-export-backends '(org html publish s5 latex rss))
+
+  ;; Allow longer sections of italics, and italicise mid-word with
+  ;; zero width no break space
+  (setcq org-emphasis-regexp-components
+         '("- ﻿\t('\"{"
+           "- ﻿\t.,:!?;'\")}\\["
+           " \t\r\n"
+           "."
+           8))
+  
   :custom
   ;;;;;; Regular Org operation
   (org-return-follows-link t)
@@ -576,15 +637,6 @@
   (org-export-with-sub-superscripts nil)
   (org-export-with-footnotes t)
 
-  (org-latex-classes
-   (append '(("tufte-handout"
-              "\\documentclass[a4paper,11pt]{tufte-handout}"
-              ("\\section{%s}" . "\\section*{%s}")
-              ("\\subsection{%s}" . "\\subsection*{%s}"))
-             ("tufte-book"
-              "\\documentclass[a4paper,10pt]{tufte-book}"))
-           org-latex-classes))
-
   (org-latex-compiler "xelatex")
   (org-latex-default-class "tufte-handout")
   (org-latex-packages-alist
@@ -607,76 +659,24 @@
        "\\fi\n")))
 
   ;;;;;; Supporting code
-  :init
-  (defun capture-general-inbox (args)
-    "Run i capture with ARGS."
-    (interactive "P")
-    (org-capture args "i"))
-
-  (defun capture-mail-inbox (args)
-    "Run m capture with ARGS."
-    (interactive "P")
-    (org-capture args "m"))
-
-  (defun skip-living-projects ()
-    "Skip top level trees that do have a TODO or WAIT child item"
-    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-          (case-fold-search nil))
-      (and (re-search-forward "TODO\\|WAIT" subtree-end t)
-           subtree-end)))
-
-  (defun narrow-or-widen-dwim (p)
-    "If the buffer is narrowed, it widens. Otherwise, it narrows
-    intelligently.  Intelligently means: region, org-src-block,
-    org-subtree, or defun, whichever applies first.  Narrowing to
-    org-src-block actually calls `org-edit-src-code'.
-
-    With prefix P, don't widen, just narrow even if buffer is already
-    narrowed."
-    (interactive "P")
-    (declare (interactive-only))
-    (cond ((and (buffer-narrowed-p) (not p)) (widen))
-          ((and (boundp 'org-src-mode) org-src-mode (not p))
-           (org-edit-src-exit))
-          ((region-active-p)
-           (narrow-to-region (region-beginning) (region-end)))
-          ((derived-mode-p 'org-mode)
-           (cond ((ignore-errors (org-edit-src-code))
-                  (delete-other-windows))
-                 ((org-at-block-p)
-                  (org-narrow-to-block))
-                 (t (org-narrow-to-subtree))))
-          ((derived-mode-p 'prog-mode)
-           (save-excursion
-             (cond ((or (outline-on-heading-p) (outline-previous-heading))
-                    (outshine-narrow-to-subtree))
-                   (t (narrow-to-defun)))))
-          (t (error "Please select a region to narrow to"))))
-
-  ;; For some reason these things need to be set before org is loaded?
-  (setcq org-export-backends '(org html publish s5 latex rss))
-  (setcq org-emphasis-regexp-components
-         '("- ﻿\t('\"{"
-           "- ﻿\t.,:!?;'\")}\\["
-           " \t\r\n"
-           "."
-           8))
-
-  ;; Allow longer sections of italics, and italicise mid-word with
-  ;; zero width no break space
   :config
   (use-package org-bullets :init
     (add-hook 'org-mode-hook
               (lambda () (org-bullets-mode 1))))
 
-  (require 'org-notmuch)
-  (require 'ox-latex)
-
   (org-set-emph-re 'org-emphasis-regexp-components
                    org-emphasis-regexp-components)
-
+  
   (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t) (R . t) (python . t))))
+                               '((emacs-lisp . t) (R . t) (python . t)))
+  
+  (push (append '(("tufte-handout"
+                   "\\documentclass[a4paper,11pt]{tufte-handout}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}"))
+                  ("tufte-book"
+                   "\\documentclass[a4paper,10pt]{tufte-book}")))
+        org-latex-classes))
 
 
 ;;;; Email client
