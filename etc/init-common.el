@@ -120,7 +120,7 @@
 
 ;; Limit the visible buffer area to some typographically sound width
 (require 'big-gutters-mode)
-(setcq bgm-ignore-mode-regex "dired|org-agenda|notmuch")
+(setcq bgm-ignore-mode-regex "dired\\|org-agenda\\|notmuch")
 (global-big-gutters-mode +1)
 
 ;; Highlight FIXME TODO etc. in comments

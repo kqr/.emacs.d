@@ -14,7 +14,7 @@
   :tag "Line Width"
   :type 'integer)
 
-(defcustom bgm-ignore-mode-regex "dired|org-agenda"
+(defcustom bgm-ignore-mode-regex "dired\\|org-agenda"
   "Prevent big gutters in these modes."
   :group 'big-gutters
   :tag "Ignore Mode Regex"
@@ -29,7 +29,7 @@
          (bgm-update)
          (add-hook 'window-configuration-change-hook 'bgm-update t t))
         (t
-         (bgm-update t)
+         (bgm-update)
          (remove-hook 'window-configuration-change-hook 'bgm-update t))))
 
 (define-global-minor-mode global-big-gutters-mode
@@ -37,27 +37,22 @@
 
 (defun bgm-toggle-with-ignore ()
   "Toggle big gutters globally except when not applicable."
-  (if big-gutters-mode
+  (if (or big-gutters-mode (string-match bgm-ignore-mode-regex
+                                         (symbol-name major-mode)))
       (big-gutters-mode -1)
-    (unless (string-match bgm-ignore-mode-regex (symbol-name major-mode))
-      (big-gutters-mode +1))))
+    (big-gutters-mode +1)))
 
-(defun bgm-update (&optional disable)
+(defun bgm-update ()
   "Recalculate correct gutter widths.  If DISABLE, disable big gutters."
-  (interactive)
-  (dolist (window (window-list))
-    (unless (or
-             (not (with-selected-window window big-gutters-mode))
-             (window-minibuffer-p window))
-      (let* ((target (or (with-selected-window window bgm-line-width) 120))
-             (fringes (apply #'+(seq-filter #'numberp
-                                            (window-fringes window))))
-             (width (+ (window-width window) (/ fringes (frame-char-width))))
-             (extra-chars (- width target))
+  (with-selected-window (selected-window)
+    (if (or (window-minibuffer-p) (not big-gutters-mode))
+        (set-window-fringes (selected-window) nil nil)
+      (let* ((fringes (apply #'+ (seq-filter #'numberp (window-fringes))))
+             (width (+ (window-width) (/ fringes (frame-char-width))))
+             (extra-chars (- width bgm-line-width))
              (margins (* (frame-char-width) extra-chars)))
-        (if (or disable (< margins 1))
-            (set-window-fringes window nil nil)
-          (set-window-fringes window
+        (when (> margins 0)
+          (set-window-fringes (selected-window)
                               (truncate (* 0.25 margins))
                               (truncate (* 0.75 margins))))))))
 
