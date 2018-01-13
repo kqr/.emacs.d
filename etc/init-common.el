@@ -120,16 +120,8 @@
 
 ;; Limit the visible buffer area to some typographically sound width
 (require 'big-gutters-mode)
+(setcq bgm-ignore-mode-regex "dired|org-agenda|notmuch")
 (global-big-gutters-mode +1)
-
-;; Highlight text extending beyond 80 characters
-(use-package column-enforce-mode :diminish column-enforce-mode :custom
-  (column-enforce-column nil "inherit fill-column")
-  (column-enforce-should-enable-p
-   (lambda () (not (string-match "^notmuch|^org-agenda"
-                            (symbol-name major-mode)))))
-  :config
-  (global-column-enforce-mode +1))
 
 ;; Highlight FIXME TODO etc. in comments
 (use-package fic-mode :init

@@ -20,23 +20,6 @@
   :tag "Ignore Mode Regex"
   :type 'string)
 
-(defun bgm-update (&optional disable)
-  "Recalculate correct gutter widths.  If DISABLE, disable big gutters."
-  (interactive)
-  (dolist (window (window-list))
-    (unless (window-minibuffer-p window)
-      (let* ((target (or (with-selected-window window bgm-line-width) 120))
-             (fringes (apply #'+(seq-filter #'numberp
-                                            (window-fringes window))))
-             (width (+ (window-width window) (/ fringes (frame-char-width))))
-             (extra-chars (- width target))
-             (margins (* (frame-char-width) extra-chars)))
-        (if (or disable (< margins 1))
-            (set-window-fringes window nil nil)
-          (set-window-fringes window
-                              (truncate (* 0.25 margins))
-                              (truncate (* 0.75 margins))))))))
-
 ;;;###autoload
 (define-minor-mode big-gutters-mode
   "Make window margins big to get a reasonable line width."
@@ -49,6 +32,9 @@
          (bgm-update t)
          (remove-hook 'window-configuration-change-hook 'bgm-update t))))
 
+(define-global-minor-mode global-big-gutters-mode
+  big-gutters-mode bgm-toggle-with-ignore)
+
 (defun bgm-toggle-with-ignore ()
   "Toggle big gutters globally except when not applicable."
   (if big-gutters-mode
@@ -56,8 +42,24 @@
     (unless (string-match bgm-ignore-mode-regex (symbol-name major-mode))
       (big-gutters-mode +1))))
 
-(define-global-minor-mode global-big-gutters-mode
-  big-gutters-mode bgm-toggle-with-ignore)
+(defun bgm-update (&optional disable)
+  "Recalculate correct gutter widths.  If DISABLE, disable big gutters."
+  (interactive)
+  (dolist (window (window-list))
+    (unless (or
+             (not (with-selected-window window big-gutters-mode))
+             (window-minibuffer-p window))
+      (let* ((target (or (with-selected-window window bgm-line-width) 120))
+             (fringes (apply #'+(seq-filter #'numberp
+                                            (window-fringes window))))
+             (width (+ (window-width window) (/ fringes (frame-char-width))))
+             (extra-chars (- width target))
+             (margins (* (frame-char-width) extra-chars)))
+        (if (or disable (< margins 1))
+            (set-window-fringes window nil nil)
+          (set-window-fringes window
+                              (truncate (* 0.25 margins))
+                              (truncate (* 0.75 margins))))))))
 
 (provide 'big-gutters-mode)
 ;;; big-gutters-mode.el ends here
