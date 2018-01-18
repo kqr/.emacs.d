@@ -226,7 +226,18 @@
             (ivy-minibuffer-match-face-3 ((t :inherit lazy-highlight)))
             (ivy-minibuffer-match-face-4 ((t :inherit lazy-highlight)))
             (ivy-cursor ((t :inherit cursor)))
-            (ivy-match-required-face ((t :inherit isearch-fail))))))
+            (ivy-match-required-face ((t :inherit isearch-fail)))
+            (company-tooltip ((t :inherit fringe)))
+            (company-preview ((t :inherit lazy-highlight)))
+            (company-preview-common ((t :inherit match)))
+            (company-scrollbar-bg ((t :inherit fringe)))
+            (company-scrollbar-fg ((t :inherit match)))
+            (company-tooltip-common ((t :inherit lazy-highlight)))
+            (company-tooltip-common-selection ((t :inherit lazy-highlight)))
+            (company-tooltip-mouse ((t :inherit match)))
+            (company-tooltip-search ((t :inherit match)))
+            (company-tooltip-search-selection ((t :inherit match)))
+            (company-tooltip-selection ((t :inherit match))))))
   
   (custom-theme-set-variables
    'modern-minik
