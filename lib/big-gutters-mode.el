@@ -25,12 +25,12 @@
   "Make window margins big to get a reasonable line width."
   :init-value nil
   :lighter " GUT"
+  (make-local-variable 'window-configuration-change-hook)
   (cond (big-gutters-mode
-         (bgm-update)
-         (add-hook 'window-configuration-change-hook 'bgm-update t t))
+         (add-hook 'window-configuration-change-hook 'bgm-update t t)
+         (bgm-update))
         (t
-         (bgm-update)
-         (remove-hook 'window-configuration-change-hook 'bgm-update t))))
+         (bgm-update))))
 
 (define-global-minor-mode global-big-gutters-mode
   big-gutters-mode bgm-toggle-with-ignore)
@@ -44,17 +44,16 @@
 
 (defun bgm-update ()
   "Recalculate correct gutter widths.  If DISABLE, disable big gutters."
-  (with-selected-window (selected-window)
-    (if (or (window-minibuffer-p) (not big-gutters-mode))
-        (set-window-fringes (selected-window) nil nil)
-      (let* ((fringes (apply #'+ (seq-filter #'numberp (window-fringes))))
-             (width (+ (window-width) (/ fringes (frame-char-width))))
-             (extra-chars (- width bgm-line-width))
-             (margins (* (frame-char-width) extra-chars)))
-        (when (> margins 0)
-          (set-window-fringes (selected-window)
-                              (truncate (* 0.25 margins))
-                              (truncate (* 0.75 margins))))))))
+  (if (or (window-minibuffer-p) (not big-gutters-mode))
+      (set-window-fringes (selected-window) nil nil)
+    (let* ((fringes (apply #'+ (seq-filter #'numberp (window-fringes))))
+           (width (+ (window-width) (/ fringes (frame-char-width))))
+           (extra-chars (- width bgm-line-width))
+           (margins (* (frame-char-width) extra-chars)))
+      (when (> margins 0)
+        (set-window-fringes (selected-window)
+                            (truncate (* 0.25 margins))
+                            (truncate (* 0.75 margins)))))))
 
 (provide 'big-gutters-mode)
 ;;; big-gutters-mode.el ends here

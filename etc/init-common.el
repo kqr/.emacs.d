@@ -119,9 +119,9 @@
 (setq prettify-symbols-unprettify-at-point 'right-edge)
 
 ;; Limit the visible buffer area to some typographically sound width
-(require 'big-gutters-mode)
-(setcq bgm-ignore-mode-regex "dired\\|org-agenda\\|notmuch")
-(global-big-gutters-mode +1)
+;;(require 'big-gutters-mode)
+;;(setcq bgm-ignore-mode-regex "dired\\|org-agenda\\|notmuch")
+;;(global-big-gutters-mode +1)
 
 ;; Highlight FIXME TODO etc. in comments
 (use-package fic-mode :init
@@ -453,7 +453,8 @@
 (use-package calc
   :bind (("<f12>" . calc))
   :custom
-  (calc-display-trail ()))
+  (calc-display-trail nil)
+  (calc-simplify-mode 'units))
 
 ;;;; File manager
 (unbind-key "<f2>")
@@ -550,6 +551,12 @@
   (org-return-follows-link t)
   (org-list-allow-alphabetical t)
   (org-ellipsis "↴")
+  
+  (org-show-context-detail
+   '((agenda . ancestors)
+     (bookmark-jump . lineage)
+     (isearch . lineage)
+     (default . ancestors)))
   
   ;;;;;; Using Org as a planner
   (org-todo-keywords
