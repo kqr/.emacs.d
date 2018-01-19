@@ -321,6 +321,23 @@
   (require 'tab-as-escape)
   (tab-as-escape-mode +1))
 
+;;;; Completion with company mode (hopefully practically intrusion-free)
+(use-package company :diminish company-mode :init
+  (defun company-complete-common-or-selected ()
+    "Insert the common part, or if none, complete using selection."
+    (interactive)
+    (when (company-manual-begin)
+      (if (not (equal company-common company-prefix))
+          (company--insert-candidate company-common)
+        (company-complete-selection))))
+  
+  (global-company-mode)
+  :custom
+  (company-frontends '(company-preview-frontend))
+  :config
+  (unbind-key "<return>" company-active-map)
+  (bind-key "TAB" #'company-complete-common-or-selected company-active-map))
+
 ;;;; Miscellaneous
 ;;;;; Export window contents to neat HTML
 (use-package htmlize
