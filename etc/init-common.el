@@ -447,9 +447,9 @@
   (setcq c-default-style "stroustrup")
   (setcq c-basic-offset 4))
 
-(use-package nxml-mode :mode "\\.html"
-  :ensure nil :config
-  (use-package html5-schema))
+;; Let's hope this is easier to configure (i.e. that I don't have to
+;; configure it at all)
+(use-package web-mode :mode "\\.html")
 
 (use-package intero :config
   (add-hook 'haskell-mode-hook #'intero-mode))
