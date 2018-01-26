@@ -132,10 +132,10 @@
   :custom
   (fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 
-;; Highlight the stuff between matching parentheses ;; Currently disabled
-;; because versor-mode does this so much better
+;; Highlight the stuff between matching parentheses
+;; The idea is to use versor-mode instead of this, but since versor needs
+;; work to be good, this is what I'll use for the time being.
 (use-package paren
-  :disabled
   :config
   (show-paren-mode +1)
   (setcq show-paren-delay 0)
@@ -449,7 +449,9 @@
 
 ;; Let's hope this is easier to configure (i.e. that I don't have to
 ;; configure it at all)
-(use-package web-mode :mode "\\.html")
+(use-package web-mode :mode "\\.html" :custom
+  (web-mode-enable-auto-pairing t)
+  (web-mode-enable-css-colorization nil))
 
 (use-package intero :config
   (add-hook 'haskell-mode-hook #'intero-mode))
