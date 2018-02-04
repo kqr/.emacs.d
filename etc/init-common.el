@@ -456,7 +456,8 @@
 (use-package intero :config
   (add-hook 'haskell-mode-hook #'intero-mode))
 
-(use-package ada-mode)
+(use-package ada-mode :custom
+  (flycheck-gnat-args "-gnat12"))
 
 (use-package ess :init (require 'ess-site))
 
