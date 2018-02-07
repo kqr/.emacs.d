@@ -259,7 +259,8 @@
                             " "
                             #'mode-line-buffer-identification
                             ":"
-                            '(:eval (propertize "(%l,%c)"))
+                            ;; temporarily disable to see if it decreases lag
+                            ;;'(:eval (propertize "(%l,%c)"))
                             " [%["
                             '(:eval mode-name)
                             " ("

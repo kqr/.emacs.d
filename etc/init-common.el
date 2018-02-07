@@ -145,9 +145,10 @@
   (setcq show-paren-priority -200))
 
 ;; Try to keep the buffer scrolled so the cursor is centered
-(require 'simpler-centered-cursor-mode)
-(diminish 'simpler-centered-cursor-mode)
-(global-simpler-centered-cursor-mode +1)
+;; ... disabled for the time being to see if that reduces lag
+;;(require 'simpler-centered-cursor-mode)
+;;(diminish 'simpler-centered-cursor-mode)
+;;(global-simpler-centered-cursor-mode +1)
 
 (use-package popup)
 
