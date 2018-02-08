@@ -17,6 +17,10 @@
   (make-backup-files nil)
   (large-file-warning-threshold 100000000)
 
+  (auto-window-vscroll nil "Reduces lag, I think")
+  (scroll-conservatively 101 "Reduces lag, I think")
+  (line-move-visual nil "Reduces lag, I think")
+
   (indent-tabs-mode nil "Prevent Emacs from mixing tabs and spaces.")
   (sentence-end-double-space nil "No need to fake typesetting.")
 
@@ -145,10 +149,18 @@
   (setcq show-paren-priority -200))
 
 ;; Try to keep the buffer scrolled so the cursor is centered
-;; ... disabled for the time being to see if that reduces lag
-;;(require 'simpler-centered-cursor-mode)
-;;(diminish 'simpler-centered-cursor-mode)
-;;(global-simpler-centered-cursor-mode +1)
+(require 'simpler-centered-cursor-mode)
+(diminish 'simpler-centered-cursor-mode)
+(use-package centered-cursor-mode :diminish centered-cursor-mode :config
+  (global-centered-cursor-mode +1)
+
+  (defun switch-to-simple-scc ()
+    "If this is a large file, switch to simpler-centered-cursor-mode."
+    (when (> (buffer-size) 32000)
+      (centered-cursor-mode -1)
+      (simpler-centered-cursor-mode +1)))
+  
+  (add-hook 'org-mode-hook #'switch-to-simple-scc))
 
 (use-package popup)
 
