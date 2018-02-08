@@ -176,6 +176,9 @@
 
 ;;; Interaction
 ;;;; Navigation and fuzzy finding
+(use-package ibuffer :bind
+  (("C-x C-b" . ibuffer)))
+
 (use-package ivy :diminish ivy-mode :config
   (setcq ivy-initial-inputs-alist nil)
   (ivy-mode +1))
