@@ -684,6 +684,7 @@
      "\\setmainfont[Ligatures=TeX,Numbers=OldStyle]{Whitman}"
      ("AUTO" "polyglossia" t)
      ("" "pdflscape" t)
+     ("" "pseudo-ewd" t)
      ;; tufte-handout xelatex shim
      ,(concat
        "\\ifxetex\n"
