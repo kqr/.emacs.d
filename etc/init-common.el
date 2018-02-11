@@ -212,57 +212,7 @@
   ;; Allow narrowing to subtree even when inside subtree
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
-                                     (outline-previous-visible-heading 1)))))
-
-;;;;; Versor-mode for convenient navigation
-
-(require 'versor)
-;;(autoload 'versor-setup "versor")
-;;(versor-setup 'arrows 'quiet-underlying)
-
-
-;;(use-package versor
-;;  :ensure nil
-;;  :init
-;;  (require 'versor)
-;;:config
-;;  (versor-setup
-;;   'arrows
-;;   'arrows-misc
-;;   'meta
-;;   'ctrl-x
-;;   'text-in-code
-;;   'quiet-underlying
-;;   'local)
-
-;;  (setcq versor-auto-change-for-modes nil)
-;;  (setcq versor-move-out-when-at-end nil)
-;;  (setcq versor-level-wrap nil)
-;;  (setcq versor-meta-level-wrap nil)
-;;  (setcq versor-text-level 2)
-;;  (setcq versor-text-meta-level 4)
-;;  (setcq versor-non-text-level 2)
-;;  (setcq versor-non-text-meta-level 6)
-;;
-;;  (setcq versor-meta-dimensions-valid-for-modes
-;;         '((t t "cartesian" "structural" "text" "structured text" "program")))
-;;  
-;;  (setcq versor-mode-current-levels
-;;         (mapcar #'versor-mode-levels-triplet
-;;                 '((emacs-lisp-mode "structural" "exprs")
-;;                   (lisp-interaction-mode "structural" "exprs")
-;;                   (c-mode "program" "statement-parts")
-;;                   (text-mode "text" "words")
-;;                   (message-mode "text" "words")
-;;                   (org-mode "text" "words"))))
-;;
-;;  (let ((color (face-attribute 'show-paren-match :background)))
-;;    (set-face-attribute 'versor-item-face nil :inherit 'unspecified :background color)
-;;    (seq-doseq (metamovemap (seq-subseq moves-moves 1))
-;;      (seq-doseq (movemap (seq-subseq metamovemap 1))
-;;        (versor-define-move movemap 'color color)
-;;        (versor-define-move movemap :background color))))
-;;)
+                                (outline-previous-visible-heading 1)))))
 
 ;;;; God mode
 ;; Modal editing *is* the greatest. This reduces hand-strain in an Emacs
@@ -399,17 +349,27 @@
 
 ;;;; Programming, general
 ;;;;; Edit by balanced parentheses
-(use-package paredit
-  :diminish paredit-mode :config
-  ;; Fixes to make paredit more convenient to work with in other languages
-  (setcq paredit-space-for-delimiter-predicates
-         (list (lambda (&rest args) nil)))
-  (unbind-key "\\" paredit-mode-map)
-  (unbind-key "M-q" paredit-mode-map)
-  
-  (add-hook 'text-mode-hook #'paredit-mode)
-  (add-hook 'prog-mode-hook #'paredit-mode)
-  (add-hook 'ada-mode-hook #'paredit-mode))
+;; Trying out smartparens-strict-mode instead of paredit...
+
+(use-package smartparens :custom
+  ()
+  :config
+  (show-smartparens-global-mode t)
+  (add-hook 'text-mode-hook #'turn-on-smartparens-strict-mode)
+  (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
+  (add-hook 'ada-mode-hook #'turn-on-smartparens-strict-mode))
+
+;;(use-package paredit
+;;  :diminish paredit-mode :config
+;;  ;; Fixes to make paredit more convenient to work with in other languages
+;;  (setcq paredit-space-for-delimiter-predicates
+;;         (list (lambda (&rest args) nil)))
+;;  (unbind-key "\\" paredit-mode-map)
+;;  (unbind-key "M-q" paredit-mode-map)
+;;  
+;;  (add-hook 'text-mode-hook #'paredit-mode)
+;;  (add-hook 'prog-mode-hook #'paredit-mode)
+;;  (add-hook 'ada-mode-hook #'paredit-mode))
 
 ;;;;; Indentation/whitespace stuff
 (use-package aggressive-indent :diminish aggressive-indent-mode :config
