@@ -137,16 +137,15 @@
   (fic-highlighted-words (split-string "FIXME TODO BUG XXX")))
 
 ;; Highlight the stuff between matching parentheses
-;; The idea is to use versor-mode instead of this, but since versor needs
-;; work to be good, this is what I'll use for the time being.
-(use-package paren
-  :config
-  (show-paren-mode +1)
-  (setcq show-paren-delay 0)
-  (setcq show-paren-when-point-inside-paren t)
-  (setcq show-paren-style 'expression)
-  ;; This is in order for region to take priority over show-paren highlighting
-  (setcq show-paren-priority -200))
+;; I'll try show-smartparen-mode instead for a while
+;;(use-package paren
+;;  :config
+;;  (show-paren-mode +1)
+;;  (setcq show-paren-delay 0)
+;;  (setcq show-paren-when-point-inside-paren t)
+;;  (setcq show-paren-style 'expression)
+;;  ;; This is in order for region to take priority over show-paren highlighting
+;;  (setcq show-paren-priority -200))
 
 ;; Try to keep the buffer scrolled so the cursor is centered
 (require 'simpler-centered-cursor-mode)
@@ -349,12 +348,12 @@
 
 ;;;; Programming, general
 ;;;;; Edit by balanced parentheses
-;; Trying out smartparens-strict-mode instead of paredit...
-
+;; Trying out smartparens-strict-mode instead of paredit
 (use-package smartparens-config :ensure smartparens
   :diminish smartparens-mode
   :config
   (show-smartparens-global-mode t)
+  (sp-use-smartparens-bindings)
   (add-hook 'text-mode-hook #'turn-on-smartparens-strict-mode)
   (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
   (add-hook 'ada-mode-hook #'turn-on-smartparens-strict-mode))
