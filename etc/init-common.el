@@ -258,17 +258,17 @@
         (set-face-background 'mode-line "dodger blue")
       (set-face-background 'mode-line "antiquewhite4")))
 
-  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor nil t)
-  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor nil t)
-  (add-hook 'read-only-mode-hook #'god-mode-update-cursor nil t)
+  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
+  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
+  (add-hook 'read-only-mode-hook #'god-mode-update-cursor)
 
   ;; I have barely any idea what I'm doing here... I'm just spamming these
   ;; to ensure the modeline is updated timely...
-  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor nil t)
-  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor nil t)
-  (add-hook 'mode-selection-hook #'god-mode-update-cursor nil t)
-  (add-hook 'buffer-selection-hook #'god-mode-update-cursor nil t)
-  (add-hook 'find-file-hook #'god-mode-update-cursor nil t)
+  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor)
+  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor)
+  (add-hook 'mode-selection-hook #'god-mode-update-cursor)
+  (add-hook 'buffer-selection-hook #'god-mode-update-cursor)
+  (add-hook 'find-file-hook #'god-mode-update-cursor)
 
   (defun god-has-priority ()
     "Try to ensure that god mode keeps priority over other minor modes."
