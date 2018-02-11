@@ -300,27 +300,25 @@
   :config
   (god-mode-all)
   (require 'god-mode-isearch)
-
   (defun god-mode-update-cursor (&optional _)
     "Make sure the modeline and cursor is updated with god mode state."
     (if (or god-local-mode buffer-read-only) (setq cursor-type 'box)
       (setq cursor-type 'bar))
     (if god-local-mode
-        (set-face-background 'mode-line
-                             (face-attribute 'font-lock-type-face :foreground))
-      (mapc #'enable-theme custom-enabled-themes)))
+        (set-face-background 'mode-line "dodger blue")
+      (set-face-background 'mode-line "antiquewhite4")))
 
-  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
-  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
-  (add-hook 'read-only-mode-hook #'god-mode-update-cursor)
+  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor nil t)
+  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor nil t)
+  (add-hook 'read-only-mode-hook #'god-mode-update-cursor nil t)
 
   ;; I have barely any idea what I'm doing here... I'm just spamming these
   ;; to ensure the modeline is updated timely...
-  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor)
-  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor)
-  (add-hook 'mode-selection-hook #'god-mode-update-cursor)
-  (add-hook 'buffer-selection-hook #'god-mode-update-cursor)
-  (add-hook 'find-file-hook #'god-mode-update-cursor)
+  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor nil t)
+  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor nil t)
+  (add-hook 'mode-selection-hook #'god-mode-update-cursor nil t)
+  (add-hook 'buffer-selection-hook #'god-mode-update-cursor nil t)
+  (add-hook 'find-file-hook #'god-mode-update-cursor nil t)
 
   (defun god-has-priority ()
     "Try to ensure that god mode keeps priority over other minor modes."
@@ -387,6 +385,9 @@
      ("C-s" . #'vr/isearch-forward)
      ("C-r" . #'vr/isearch-backward))))
 
+(use-package expand-region :bind
+  (("M-SPC" . er/expand-region)))
+
 (use-package dabbrev :config
   (bind-key* "C-M-i" 'dabbrev-expand)
   (setcq dabbrev-case-fold-search nil))
@@ -399,7 +400,6 @@
 ;;;; Programming, general
 ;;;;; Edit by balanced parentheses
 (use-package paredit
-  :disabled
   :diminish paredit-mode :config
   ;; Fixes to make paredit more convenient to work with in other languages
   (setcq paredit-space-for-delimiter-predicates
