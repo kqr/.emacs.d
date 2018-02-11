@@ -408,7 +408,8 @@
   (unbind-key "M-q" paredit-mode-map)
   
   (add-hook 'text-mode-hook #'paredit-mode)
-  (add-hook 'prog-mode-hook #'paredit-mode))
+  (add-hook 'prog-mode-hook #'paredit-mode)
+  (add-hook 'ada-mode-hook #'paredit-mode))
 
 ;;;;; Indentation/whitespace stuff
 (use-package aggressive-indent :diminish aggressive-indent-mode :config
