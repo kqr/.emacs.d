@@ -351,8 +351,8 @@
 ;;;;; Edit by balanced parentheses
 ;; Trying out smartparens-strict-mode instead of paredit...
 
-(use-package smartparens :custom
-  ()
+(use-package smartparens-config :ensure smartparens
+  :diminish smartparens-mode
   :config
   (show-smartparens-global-mode t)
   (add-hook 'text-mode-hook #'turn-on-smartparens-strict-mode)
