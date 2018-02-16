@@ -372,7 +372,8 @@
      (diminish 'smartparens-mode)
      (require 'smartparens-config)
      (sp-use-smartparens-bindings)
-     (turn-on-smartparens-strict-mode)))
+     (turn-on-smartparens-strict-mode)
+     (sp-local-pair 'ada-mode "'" nil :actions nil)))
 
 ;;;;; Indentation/whitespace stuff
 (when (require 'aggressive-indent nil 'noerror)
