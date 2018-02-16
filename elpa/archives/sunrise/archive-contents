@@ -1,0 +1,51 @@
+(1
+ (sunrise-commander     . [(6 464)
+                           nil
+                           "Two-pane file manager for Emacs based on Dired and inspired by MC"
+                           single])
+
+ (sunrise-x-buttons     . [(1 444)
+                           ((sunrise-commander (5 463)))
+                           "Clickable shortcut buttons for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-checkpoints . [(1 440)
+                           ((sunrise-commander (5 463)))
+                           "Checkpoint bookmarks for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-loop        . [(3 423)
+                           ((sunrise-commander (5 463)))
+                           "Asynchronous execution of filesystem operations for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-mirror      . [(2 423)
+                           ((sunrise-commander (5 463)))
+                           "Full read/write access to compressed archives for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-modeline    . [(2 423)
+                           ((sunrise-commander (5 463)))
+                           "Navigable mode line for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-popviewer   . [(3 444)
+                           ((sunrise-commander (5 463)))
+                           "Floating viewer window for the Sunrise Commander"
+                           single])
+
+ (sunrise-x-tabs        . [(1 446)
+                           ((sunrise-commander (5 463)))
+                           "Tabs for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-tree        . [(1 450)
+                           ((sunrise-commander (5 463)))
+                           "Tree View for the Sunrise Commander file manager"
+                           single])
+
+ (sunrise-x-w32-addons  . [(1 456)
+                           ((sunrise-commander (5 463)))
+                           "MS-Windows-specific utilities for the Sunrise Commander file manager"
+                           single])
+)

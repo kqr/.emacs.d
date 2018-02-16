@@ -228,14 +228,13 @@
             (ivy-cursor ((t :inherit cursor)))
             (ivy-match-required-face ((t :inherit isearch-fail)))
             (company-tooltip ((t :inherit fringe)))
-            (company-preview ((t :inherit lazy-highlight)))
-            (company-preview-common ((t :inherit match)))
+            (company-preview ((t :inherit font-lock-comment-face)))
+            (company-preview-common ((t :inherit default)))
             (company-scrollbar-bg ((t :inherit fringe)))
             (company-scrollbar-fg ((t :inherit match)))
             (company-tooltip-common ((t :inherit lazy-highlight)))
             (company-tooltip-common-selection ((t :inherit lazy-highlight)))
-            (company-tooltip-mouse ((t :inherit match)))
-            (company-tooltip-search ((t :inherit match)))
+	    (company-tooltip-search ((t :inherit match)))
             (company-tooltip-search-selection ((t :inherit match)))
             (company-tooltip-selection ((t :inherit match))))))
   
@@ -291,6 +290,12 @@ Chooses based on `display-graphic-p'."
   (let ((pick (if (display-graphic-p) #'car #'cdr))
         (icon (alist-get mode modern-minik-mode-icon-alist)))
     (apply pick icon)))
+
+(defun modern-minik-set-icons ()
+  "Set all mode icons in the mode-line."
+  (dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
+    (unless (member mode '(flycheck-mode))
+      (diminish mode (modern-minik-mode-icon mode)))))
 
 (provide-theme 'modern-minik)
 
