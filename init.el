@@ -10,6 +10,25 @@
 ;;
 ;;; Code:
 
+;;; GUI removal
+;; Remove a bunch of distracting, unnecessary, silly graphic components We want
+;; to do this very early to avoid annoying flickering of menu bars and such.
+(when (display-graphic-p)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1))
+(menu-bar-mode -1)
+(blink-cursor-mode -1)
+
+(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
+(add-to-list 'default-frame-alist '(tool-bar-lines . nil))
+(add-to-list 'initial-frame-alist '(left-fringe . 40))
+(add-to-list 'default-frame-alist '(left-fringe . 40))
+(add-to-list 'initial-frame-alist '(right-fringe . 80))
+(add-to-list 'default-frame-alist '(right-fringe . 80))
+
+
+;;; Custom file
 ;; I don't use customize-set-variable as much anymore, but it's probably a
 ;; good idea to load the custom file anyway...
 (setq custom-file "~/.emacs.d/var/custom.el")
@@ -45,28 +64,7 @@
 (push "~/.emacs.d/lib" load-path)
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
 
-;;; Built-in Emacs stuff
-;;;; GUI removal
-;; Remove a bunch of distracting, unnecessary, silly graphic components
-(when (display-graphic-p)
-  (scroll-bar-mode -1)
-  (tool-bar-mode -1)
-  (tooltip-mode -1))
-(menu-bar-mode -1)
-(blink-cursor-mode -1)
-
-(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
-(add-to-list 'default-frame-alist '(tool-bar-lines . nil))
-(add-to-list 'initial-frame-alist '(left-fringe . 40))
-(add-to-list 'default-frame-alist '(left-fringe . 40))
-(add-to-list 'initial-frame-alist '(right-fringe . 80))
-(add-to-list 'default-frame-alist '(right-fringe . 80))
-
-;;;; User information
-(setq user-full-name "Christoffer Stjernlöf"
-      user-mail-address "k@rdw.se")
-
- ;;;; Set variable width font for most things (but not quite all of them!)
+;;;; Set variable width font for most things (but not quite all of them!)
 (when (display-graphic-p)
   (set-frame-font (font-spec :name "Linux Libertine O" :size 11.0) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
@@ -77,7 +75,10 @@
 ;; Replace the default line-extends-beyond-window symbol
 (set-display-table-slot standard-display-table 0 ?›)
 
-;;;; Various other settings
+;;; User information and various other basic settings
+(setq user-full-name "Christoffer Stjernlöf"
+      user-mail-address "k@rdw.se")
+
 (setq inhibit-startup-screen t
       initial-scratch-message ""
 
@@ -117,27 +118,13 @@
 ;; Let text extend beyond the window width
 (setq-default truncate-lines t)
 
-;;;; Basic keybind setup
 ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
 (define-key global-map (kbd "C-z") nil)
-
-;; <f1> defaults to duplicate the functionality provided by C-h
-;; By unbinding C-h we open it up to be used for better things
-(define-key global-map (kbd "C-h") nil)
-
-;; This is neat to quickly go back to the previous buffer
-(define-key global-map (kbd "C-q") #'kill-this-buffer)
-;; But then we also need this...
-(define-key global-map (kbd "C-S-q") #'quoted-insert)
-
-;; Make "join this line to the one above" a bit more convenient to perform
-(define-key global-map (kbd "C-S-j") #'delete-indentation)
-
 
 ;; Config troubleshooting
 (autoload 'bug-hunter-init-file "bug-hunter" nil t)
 
-;;; UI configuration (should appear early)
+;;; UI
 ;;;; Typography
 (when (require 'face-remap nil 'noerror)
   ;; Make available smaller changes in text size
@@ -159,7 +146,7 @@
   '(setq-default fic-highlighted-words
 		 (split-string "FIXME TODO BUG XXX")))
 
-;;;; Keep cursor centered by scrolling buffer
+;;;; Centered cursor and scrolling
 (when (require 'centered-cursor-mode nil 'noerror)
   (when (require 'simpler-centered-cursor-mode nil 'noerror)
     (defun switch-to-simple-scc ()
@@ -174,10 +161,10 @@
   (diminish 'centered-cursor-mode)
   (global-centered-cursor-mode +1))
 
-;;;; Have capability of displaying tooltips
+;;;; Tooltips
 (require 'popup nil 'noerror)
 
-;;;; Avoid the built-in Emacs window manager and try to use the real one
+;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode nil 'noerror)
   (frames-only-mode +1)
   ;; A new frame for each LaTeX refresh gets annoying
@@ -185,6 +172,8 @@
    '(".*Org PDF LaTeX Output.*" .
      (display-buffer-no-window . ((allow-no-window . t))))
    display-buffer-alist))
+
+
 
 ;;; Interaction
 ;;;; Navigation and fuzzy finding
@@ -229,6 +218,7 @@
   (define-key global-map (kbd "<escape>") #'god-local-mode)
 
   (when (require 'tab-as-escape nil 'noerror)
+    (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
   
   (when (require 'god-mode-isearch nil 'noerror)
@@ -289,7 +279,7 @@
 
 ;;;; Completion with company mode (hopefully practically intrusion-free)
 (when (require 'company nil 'noerror)
-  (diminish company-mode)
+  (diminish 'company-mode)
   (global-company-mode +1)
 
   (defun company-complete-common-or-selected ()
@@ -312,7 +302,7 @@
   (define-key company-active-map (kbd "TAB")
     #'company-complete-common-or-selected))
 
-;;;; Miscellaneous
+;;;; Miscellaneous interaction
 ;;;;; Export window contents to neat HTML
 (autoload 'htmlize-buffer "htmlize" nil t)
 (autoload 'htmlize-file "htmlize" nil t)
@@ -324,15 +314,27 @@
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 
-;;; Editing
+;;; General editing
+;;;; Basic binds
+;; This is neat to quickly go back to the previous buffer
+(define-key global-map (kbd "C-q") #'kill-this-buffer)
+;; But then we also need this...
+(define-key global-map (kbd "C-S-q") #'quoted-insert)
+
+;; Make "join this line to the one above" a bit more convenient to perform
+(define-key global-map (kbd "C-S-j") #'delete-indentation)
+
+;;;; Autorevert
 (when (require 'autorevert nil 'noerror)
   (global-auto-revert-mode 1))
 
+;;;; Undo-tree
 (when (require 'undo-tree nil 'noerror)
   (diminish 'undo-tree-mode)
   (global-undo-tree-mode +1)
   (setq-default undo-tree-visualizer-diff t))
 
+;;;; Merge binds
 (when (require 'smerge-mode nil 'noerror)
   (defun sm-try-smerge ()
     "Start smerge-mode automatically when a git conflict is detected."
@@ -342,6 +344,7 @@
         (smerge-mode 1))))
   (add-hook 'find-file-hook 'sm-try-smerge t))
 
+;;;; Visual regexp (on steroids!)
 (autoload 'vr/query-replace "visual-regexp")
 (autoload 'vr/isearch-forward "visual-regexp")
 (autoload 'vr/isearch-backward "visual-regexp")
@@ -353,29 +356,33 @@
      (require 'visual-regexp-steroids nil 'noerror)
      (setq-default sr/default-regexp-modifiers '(:I t :M nil :S nil :U nil))))
 
+;;;; Expand-region
 (autoload 'er/expand-region "expand-region")
 (define-key global-map (kbd "M-SPC") 'er/expand-region)
 
+;;;; Yas-snippet
 (setq-default yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
 (when (require 'yasnippet nil 'noerror)
   (yas-global-mode 1))
 
-;;;; Programming, general
-;;;;; Edit by balanced parentheses
-;; Trying out smartparens-strict-mode instead of paredit
-(autoload 'show-smartparens-mode "smartparens")
-(add-hook 'text-mode-hook #'show-smartparens-mode)
-(add-hook 'prog-mode-hook #'show-smartparens-mode)
-(add-hook 'ada-mode-hook #'show-smartparens-mode)
-(eval-after-load "smartparens"
-  '(progn
-     (diminish 'smartparens-mode)
-     (require 'smartparens-config)
-     (sp-use-smartparens-bindings)
-     (turn-on-smartparens-strict-mode)
-     (sp-local-pair 'ada-mode "'" nil :actions nil)))
+;;;; Thesaurus/synonyms tooltip
+(define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
+(autoload 'synosaurus "synosaurus-choose-and-replace")
+(eval-after-load "synosaurus"
+  '(setq-default synosaurus-choose-method 'popup))
 
-;;;;; Indentation/whitespace stuff
+;;; Programming
+;;;; Edit by balanced parentheses
+;; Trying out smartparens-strict-mode instead of paredit
+(when (require 'smartparens nil 'noerror)
+  (diminish 'smartparens-mode)
+  (require 'smartparens-config)
+  (show-smartparens-global-mode)
+  (sp-use-smartparens-bindings)
+  (turn-on-smartparens-strict-mode)
+  (sp-local-pair 'ada-mode "'" nil :actions nil))
+
+;;;; Indentation/whitespace stuff
 (when (require 'aggressive-indent nil 'noerror)
   (diminish 'aggressive-indent-mode)
   (electric-indent-mode -1)
@@ -395,46 +402,46 @@
 (autoload 'global-flycheck-mode "flycheck")
 (add-hook 'prog-mode-hook 'global-flycheck-mode)
 (eval-after-load "flycheck"
-  '(diminish 'global-flycheck-mode))
+  '(diminish 'flycheck-mode))
 
-;;;;; Project management of source code etc.
+;;;; Project management
 (when (require 'projectile nil 'noerror)
   (define-key global-map (kbd "<f8>") 'projectile-command-map)
   (projectile-mode +1)
   (when (require 'counsel-projectile nil 'noerror)
     (counsel-projectile-mode +1)))
 
-;;;; Programming, language-specific
+;;;; C and C++ mode
 (when (require 'cc-mode nil 'noerror)
   (setq-default c-default-style "stroustrup"
-		c-basic-offset 4))
+                c-basic-offset 4))
 
+;;;; Web mode (multi-modal editing of templates)
 (autoload 'web-mode "web-mode")
 (push '("\\.html\'" . web-mode) auto-mode-alist)
 (push '("\\.css\'" . web-mode) auto-mode-alist)
 (push '("\\.js\'" . web-mode) auto-mode-alist)
 (eval-after-load "web-mode"
-  '(setq-default web-mode-enable-auto-pairing t
-		 web-mode-enable-css-colorization nil
-		 web-mode-css-indent-offset 2))
+  '(progn
+     (setq-default web-mode-enable-auto-pairing t
+                   web-mode-enable-css-colorization nil
+                   web-mode-css-indent-offset 2)
 
+     ;; If we like web-mode, we'll probably like impatient-mode too!
+     (require 'impatient-mode nil 'no)))
+
+;;;; Ada mode
 (autoload 'ada-mode "ada-mode")
 (push '("\\.adb\\'" . ada-mode) auto-mode-alist)
 (push '("\\.ads\\'" . ada-mode) auto-mode-alist)
 (eval-after-load "ada-mode"
   '(setq-default flycheck-gnat-args "-gnat12"))
 
+;;;; Emacs Speaks Statistics, used for R
 (autoload 'ess-r-mode "ess-site")
 (push '("\\.r\\'" . ess-r-mode) auto-mode-alist)
 
-;;;; Prose
-(define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
-(autoload 'synosaurus "synosaurus-choose-and-replace")
-(eval-after-load "synosaurus"
-  '(setq-default synosaurus-choose-method 'popup))
-
-;;; EAAS = Emacs-As-An-(operating)-System
-;;;; Calculator
+;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
 (eval-after-load "calc"
@@ -442,15 +449,15 @@
      (setq calc-display-trail nil
 	   calc-simplify-mode 'units)))
 
-;;;; File manager
+;;; Orthodox file manager
 (autoload 'sunrise-cd "sunrise-commander")
 (define-key global-map (kbd "<f2>") 'sunrise-cd)
 
-;;;; Git integration
+;;; Git integration
 (autoload 'magit-status "magit")
 (define-key global-map (kbd "<f3>") 'magit-status)
 
-;;;; Organizer, planner, note taking etc.
+;;; Organizer, planner, note taking etc.
 ;; I /think/ these need to be set before Org is required
 (setq-default org-export-backends '(org html publish s5 latex rss))
 ;; Allow longer sections of italics, and italicise mid-word with
@@ -466,11 +473,10 @@
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
-  (defvar kqr-org-prefix (make-sparse-keymap))
   (define-prefix-command 'kqr-org-prefix)  
-  (define-key kqr-org-prefix (kbd "l") #'org-store-link)
+  (define-key 'kqr-org-prefix (kbd "l") #'org-store-link)
 
-  ;;;;;; Regular Org operation     
+;;;; Regular Org operation     
   (defun narrow-or-widen-dwim (p)
     "If the buffer is narrowed, it widens. Otherwise, it narrows
     intelligently.  Intelligently means: region, org-src-block,
@@ -498,7 +504,7 @@
 		    (outshine-narrow-to-subtree))
 		   (t (narrow-to-defun)))))
 	  (t (error "Please select a region to narrow to"))))
-  (define-key kqr-org-prefix (kbd "RET") #'narrow-or-widen-dwim)
+  (define-key 'kqr-org-prefix (kbd "RET") #'narrow-or-widen-dwim)
 
   (require 'org)
   
@@ -517,21 +523,20 @@
   (org-set-emph-re 'org-emphasis-regexp-components
 		   org-emphasis-regexp-components)
   
-     ;;;;;; Using Org as a planner
+;;;; Using Org as a planner
   (define-key 'kqr-org-prefix (kbd "a") #'org-agenda)
   (defun capture-general-inbox (args)
     "Run inbox capture with ARGS."
     (interactive "P")
     (org-capture args "i"))
-  (define-key kqr-org-prefix (kbd "i") #'capture-general-inbox)
+  (define-key 'kqr-org-prefix (kbd "i") #'capture-general-inbox)
 
   (require 'org-notmuch nil 'noerror)
   (defun capture-mail-inbox (args)
     "Run mail capture with ARGS."
     (interactive "P")
-    (org-capture args "m"))
-  
-  (define-key kqr-org-prefix (kbd "m") #'capture-mail-inbox)
+    (org-capture args "m")) 
+  (define-key 'kqr-org-prefix (kbd "m") #'capture-mail-inbox)
 
   (setq org-todo-keywords
 	'((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
@@ -565,8 +570,8 @@
 	;; C = fine if rescheduled
 	org-lowest-priority ?C
 	org-default-priority ?B)
-  
-  ;; Capturing, refiling and archiving
+
+;;;;; Capturing, refiling and archiving
   (setq org-capture-templates
 	'(("i" ">inbox" entry (file "") "* %?\n")
 	  ("m" "mail>inbox" entry (file "") "* %?\n%a\n"))
@@ -583,7 +588,7 @@
 	org-reverse-note-order t
 	org-archive-location "~/org/archive.org::* %s")
 
-  ;; Agenda
+;;;;; Agenda
   (setq org-agenda-files '("/home/kqr/org/inbox.org" "/home/kqr/org/projects.org" "/home/kqr/org/tickler.org")
 	org-agenda-dim-blocked-tasks 'invisible
 	org-agenda-span 'day
@@ -613,7 +618,7 @@
 		  ((org-agenda-overriding-header "Stuck projects")
 		   (org-agenda-skip-function #'skip-living-projects)))))))
 
-  ;;;;;; Using Org to publish documents
+;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
 			       '((emacs-lisp . t) (R . t) (python . t)))
   
@@ -654,10 +659,10 @@
 	      "\\fi\n"))))
                                         ; ;
   ;; This must happen last, when we have defined all keys in the prefix map
-  (define-key global-map (kbd "<f4>") kqr-org-prefix))
+  (define-key global-map (kbd "<f4>") 'kqr-org-prefix))
 
 
-;;;; Email client
+;;; Email client
 (when (require 'notmuch nil 'noerror)
   (define-key global-map (kbd "<f5>") #'notmuch)
 
