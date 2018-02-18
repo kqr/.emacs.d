@@ -27,7 +27,6 @@
 (add-to-list 'initial-frame-alist '(right-fringe . 80))
 (add-to-list 'default-frame-alist '(right-fringe . 80))
 
-
 ;;; Custom file
 ;; I don't use customize-set-variable as much anymore, but it's probably a
 ;; good idea to load the custom file anyway...
@@ -63,6 +62,8 @@
 (push "~/.emacs.d/etc" load-path)
 (push "~/.emacs.d/lib" load-path)
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
+
+(load "load-path-local.el" 'noerror)
 
 ;;;; Set variable width font for most things (but not quite all of them!)
 (when (display-graphic-p)
@@ -145,6 +146,14 @@
 (eval-after-load "fic-mode"
   '(setq-default fic-highlighted-words
 		 (split-string "FIXME TODO BUG XXX")))
+
+(when (require 'paren nil 'noerror)
+  (show-paren-mode +1)
+  (setq-default show-paren-delay 0
+                show-paren-when-point-inside-paren t
+                show-paren-style 'expression)
+  ;; This is in order for region to take priority over show-paren highlighting
+  (setq-default show-paren-priority -200))
 
 ;;;; Centered cursor and scrolling
 (when (require 'centered-cursor-mode nil 'noerror)
@@ -377,9 +386,8 @@
 (when (require 'smartparens nil 'noerror)
   (diminish 'smartparens-mode)
   (require 'smartparens-config)
-  (show-smartparens-global-mode)
+  (smartparens-global-strict-mode)
   (sp-use-smartparens-bindings)
-  (turn-on-smartparens-strict-mode)
   (sp-local-pair 'ada-mode "'" nil :actions nil))
 
 ;;;; Indentation/whitespace stuff
@@ -473,7 +481,7 @@
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
-  (define-prefix-command 'kqr-org-prefix)  
+  (define-prefix-command 'kqr-org-prefix)
   (define-key 'kqr-org-prefix (kbd "l") #'org-store-link)
 
 ;;;; Regular Org operation     
@@ -664,7 +672,7 @@
 
 ;;; Email client
 (when (require 'notmuch nil 'noerror)
-  (define-key global-map (kbd "<f5>") #'notmuch)
+  (define-key global-map (kbd "<f5>") 'notmuch)
 
   (defun notmuch-toggle-deleted-tag (&optional beg end)
     (interactive (notmuch-search-interactive-region))
@@ -735,7 +743,7 @@
 (load-theme 'modern-minik t)
 (modern-minik-set-icons)
 
-(load "init-local.el")
+(load "init-local.el" 'noerror)
 
 (provide 'init)
 ;;; init.el ends here
