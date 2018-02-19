@@ -313,10 +313,27 @@
 
 ;;;; Miscellaneous interaction
 ;;;;; Export window contents to neat HTML
-(autoload 'htmlize-buffer "htmlize" nil t)
-(autoload 'htmlize-file "htmlize" nil t)
-(autoload 'htmlize-many-files "htmlize" nil t)
-(autoload 'htmlize-region "htmlize" nil t)
+;; Tried autoloading but that didn't work and I don't have time to troubleshoot
+(when (require 'htmlize nil 'noerror)
+  (require 'subr-x))
+
+;; Automatically upload HTML of region-or-buffer to remote
+(defvar htmlize-paste-it-target-directory "/two-wrongs.com:pastes/")
+(defun htmlize-paste-it ()
+  "Htmlize active region or buffer and upload to target directory."
+  (interactive)
+  (let ((file-name (file-name-base (buffer-name)))
+        (file-extension (file-name-extension (buffer-name))))
+    (with-current-buffer
+        (or
+         (and (region-active-p) (htmlize-region))
+         (htmlize-buffer))
+      (write-file (concat
+                   htmlize-paste-it-target-directory
+                   file-name
+                   "-" (substring (sha1 (current-buffer)) 0 6)
+                   "." file-extension
+                   ".html")))))
 
 ;;;;; Analyse command usage frequency to optimise config
 (when (require 'keyfreq nil 'noerror)
