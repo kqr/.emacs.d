@@ -425,7 +425,7 @@
                 c-basic-offset 4))
 
 ;;;; Web mode (multi-modal editing of templates)
-(autoload 'web-mode "web-mode")
+(autoload 'web-mode "web-mode"  nil t)
 (push '("\\.html\'" . web-mode) auto-mode-alist)
 (push '("\\.css\'" . web-mode) auto-mode-alist)
 (push '("\\.js\'" . web-mode) auto-mode-alist)
