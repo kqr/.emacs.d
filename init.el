@@ -80,41 +80,41 @@
 (setq user-full-name "Christoffer Stjernlöf"
       user-mail-address "k@rdw.se")
 
-(setq inhibit-startup-screen t
-      initial-scratch-message ""
+(setq-default inhibit-startup-screen t
+	      initial-scratch-message ""
 
-      ;; Org is useful default for scratch buffers
-      major-mode 'org-mode
-      make-backup-files nil
-      large-file-warning-threshold 100000000
+	      ;; Org is useful default for scratch buffers
+	      major-mode 'org-mode
+	      make-backup-files nil
+	      large-file-warning-threshold 100000000
 
-      ;; Reduces lag, I think
-      auto-window-vscroll nil
-      scroll-conservatively 101
-      line-move-visual nil
+	      ;; Reduces lag, I think
+	      auto-window-vscroll nil
+	      scroll-conservatively 101
+	      line-move-visual nil
 
-      ;; Prevent Emacs from mixing tabs and spaces.
-      indent-tabs-mode nil
-      ;; No need to fake typesetting.
-      sentence-end-double-space nil
+	      ;; Prevent Emacs from mixing tabs and spaces.
+	      indent-tabs-mode nil
+	      ;; No need to fake typesetting.
+	      sentence-end-double-space nil
 
-      ;; Hide cursor in inactive windows
-      cursor-in-non-selected-windows nil
+	      ;; Hide cursor in inactive windows
+	      cursor-in-non-selected-windows nil
 
-      ;; Set a column limit at 80 characters
-      fill-column 80
-      ;; Automatically hard wrap content instead
-      auto-fill-function #'do-auto-fill
+	      ;; Set a column limit at 80 characters
+	      fill-column 80
+	      ;; Automatically hard wrap content instead
+	      auto-fill-function #'do-auto-fill
 
-      ;; Copy stuff to the X11 primary selection
-      select-enable-primary t
-      ;; Typing stuff with active region replaces region
-      delete-selection-mode 1
+	      ;; Copy stuff to the X11 primary selection
+	      select-enable-primary t
+	      ;; Typing stuff with active region replaces region
+	      delete-selection-mode 1
 
-      ;; Focus on newly opened help windows
-      help-window-select t
+	      ;; Focus on newly opened help windows
+	      help-window-select t
 
-      browse-url-browser-function #'eww)
+	      browse-url-browser-function #'eww)
 
 ;; Let text extend beyond the window width
 (setq-default truncate-lines t)
