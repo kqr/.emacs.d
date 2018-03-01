@@ -114,7 +114,8 @@
       ;; Focus on newly opened help windows
       help-window-select t
 
-      browse-url-browser-function #'eww)
+      browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
 
 ;; Let text extend beyond the window width
 (setq-default truncate-lines t)

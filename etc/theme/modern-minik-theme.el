@@ -178,6 +178,7 @@
 
            (((t :foreground ,theme-strong-diminuitive))
             font-lock-string-face
+            sh-heredoc
             undo-tree-visualizer-unmodified-face
             org-footnote
             notmuch-wash-cited-text
