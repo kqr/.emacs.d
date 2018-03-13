@@ -65,11 +65,13 @@
 
 (load "load-path-local.el" 'noerror)
 
-;;;; Set variable width font for most things (but not quite all of them!)
+;;;; Fixed with font
 (when (display-graphic-p)
-  (set-frame-font (font-spec :name "Linux Libertine O" :size 11.0) t t)
+  (set-frame-font (font-spec :name "Liberation Mono" :size 9.0) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
-                                  ((t :family "Luxi Mono" :height 0.8))))
+                                  ((t :family "Hack" :height 1.0))))  ;; was Luxi Mono
+  (custom-theme-set-faces 'user '(variable-pitch
+                                  ((t :family "Linux Libertine O" :height 1.2))))
   (add-to-list 'initial-frame-alist '(line-spacing . 1))
   (add-to-list 'default-frame-alist '(line-spacing . 1)))
 
@@ -83,8 +85,7 @@
 (setq inhibit-startup-screen t
       initial-scratch-message ""
 
-      ;; Org is useful default for scratch buffers
-      major-mode 'org-mode
+      major-mode 'fundamental-mode
       make-backup-files nil
       large-file-warning-threshold 100000000
 
