@@ -94,8 +94,6 @@
       scroll-conservatively 101
       line-move-visual nil
 
-      ;; Prevent Emacs from mixing tabs and spaces.
-      indent-tabs-mode nil
       ;; No need to fake typesetting.
       sentence-end-double-space nil
 
@@ -119,7 +117,10 @@
       browse-url-generic-program "firefox")
 
 ;; Let text extend beyond the window width
-(setq-default truncate-lines t)
+(setq-default truncate-lines t
+	      
+	      ;; Prevent Emacs from mixing tabs and spaces.
+	      indent-tabs-mode nil)
 
 ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
 (define-key global-map (kbd "C-z") nil)
@@ -461,8 +462,9 @@
 (autoload 'ada-mode "ada-mode")
 (push '("\\.adb\\'" . ada-mode) auto-mode-alist)
 (push '("\\.ads\\'" . ada-mode) auto-mode-alist)
-(eval-after-load "ada-mode"
-  '(setq-default flycheck-gnat-args "-gnat12"))
+(with-eval-after-load "ada-mode"
+  (setq-default flycheck-gnat-args "-gnat12")
+  (setq ada-language-version 'ada2005))
 
 ;;;; Emacs Speaks Statistics, used for R
 (autoload 'ess-r-mode "ess-site")
