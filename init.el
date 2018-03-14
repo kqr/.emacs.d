@@ -82,45 +82,45 @@
 (setq user-full-name "Christoffer Stjernlöf"
       user-mail-address "k@rdw.se")
 
-(setq inhibit-startup-screen t
-      initial-scratch-message ""
+(setq-default inhibit-startup-screen t
+              initial-scratch-message ""
 
-      major-mode 'fundamental-mode
-      make-backup-files nil
-      large-file-warning-threshold 100000000
+              major-mode 'fundamental-mode
+              make-backup-files nil
+              large-file-warning-threshold 100000000
 
-      ;; Reduces lag, I think
-      auto-window-vscroll nil
-      scroll-conservatively 101
-      line-move-visual nil
+              ;; Reduces lag, I think
+              auto-window-vscroll nil
+              scroll-conservatively 101
+              line-move-visual nil
 
-      ;; No need to fake typesetting.
-      sentence-end-double-space nil
+              ;; No need to fake typesetting.
+              sentence-end-double-space nil
 
-      ;; Hide cursor in inactive windows
-      cursor-in-non-selected-windows nil
+              ;; Hide cursor in inactive windows
+              cursor-in-non-selected-windows nil
 
-      ;; Set a column limit at 80 characters
-      fill-column 80
-      ;; Automatically hard wrap content instead
-      auto-fill-function #'do-auto-fill
+              ;; Set a column limit at 80 characters
+              fill-column 80
+              ;; Automatically hard wrap content instead
+              auto-fill-function #'do-auto-fill
 
-      ;; Copy stuff to the X11 primary selection
-      select-enable-primary t
-      ;; Typing stuff with active region replaces region
-      delete-selection-mode 1
+              ;; Copy stuff to the X11 primary selection
+              select-enable-primary t
+              ;; Typing stuff with active region replaces region
+              delete-selection-mode 1
 
-      ;; Focus on newly opened help windows
-      help-window-select t
+              ;; Focus on newly opened help windows
+              help-window-select t
 
-      browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
+              browse-url-browser-function 'browse-url-generic
+              browse-url-generic-program "firefox")
 
 ;; Let text extend beyond the window width
 (setq-default truncate-lines t
-	      
-	      ;; Prevent Emacs from mixing tabs and spaces.
-	      indent-tabs-mode nil)
+              
+              ;; Prevent Emacs from mixing tabs and spaces.
+              indent-tabs-mode nil)
 
 ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
 (define-key global-map (kbd "C-z") nil)
@@ -148,7 +148,7 @@
 (add-hook 'prog-mode-hook 'fic-mode)
 (eval-after-load "fic-mode"
   '(setq-default fic-highlighted-words
-		 (split-string "FIXME TODO BUG XXX")))
+                 (split-string "FIXME TODO BUG XXX")))
 
 (when (require 'paren nil 'noerror)
   (show-paren-mode +1)
@@ -303,7 +303,7 @@
         (company-complete-selection))))
   
   (setq company-frontends '(company-preview-frontend)
-	company-idle-delay 0)
+        company-idle-delay 0)
 
   ;; We don't want completion to prevent us from actually navigating the code
   (define-key company-active-map (kbd "<return>") nil)
@@ -318,25 +318,31 @@
 ;;;;; Export window contents to neat HTML
 ;; Tried autoloading but that didn't work and I don't have time to troubleshoot
 (when (require 'htmlize nil 'noerror)
-  (require 'subr-x))
+  ;; Automatically upload HTML of region-or-buffer to remote
+  (defvar htmlize-paste-it-target-directory "/two-wrongs.com:pastes/")
+  (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
 
-;; Automatically upload HTML of region-or-buffer to remote
-(defvar htmlize-paste-it-target-directory "/two-wrongs.com:pastes/")
-(defun htmlize-paste-it ()
-  "Htmlize active region or buffer and upload to target directory."
-  (interactive)
-  (let ((file-name (file-name-base (buffer-name)))
-        (file-extension (file-name-extension (buffer-name))))
-    (with-current-buffer
-        (or
-         (and (region-active-p) (htmlize-region))
-         (htmlize-buffer))
-      (write-file (concat
-                   htmlize-paste-it-target-directory
-                   file-name
-                   "-" (substring (sha1 (current-buffer)) 0 6)
-                   "." file-extension
-                   ".html")))))
+  (defun htmlize-paste-it ()
+    "Htmlize region-or-buffer and copy to directory."
+    (interactive)
+    (let* ((start (if (region-active-p) (region-beginning) (point-min)))
+           (end (if (region-active-p) (region-end) (point-max)))
+           (basename (file-name-base (buffer-name)))
+           (extension (file-name-extension (buffer-name)))
+           (hash (sha1 (current-buffer) start end))
+           (file-name (concat basename "-" (substring hash 0 6)
+                              "." extension ".html"))
+           (new-file (concat htmlize-paste-it-target-directory file-name))
+           (access-url (concat htmlize-paste-it-base-url file-name)))
+      ;; Region messes with clipboard, so deactivate it
+      (deactivate-mark)
+      (with-current-buffer (htmlize-region start end)
+        ;; Copy htmlized contents to target
+        (write-file new-file)
+        ;; Ensure target can be accessed by web server
+        (chmod new-file #o755))
+      ;; Put URL into clipboard
+      (kill-new access-url))))
 
 ;;;;; Analyse command usage frequency to optimise config
 (when (require 'keyfreq nil 'noerror)
