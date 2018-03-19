@@ -65,9 +65,9 @@
 
 (load "load-path-local.el" 'noerror)
 
-;;;; Fixed with font
+;;; Fixed with font
 (when (display-graphic-p)
-  (set-frame-font (font-spec :name "Liberation Mono" :size 9.0) t t)
+  (set-frame-font (font-spec :name "Hack" :size 12) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
                                   ((t :family "Hack" :height 1.0))))  ;; was Luxi Mono
   (custom-theme-set-faces 'user '(variable-pitch
@@ -476,6 +476,23 @@
 (autoload 'ess-r-mode "ess-site")
 (push '("\\.r\\'" . ess-r-mode) auto-mode-alist)
 
+;;;; ENSIME for Scala
+(when (require 'ensime nil 'noerror)
+  (setq ensime-startup-notification nil
+        ensime-typecheck-when-idle nil
+        ensime-sem-high-enabled-p nil
+        ensime-default-java-flags '("-DXmx200m")
+        ensime-inf-cmd-template
+        '(:java :java-flags
+                "-DXmx200m"
+                "-Djline.terminal=jline.UnsupportedTerminal"
+                "-Dscala.usejavacp=true"
+                "scala.tools.nsc.MainGenericRunner"))
+  ;; don't start ensime. eats a ridiculous amount of RAM
+  ;;  (add-hook 'scala-mode-hook 'ensime)
+  (when (require 'aggressive-indent nil 'noerror)
+    (push 'scala-mode aggressive-indent-excluded-modes)))
+
 ;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
@@ -545,18 +562,20 @@
   
   (setq org-return-follows-link t
 	org-list-allow-alphabetical t
+	org-hide-emphasis-markers t
 	org-ellipsis "↴"
 	org-show-context-detail
 	'((agenda . ancestors)
 	  (bookmark-jump . lineage)
 	  (isearch . lineage)
-	  (default . ancestors)))
+	  (default . ancestors)))  
 
+  ;; TODO: Set faces for org-level-1 (1.618) and org-level-2 (1.618Q?)
   (when (require 'org-bullets nil 'noerror)
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
+    (setq org-bullets-bullet-list '("⊛")))
+  
   (org-set-emph-re 'org-emphasis-regexp-components
-		   org-emphasis-regexp-components)
+                   org-emphasis-regexp-components)
   
 ;;;; Using Org as a planner
   (define-key 'kqr-org-prefix (kbd "a") #'org-agenda)
@@ -574,124 +593,124 @@
   (define-key 'kqr-org-prefix (kbd "m") #'capture-mail-inbox)
 
   (setq org-todo-keywords
-	'((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
-	  (sequence "|" "DONE(d)")
-	  (sequence "|" "CANCELED(c)"))
+        '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
+          (sequence "|" "DONE(d)")
+          (sequence "|" "CANCELED(c)"))
 
-	org-todo-keyword-faces
-	'(("HOLD" . (:foreground "dodger blue" :weight bold))
-	  ("WAIT" . (:foreground "black" :weight bold))
-	  ("TODO" . (:foreground "dark orange" :weight bold))
-	  ("DONE" . (:foreground "olivedrab3" :weight bold))
-	  ("CANCELED" . (:foreground "dim grey" :weight bold)))
+        org-todo-keyword-faces
+        '(("HOLD" . (:foreground "dodger blue" :weight bold))
+          ("WAIT" . (:foreground "black" :weight bold))
+          ("TODO" . (:foreground "dark orange" :weight bold))
+          ("DONE" . (:foreground "olivedrab3" :weight bold))
+          ("CANCELED" . (:foreground "dim grey" :weight bold)))
 
-	;; Normally we'd want tasks to reset to HOLD, but since this is a
-	;; repeated task it also has a new scheduled date so it's okay if it
-	;; becomes a todo because it won't clutter until scheduled anyway!
-	org-todo-repeat-to-state "TODO"
-	
-	org-enforce-todo-dependencies t
-	org-hierarchical-todo-statistics nil
+        ;; Normally we'd want tasks to reset to HOLD, but since this is a
+        ;; repeated task it also has a new scheduled date so it's okay if it
+        ;; becomes a todo because it won't clutter until scheduled anyway!
+        org-todo-repeat-to-state "TODO"
+        
+        org-enforce-todo-dependencies t
+        org-hierarchical-todo-statistics nil
 
-	;; When closing an item, ask for a note – just in case there's an
-	;; important thought there that may otherwise not get recorded
-	org-log-done 'note
-	;; Don't ask for a log message if cycling through with shift-arrow keys
-	org-treat-S-cursor-todo-selection-as-state-change nil
+        ;; When closing an item, ask for a note – just in case there's an
+        ;; important thought there that may otherwise not get recorded
+        org-log-done 'note
+        ;; Don't ask for a log message if cycling through with shift-arrow keys
+        org-treat-S-cursor-todo-selection-as-state-change nil
 
-	;; Let's simplify this...
-	;; A = screamingly important
-	;; B = normal day-to-day "you should do this or bad things will happen"
-	;; C = fine if rescheduled
-	org-lowest-priority ?C
-	org-default-priority ?B)
+        ;; Let's simplify this...
+        ;; A = screamingly important
+        ;; B = normal day-to-day "you should do this or bad things will happen"
+        ;; C = fine if rescheduled
+        org-lowest-priority ?C
+        org-default-priority ?B)
 
 ;;;;; Capturing, refiling and archiving
   (setq org-capture-templates
-	'(("i" ">inbox" entry (file "") "* %?\n")
-	  ("m" "mail>inbox" entry (file "") "* %?\n%a\n"))
-	org-default-notes-file "~/org/inbox.org"
-	org-refile-targets
-	'(("~/org/projects.org" :maxlevel . 3)
-	  ("~/org/tickler.org" :maxlevel . 1)
-	  ("~/org/someday.org" :maxlevel . 3)
-	  ("~/org/notes.org" :maxlevel . 2))
-	org-refile-allow-creating-parent-nodes 'confirm
-	org-refile-use-outline-path t
-	org-outline-path-complete-in-steps nil
-	org-log-refile 'time
-	org-reverse-note-order t
-	org-archive-location "~/org/archive.org::* %s")
+        '(("i" ">inbox" entry (file "") "* %?\n")
+          ("m" "mail>inbox" entry (file "") "* %?\n%a\n"))
+        org-default-notes-file "~/org/inbox.org"
+        org-refile-targets
+        '(("~/org/projects.org" :maxlevel . 3)
+          ("~/org/tickler.org" :maxlevel . 1)
+          ("~/org/someday.org" :maxlevel . 3)
+          ("~/org/notes.org" :maxlevel . 2))
+        org-refile-allow-creating-parent-nodes 'confirm
+        org-refile-use-outline-path t
+        org-outline-path-complete-in-steps nil
+        org-log-refile 'time
+        org-reverse-note-order t
+        org-archive-location "~/org/archive.org::* %s")
 
 ;;;;; Agenda
   (setq org-agenda-files '("/home/kqr/org/inbox.org" "/home/kqr/org/projects.org" "/home/kqr/org/tickler.org")
-	org-agenda-dim-blocked-tasks 'invisible
-	org-agenda-span 'day
-	org-agenda-use-time-grid nil
-	org-agenda-skip-scheduled-if-done t
-	org-agenda-skip-deadline-if-done t)
+        org-agenda-dim-blocked-tasks 'invisible
+        org-agenda-span 'day
+        org-agenda-use-time-grid nil
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t)
 
   (defun skip-living-projects ()
     "Skip top level trees that do have a TODO or WAIT child item"
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-	  (case-fold-search nil))
+          (case-fold-search nil))
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
-	   subtree-end)))
+           subtree-end)))
 
   (setq org-agenda-custom-commands
-	'((" " "Agenda"
-	   ((tags "FILE={inbox.org}"
-		  ((org-agenda-overriding-header "Inbox")))
-	    (agenda "" nil)
-	    (tags "-@out/TODO"
-		  ((org-agenda-overriding-header "To do (not scheduled)")
-		   (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
-	    (todo "WAIT"
-		  ((org-agenda-overriding-header "Waiting")
-		   (org-agenda-todo-ignore-scheduled t)))
-	    (tags "FILE={projects.org}+LEVEL=1-noproject"
-		  ((org-agenda-overriding-header "Stuck projects")
-		   (org-agenda-skip-function #'skip-living-projects)))))))
+        '((" " "Agenda"
+           ((tags "FILE={inbox.org}"
+                  ((org-agenda-overriding-header "Inbox")))
+            (agenda "" nil)
+            (tags "-@out/TODO"
+                  ((org-agenda-overriding-header "To do (not scheduled)")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
+            (todo "WAIT"
+                  ((org-agenda-overriding-header "Waiting")
+                   (org-agenda-todo-ignore-scheduled t)))
+            (tags "FILE={projects.org}+LEVEL=1-noproject"
+                  ((org-agenda-overriding-header "Stuck projects")
+                   (org-agenda-skip-function #'skip-living-projects)))))))
 
 ;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
-			       '((emacs-lisp . t) (R . t) (python . t)))
+                               '((emacs-lisp . t) (R . t) (python . t)))
   
   (setq org-babel-python-command "python3"
-	org-export-with-smart-quotes t
-	org-export-with-emphasize t
-	org-export-with-sub-superscripts nil
-	org-export-with-footnotes t)
+        org-export-with-smart-quotes t
+        org-export-with-emphasize t
+        org-export-with-sub-superscripts nil
+        org-export-with-footnotes t)
   
   (when (require 'ox-latex nil 'noerror)
     (push (append '(("tufte-handout"
-		     "\\documentclass[a4paper,11pt]{tufte-handout}"
-		     ("\\section{%s}" . "\\section*{%s}")
-		     ("\\subsection{%s}" . "\\subsection*{%s}"))
-		    ("tufte-book"
-		     "\\documentclass[a4paper,10pt]{tufte-book}")))
-	  org-latex-classes)
+                     "\\documentclass[a4paper,11pt]{tufte-handout}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}"))
+                    ("tufte-book"
+                     "\\documentclass[a4paper,10pt]{tufte-book}")))
+          org-latex-classes)
     (setq org-latex-compiler "xelatex"
-	  org-latex-default-class "tufte-handout"
-	  org-latex-packages-alist
-	  ;; These depend on xelatex, so be careful with that!
-	  `(("" "fontspec" t)
-	    "\\setmainfont[Ligatures=TeX,Numbers=OldStyle]{Whitman}"
-	    ("AUTO" "polyglossia" t)
-	    ("" "pdflscape" t)
-	    ("" "pseudo-ewd" t)
-	    ;; tufte-handout xelatex shim
-	    ,(concat
-	      "\\ifxetex\n"
-	      "  \\newcommand{\\textls}[2][5]{%\n"
-	      "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
-	      "  }\n"
-	      "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
-	      "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
-	      "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
-	      " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
-	      " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
-	      "\\fi\n"))))
+          org-latex-default-class "tufte-handout"
+          org-latex-packages-alist
+          ;; These depend on xelatex, so be careful with that!
+          `(("" "fontspec" t)
+            "\\setmainfont[Ligatures=TeX,Numbers=OldStyle]{Whitman}"
+            ("AUTO" "polyglossia" t)
+            ("" "pdflscape" t)
+            ("" "pseudo-ewd" t)
+            ;; tufte-handout xelatex shim
+            ,(concat
+              "\\ifxetex\n"
+              "  \\newcommand{\\textls}[2][5]{%\n"
+              "    \\begingroup\\addfontfeatures{LetterSpace=#1}#2\\endgroup\n"
+              "  }\n"
+              "  \\renewcommand{\\allcapsspacing}[1]{\\textls[15]{#1}}\n"
+              "  \\renewcommand{\\smallcapsspacing}[1]{\\textls[0]{#1}}\n"
+              "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
+              " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
+              " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
+              "\\fi\n"))))
                                         ; ;
   ;; This must happen last, when we have defined all keys in the prefix map
   (define-key global-map (kbd "<f4>") 'kqr-org-prefix))
