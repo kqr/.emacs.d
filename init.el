@@ -65,7 +65,7 @@
 
 (load "load-path-local.el" 'noerror)
 
-;;;; Fixed with font
+;;; Fixed with font
 (when (display-graphic-p)
   (set-frame-font (font-spec :name "Liberation Mono" :size 9.0) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
@@ -476,6 +476,15 @@
 (autoload 'ess-r-mode "ess-site")
 (push '("\\.r\\'" . ess-r-mode) auto-mode-alist)
 
+;;;; SLIME and Lisp stuff
+(autoload 'slime "slime")
+(autoload 'slime-connected-p "slime")
+(add-hook 'lisp-mode-hook
+          (lambda () (or (slime-connected-p)
+                    (save-excursion (slime)))))
+(with-eval-after-load "slime"  
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
 ;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
