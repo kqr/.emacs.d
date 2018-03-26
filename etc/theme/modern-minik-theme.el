@@ -162,6 +162,9 @@
             notmuch-tree-match-tag-face
             notmuch-tree-no-match-tag-face)
 
+           (((t :box (:line-width 1 :color ,theme-weak-diminuitive :style pressed-button)))
+            org-code)
+           
            (((t :underline
                 (:color ,theme-secondary-accent :style wave)))
             flycheck-info)
