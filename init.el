@@ -476,6 +476,16 @@
 (autoload 'ess-r-mode "ess-site")
 (push '("\\.r\\'" . ess-r-mode) auto-mode-alist)
 
+;;;; SLIME and Lisp stuff
+(autoload 'slime "slime")
+(autoload 'slime-connected-p "slime")
+(add-hook 'lisp-mode-hook
+          (lambda () (or (slime-connected-p)
+                    (save-excursion (slime)))))
+(with-eval-after-load "slime"  
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
+
 ;;;; ENSIME for Scala
 (when (require 'ensime nil 'noerror)
   (setq ensime-startup-notification nil
@@ -492,6 +502,7 @@
   ;;  (add-hook 'scala-mode-hook 'ensime)
   ;(when (require 'aggressive-indent nil 'noerror)
     ;(push 'scala-mode aggressive-indent-excluded-modes)))
+
 
 ;;; Calculator
 (autoload 'calc "calc")
