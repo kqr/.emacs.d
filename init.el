@@ -256,7 +256,8 @@
           notmuch-hello-mode
           notmuch-search-mode
           notmuch-show-mode
-          notmuch-tree-mode))
+          notmuch-tree-mode
+          sldb-mode))
   
   (god-mode-all)
 
