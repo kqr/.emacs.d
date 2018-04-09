@@ -318,6 +318,8 @@
 ;;;;; Export window contents to neat HTML
 ;; Tried autoloading but that didn't work and I don't have time to troubleshoot
 (when (require 'htmlize nil 'noerror)
+  (setq htmlize-output-type 'inline-css)
+  
   ;; Automatically upload HTML of region-or-buffer to remote
   (defvar htmlize-paste-it-target-directory "/two-wrongs.com:pastes/")
   (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
@@ -500,9 +502,14 @@
                 "scala.tools.nsc.MainGenericRunner"))
   ;; don't start ensime. eats a ridiculous amount of RAM
   ;;  (add-hook 'scala-mode-hook 'ensime)
-  ;(when (require 'aggressive-indent nil 'noerror)
-    ;(push 'scala-mode aggressive-indent-excluded-modes)))
+                                        ;(when (require 'aggressive-indent nil 'noerror)
+                                        ;(push 'scala-mode aggressive-indent-excluded-modes))
+  )
 
+
+;;;; Haskell-mode maybe?
+
+(require 'haskell-mode nil 'noerror)
 
 ;;; Calculator
 (autoload 'calc "calc")
