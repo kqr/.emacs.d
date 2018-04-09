@@ -256,7 +256,8 @@
           notmuch-hello-mode
           notmuch-search-mode
           notmuch-show-mode
-          notmuch-tree-mode))
+          notmuch-tree-mode
+          sldb-mode))
   
   (god-mode-all)
 
@@ -502,13 +503,12 @@
                 "scala.tools.nsc.MainGenericRunner"))
   ;; don't start ensime. eats a ridiculous amount of RAM
   ;;  (add-hook 'scala-mode-hook 'ensime)
-                                        ;(when (require 'aggressive-indent nil 'noerror)
-                                        ;(push 'scala-mode aggressive-indent-excluded-modes))
+  ;;  (when (require 'aggressive-indent nil 'noerror)
+  ;;    (push 'scala-mode aggressive-indent-excluded-modes))
   )
 
 
 ;;;; Haskell-mode maybe?
-
 (require 'haskell-mode nil 'noerror)
 
 ;;; Calculator
