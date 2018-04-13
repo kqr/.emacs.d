@@ -65,7 +65,7 @@
 
 (load "load-path-local.el" 'noerror)
 
-;;; Fixed with font
+;;; Fixed width font
 (when (display-graphic-p)
   (set-frame-font (font-spec :name "Hack" :size 12) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
@@ -193,6 +193,13 @@
 (autoload 'ibuffer "ibuffer")
 (eval-after-load "ibuffer"
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
+
+;; Provide a list of recently opened files
+;; bind to C-x C-r because I don't use find-file-read-only too much (though I
+;; probably should...)
+(when (require 'recentf nil 'noerror)
+  (define-key global-map (kbd "C-x C-r") #'ivy-recentf))
+
 
 ;; Smart M-x and fuzzy matching everywhere
 (require 'smex nil 'noerror)
@@ -760,7 +767,7 @@
 
   (setq notmuch-saved-searches
         '((:name "inbox" :query "tag:inbox" :key "i")
-          (:name "unread" :query "tag:unread" :key "u")
+          (:name "unread" :query "tag:unread OR (tag:spam AND tag:unread)" :key "u")
           (:name "spam" :query "tag:spam" :key "m")
           (:name "sent" :query "tag:sent" :key "s")
           (:name "all mail" :query "*" :key "a")))
