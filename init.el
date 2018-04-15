@@ -194,7 +194,6 @@
 (eval-after-load "ibuffer"
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
 
-<<<<<<< HEAD
 ;; Sidebar based on dired
 (define-key global-map (kbd "C-x C-n") 'dired-sidebar-toggle-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
@@ -202,15 +201,14 @@
   (setq dired-sidebar-subtree-line-prefix " ."))
 (when (and (require 'all-the-icons nil 'noerror)
            (require 'all-the-icons-dired nil 'noerror))
-  (all-the-icons-dired-mode))
-=======
+  (all-the-icons-dired-mode)
+  (diminish 'all-the-icons-dired-mode))
+
 ;; Provide a list of recently opened files
 ;; bind to C-x C-r because I don't use find-file-read-only too much (though I
 ;; probably should...)
 (when (require 'recentf nil 'noerror)
   (define-key global-map (kbd "C-x C-r") #'ivy-recentf))
-
->>>>>>> b87b48d9bdc5343d7d1453e023825af9e0ab234e
 
 ;; Smart M-x and fuzzy matching everywhere
 (require 'smex nil 'noerror)
