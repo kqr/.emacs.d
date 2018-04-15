@@ -328,6 +328,8 @@
   (define-key company-active-map (kbd "<up>") nil)
   (define-key company-active-map (kbd "C-n") nil)
   (define-key company-active-map (kbd "<down>") nil)
+  (define-key company-active-map (kbd "C-<up>") #'company-select-previous)
+  (define-key company-active-map (kbd "C-<down>") #'company-select-next)
   (define-key company-active-map (kbd "TAB")
     #'company-complete-common-or-selected))
 

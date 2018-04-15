@@ -90,6 +90,10 @@
             font-lock-constant-face
             font-lock-variable-name-face
             font-lock-function-name-face
+            jdee-font-lock-package-face
+            jdee-font-lock-number-face
+            jdee-font-lock-constant-face
+            jdee-font-lock-constructor-face
             message-header-subject
             whitespace-hspace
             whitespace-newline
@@ -146,6 +150,10 @@
                 :weight bold))
             minibuffer-prompt
             font-lock-keyword-face
+            jdee-font-lock-public-face
+            jdee-font-lock-private-face
+            jdee-font-lock-protected-face
+            jdee-font-lock-modifier-face
             org-todo
             fic-author-face)
 
