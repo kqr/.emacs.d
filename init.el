@@ -194,6 +194,15 @@
 (eval-after-load "ibuffer"
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
 
+;; Sidebar based on dired
+(define-key global-map (kbd "C-x C-n") 'dired-sidebar-toggle-sidebar)
+(autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
+(with-eval-after-load "dired-sidebar"
+  (setq dired-sidebar-subtree-line-prefix " ."))
+(when (and (require 'all-the-icons nil 'noerror)
+           (require 'all-the-icons-dired nil 'noerror))
+  (all-the-icons-dired-mode))
+
 ;; Smart M-x and fuzzy matching everywhere
 (require 'smex nil 'noerror)
 (when (require 'ivy nil 'noerror)
@@ -487,23 +496,10 @@
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
 
-;;;; ENSIME for Scala
-(when (require 'ensime nil 'noerror)
-  (setq ensime-startup-notification nil
-        ensime-typecheck-when-idle nil
-        ensime-sem-high-enabled-p nil
-        ensime-default-java-flags '("-DXmx200m")
-        ensime-inf-cmd-template
-        '(:java :java-flags
-                "-DXmx200m"
-                "-Djline.terminal=jline.UnsupportedTerminal"
-                "-Dscala.usejavacp=true"
-                "scala.tools.nsc.MainGenericRunner")))
-;; don't start ensime. eats a ridiculous amount of RAM
-;;  (add-hook 'scala-mode-hook 'ensime)
-;;  (when (require 'aggressive-indent nil 'noerror)
-;;    (push 'scala-mode aggressive-indent-excluded-modes)))
-
+;;;; JDEE for Java development
+;; NOTE: requires jdee-server to be installed separately from git?
+(when (require 'jdee nil 'noerror)
+  (setq jdee-server-dir "~/.emacs.d/lib/jdee-server"))
 
 ;;; Calculator
 (autoload 'calc "calc")
