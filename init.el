@@ -65,7 +65,7 @@
 
 (load "load-path-local.el" 'noerror)
 
-;;; Fixed with font
+;;; Fixed width font
 (when (display-graphic-p)
   (set-frame-font (font-spec :name "Hack" :size 12) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
@@ -194,6 +194,7 @@
 (eval-after-load "ibuffer"
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
 
+<<<<<<< HEAD
 ;; Sidebar based on dired
 (define-key global-map (kbd "C-x C-n") 'dired-sidebar-toggle-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
@@ -202,6 +203,14 @@
 (when (and (require 'all-the-icons nil 'noerror)
            (require 'all-the-icons-dired nil 'noerror))
   (all-the-icons-dired-mode))
+=======
+;; Provide a list of recently opened files
+;; bind to C-x C-r because I don't use find-file-read-only too much (though I
+;; probably should...)
+(when (require 'recentf nil 'noerror)
+  (define-key global-map (kbd "C-x C-r") #'ivy-recentf))
+
+>>>>>>> b87b48d9bdc5343d7d1453e023825af9e0ab234e
 
 ;; Smart M-x and fuzzy matching everywhere
 (require 'smex nil 'noerror)
@@ -229,7 +238,7 @@
      ;; Allow narrowing to subtree even when inside subtree
      (advice-add 'outshine-narrow-to-subtree :before
                  (lambda (&rest args) (unless (outline-on-heading-p t)
-                                   (outline-previous-visible-heading 1))))))
+                                        (outline-previous-visible-heading 1))))))
 
 
 ;;;; God mode
@@ -328,6 +337,8 @@
 ;;;;; Export window contents to neat HTML
 ;; Tried autoloading but that didn't work and I don't have time to troubleshoot
 (when (require 'htmlize nil 'noerror)
+  (setq htmlize-output-type 'inline-css)
+  
   ;; Automatically upload HTML of region-or-buffer to remote
   (defvar htmlize-paste-it-target-directory "/two-wrongs.com:pastes/")
   (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
@@ -500,6 +511,9 @@
 ;; NOTE: requires jdee-server to be installed separately from git?
 (when (require 'jdee nil 'noerror)
   (setq jdee-server-dir "~/.emacs.d/lib/jdee-server"))
+
+;;;; Haskell-mode maybe?
+(require 'haskell-mode nil 'noerror)
 
 ;;; Calculator
 (autoload 'calc "calc")
@@ -750,7 +764,7 @@
 
   (setq notmuch-saved-searches
         '((:name "inbox" :query "tag:inbox" :key "i")
-          (:name "unread" :query "tag:unread" :key "u")
+          (:name "unread" :query "tag:unread OR (tag:spam AND tag:unread)" :key "u")
           (:name "spam" :query "tag:spam" :key "m")
           (:name "sent" :query "tag:sent" :key "s")
           (:name "all mail" :query "*" :key "a")))
