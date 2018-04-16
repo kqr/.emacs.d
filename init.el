@@ -195,7 +195,7 @@
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
 
 ;; Sidebar based on dired
-(define-key global-map (kbd "C-x C-n") 'dired-sidebar-toggle-sidebar)
+(define-key global-map (kbd "<C-tab>") 'dired-sidebar-toggle-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " ."))
