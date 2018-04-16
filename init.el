@@ -469,6 +469,25 @@
   (when (require 'counsel-projectile nil 'noerror)
     (counsel-projectile-mode +1)))
 
+(defmacro file-mode (name extensions &rest config)
+  "Associate NAME mode with EXTENSIONS and run CONFIG."
+  (let* ((mode-fn (intern (concat (symbol-name name) "-mode")))
+         (ext-mode
+          (lambda (ext)
+            (cons (concat "\\." (symbol-name ext) "\\'")
+                  mode-fn))))
+    `(progn
+       (autoload (quote ,mode-fn) ,(symbol-name name))
+       ,@(mapcar (lambda (ext)
+                   `(push
+                     (quote ,(funcall ext-mode ext))
+                     auto-mode-alist))
+                 extensions)
+       (with-eval-after-load ,(symbol-name name)
+         ,@config))))
+(put 'file-mode 'lisp-indent-function 2)
+
+
 ;;;; C and C++ mode
 (when (require 'cc-mode nil 'noerror)
   (setq-default c-default-style "stroustrup"
@@ -476,9 +495,9 @@
 
 ;;;; Web mode (multi-modal editing of templates)
 (autoload 'web-mode "web-mode"  nil t)
-(push '("\\.html\'" . web-mode) auto-mode-alist)
-(push '("\\.css\'" . web-mode) auto-mode-alist)
-(push '("\\.js\'" . web-mode) auto-mode-alist)
+(push '("\\.html\\'" . web-mode) auto-mode-alist)
+(push '("\\.css\\'" . web-mode) auto-mode-alist)
+(push '("\\.js\\'" . web-mode) auto-mode-alist)
 (eval-after-load "web-mode"
   '(progn
      (setq-default web-mode-enable-auto-pairing t
@@ -486,13 +505,13 @@
                    web-mode-css-indent-offset 2)
 
      ;; If we like web-mode, we'll probably like impatient-mode too!
-     (require 'impatient-mode nil 'no)))
+     (require 'impatient-mode nil 'noerror)))
 
 ;;;; Ada mode
-(autoload 'ada-mode "ada-mode")
+(autoload 'ada-mode "ada")
 (push '("\\.adb\\'" . ada-mode) auto-mode-alist)
 (push '("\\.ads\\'" . ada-mode) auto-mode-alist)
-(with-eval-after-load "ada-mode"
+(with-eval-after-load "ada"
   (setq-default flycheck-gnat-args "-gnat12")
   (setq ada-language-version 'ada2005))
 
@@ -512,11 +531,15 @@
 
 ;;;; JDEE for Java development
 ;; NOTE: requires jdee-server to be installed separately from git?
-(when (require 'jdee nil 'noerror)
-  (setq jdee-server-dir "~/.emacs.d/lib/jdee-server"))
+(autoload 'jdee-mode "jdee")
+(push '("\\.java\\'" . jdee-mode) auto-mode-alist)
+(with-eval-after-load "jdee"
+  (setq jdee-server-dir "~/.emacs.d/lib/jdee-server/"))
 
 ;;;; Haskell-mode maybe?
-(require 'haskell-mode nil 'noerror)
+(autoload 'haskell-mode "haskell")
+(push '("\\.hs\\'" . haskell-mode) auto-mode-alist)
+(push '("\\.lhs\\'" . haskell-mode) auto-mode-alist)
 
 ;;; Calculator
 (autoload 'calc "calc")
