@@ -122,6 +122,7 @@
            (((t :foreground ,theme-error-color
                 :weight bold))
             error
+            org-warning
             show-paren-mismatch
             column-enforce-face
             whitespace-trailing
@@ -155,6 +156,7 @@
             jdee-font-lock-protected-face
             jdee-font-lock-modifier-face
             org-todo
+            org-upcoming-deadline
             fic-author-face)
 
            (((t :foreground ,theme-primary-accent

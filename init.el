@@ -198,7 +198,8 @@
 (define-key global-map (kbd "<C-tab>") 'dired-sidebar-toggle-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
 (with-eval-after-load "dired-sidebar"
-  (setq dired-sidebar-subtree-line-prefix " ."))
+  (setq dired-sidebar-subtree-line-prefix " .")
+  (setq dired-sidebar-close-sidebar-on-file-open t))
 (when (and (require 'all-the-icons nil 'noerror)
            (require 'all-the-icons-dired nil 'noerror))
   (all-the-icons-dired-mode)
