@@ -9,6 +9,7 @@
 ;; - find a way to list the defines in current buffer? imenu?
 ;;
 ;;; Code:
+(setq gc-cons-threshold 87654321)
 
 ;;; GUI removal
 ;; Remove a bunch of distracting, unnecessary, silly graphic components We want
@@ -214,14 +215,17 @@
   (define-key global-map (kbd "C-x C-r") #'ivy-recentf))
 
 ;; Smart M-x and fuzzy matching everywhere
-(require 'smex nil 'noerror)
-(when (require 'ivy nil 'noerror)
-  (diminish 'ivy-mode)
-  (setq-default ivy-initial-inputs-alist nil)
-  (ivy-mode +1)
+(run-with-idle-timer
+ 6 nil
+ (lambda () 
+   (require 'smex nil 'noerror)
+   (when (require 'ivy nil 'noerror)
+     (diminish 'ivy-mode)
+     (setq-default ivy-initial-inputs-alist nil)
+     (ivy-mode +1)
 
-  (autoload 'counsel-M-x "counsel")
-  (define-key global-map (kbd "M-x") #'counsel-M-x))
+     (autoload 'counsel-M-x "counsel")
+     (define-key global-map (kbd "M-x") #'counsel-M-x))))
 
 ;;;;; Org-like outlining of ANY document, not only Org files
 (autoload 'outshine-minor-mode "outshine")
@@ -310,31 +314,35 @@
   (add-hook 'god-mode-enabled-hook #'god-has-priority))
 
 ;;;; Completion with company mode (hopefully practically intrusion-free)
-(when (require 'company nil 'noerror)
-  (diminish 'company-mode)
-  (global-company-mode +1)
+(run-with-idle-timer
+ 10 nil
+ (lambda ()
+   (when (require 'company nil 'noerror)
+     (diminish 'company-mode)
+     (global-company-mode +1)
 
-  (defun company-complete-common-or-selected ()
-    "Insert the common part, or if none, complete using selection."
-    (interactive)
-    (when (company-manual-begin)
-      (if (not (equal company-common company-prefix))
-          (company--insert-candidate company-common)
-        (company-complete-selection))))
-  
-  (setq company-frontends '(company-preview-frontend)
-        company-idle-delay 0)
+     (defun company-complete-common-or-selected ()
+       "Insert the common part, or if none, complete using selection."
+       (interactive)
+       (when (company-manual-begin)
+         (if (not (equal company-common company-prefix))
+             (company--insert-candidate company-common)
+           (company-complete-selection))))
+     
+     (setq company-frontends '(company-preview-frontend)
+           company-idle-delay 0)
 
-  ;; We don't want completion to prevent us from actually navigating the code
-  (define-key company-active-map (kbd "<return>") nil)
-  (define-key company-active-map (kbd "C-p") nil)
-  (define-key company-active-map (kbd "<up>") nil)
-  (define-key company-active-map (kbd "C-n") nil)
-  (define-key company-active-map (kbd "<down>") nil)
-  (define-key company-active-map (kbd "C-<up>") #'company-select-previous)
-  (define-key company-active-map (kbd "C-<down>") #'company-select-next)
-  (define-key company-active-map (kbd "TAB")
-    #'company-complete-common-or-selected))
+     ;; We don't want completion to prevent us from actually navigating the code
+     (define-key company-active-map (kbd "<return>") nil)
+     (define-key company-active-map (kbd "C-p") nil)
+     (define-key company-active-map (kbd "<up>") nil)
+     (define-key company-active-map (kbd "C-n") nil)
+     (define-key company-active-map (kbd "<down>") nil)
+     (define-key company-active-map (kbd "C-<up>") #'company-select-previous)
+     (define-key company-active-map (kbd "C-<down>") #'company-select-next)
+     (define-key company-active-map (kbd "TAB")
+       #'company-complete-common-or-selected))))
+
 
 ;;;; Miscellaneous interaction
 ;;;;; Export window contents to neat HTML
@@ -388,7 +396,13 @@
   (global-auto-revert-mode 1))
 
 ;;;; Undo-tree
-(when (require 'undo-tree nil 'noerror)
+(autoload 'undo-tree-undo "undo-tree")
+(autoload 'undo-tree-redo "undo-tree")
+(autoload 'undo-tree-visualize "undo-tree")
+(define-key global-map (kbd "C-/") 'undo-tree-undo)
+(define-key global-map (kbd "C-?") 'undo-tree-redo)
+(define-key global-map (kbd "C-x u") 'undo-tree-visualize)
+(with-eval-after-load "undo-tree"
   (diminish 'undo-tree-mode)
   (global-undo-tree-mode +1)
   (setq-default undo-tree-visualizer-diff t))
@@ -420,9 +434,9 @@
 (define-key global-map (kbd "M-SPC") 'er/expand-region)
 
 ;;;; Yas-snippet
-(setq-default yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
-(when (require 'yasnippet nil 'noerror)
-  (yas-global-mode 1))
+;;(setq-default yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
+;;(when (require 'yasnippet nil 'noerror)
+;;  (yas-global-mode 1))
 
 ;;;; Thesaurus/synonyms tooltip
 (define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
@@ -433,12 +447,15 @@
 ;;; Programming
 ;;;; Edit by balanced parentheses
 ;; Trying out smartparens-strict-mode instead of paredit
-(when (require 'smartparens nil 'noerror)
-  (diminish 'smartparens-mode)
-  (require 'smartparens-config)
-  (smartparens-global-strict-mode)
-  (sp-use-smartparens-bindings)
-  (sp-local-pair 'ada-mode "'" nil :actions nil))
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (when (require 'smartparens nil 'noerror)
+     (diminish 'smartparens-mode)
+     (require 'smartparens-config)
+     (smartparens-global-strict-mode)
+     (sp-use-smartparens-bindings)
+     (sp-local-pair 'ada-mode "'" nil :actions nil))))
 
 ;;;; Indentation/whitespace stuff
 (when (require 'aggressive-indent nil 'noerror)
@@ -463,33 +480,18 @@
   '(diminish 'flycheck-mode))
 
 ;;;; Project management
-(when (require 'projectile nil 'noerror)
-  (define-key global-map (kbd "<f8>") 'projectile-command-map)
+(autoload 'projectile-command-map "projectile")
+(define-key global-map (kbd "<f8>") 'projectile-command-map)
+(with-eval-after-load "projectile"
   (projectile-mode +1)
   (when (require 'counsel-projectile nil 'noerror)
     (counsel-projectile-mode +1)))
 
-(defmacro file-mode (name extensions &rest config)
-  "Associate NAME mode with EXTENSIONS and run CONFIG."
-  (let* ((mode-fn (intern (concat (symbol-name name) "-mode")))
-         (ext-mode
-          (lambda (ext)
-            (cons (concat "\\." (symbol-name ext) "\\'")
-                  mode-fn))))
-    `(progn
-       (autoload (quote ,mode-fn) ,(symbol-name name))
-       ,@(mapcar (lambda (ext)
-                   `(push
-                     (quote ,(funcall ext-mode ext))
-                     auto-mode-alist))
-                 extensions)
-       (with-eval-after-load ,(symbol-name name)
-         ,@config))))
-(put 'file-mode 'lisp-indent-function 2)
-
-
 ;;;; C and C++ mode
-(when (require 'cc-mode nil 'noerror)
+(autoload 'c-mode "cc-mode")
+(push '("\\.c\\'" . c-mode) auto-mode-alist)
+(push '("\\.h\\'" . c-mode) auto-mode-alist)
+(with-eval-after-load "cc-mode"
   (setq-default c-default-style "stroustrup"
                 c-basic-offset 4))
 
@@ -569,54 +571,75 @@
 		"."
 		8))
 
-(when (require 'org nil 'noerror)
-  (when (require 'calendar nil 'noerror)
-    (setq-default calendar-date-style 'iso))
 
-  (define-prefix-command 'kqr-org-prefix)
-  (define-key 'kqr-org-prefix (kbd "l") #'org-store-link)
+(autoload 'org-mode "org")
+(autoload 'org-store-link "org")
+(autoload 'org-agenda "org")
+(autoload 'org-capture "org")
 
-;;;; Regular Org operation     
-  (defun narrow-or-widen-dwim (p)
-    "If the buffer is narrowed, it widens. Otherwise, it narrows
+(defun narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens. Otherwise, it narrows
     intelligently.  Intelligently means: region, org-src-block,
     org-subtree, or defun, whichever applies first.  Narrowing to
     org-src-block actually calls `org-edit-src-code'.
 
     With prefix P, don't widen, just narrow even if buffer is already
     narrowed."
-    (interactive "P")
-    (declare (interactive-only))
-    (cond ((and (buffer-narrowed-p) (not p)) (widen))
-	  ((and (boundp 'org-src-mode) org-src-mode (not p))
-	   (org-edit-src-exit))
-	  ((region-active-p)
-	   (narrow-to-region (region-beginning) (region-end)))
-	  ((derived-mode-p 'org-mode)
-	   (cond ((ignore-errors (org-edit-src-code))
-		  (delete-other-windows))
-		 ((org-at-block-p)
-		  (org-narrow-to-block))
-		 (t (org-narrow-to-subtree))))
-	  ((derived-mode-p 'prog-mode)
-	   (save-excursion
-	     (cond ((or (outline-on-heading-p) (outline-previous-heading))
-		    (outshine-narrow-to-subtree))
-		   (t (narrow-to-defun)))))
-	  (t (error "Please select a region to narrow to"))))
-  (define-key 'kqr-org-prefix (kbd "RET") #'narrow-or-widen-dwim)
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+        ((and (boundp 'org-src-mode) org-src-mode (not p))
+         (org-edit-src-exit))
+        ((region-active-p)
+         (narrow-to-region (region-beginning) (region-end)))
+        ((derived-mode-p 'org-mode)
+         (cond ((ignore-errors (org-edit-src-code))
+                (delete-other-windows))
+               ((org-at-block-p)
+                (org-narrow-to-block))
+               (t (org-narrow-to-subtree))))
+        ((derived-mode-p 'prog-mode)
+         (save-excursion
+           (cond ((or (outline-on-heading-p) (outline-previous-heading))
+                  (outshine-narrow-to-subtree))
+                 (t (narrow-to-defun)))))
+        (t (error "Please select a region to narrow to"))))
 
-  (require 'org)
-  
+(defun capture-general-inbox (args)
+  "Run inbox capture with ARGS."
+  (interactive "P")
+  (org-capture args "i"))
+
+(defun capture-mail-inbox (args)
+  "Run mail capture with ARGS."
+  (interactive "P")
+  (org-capture args "m")) 
+
+(define-prefix-command 'kqr-org-prefix)
+(define-key 'kqr-org-prefix (kbd "l") #'org-store-link)
+(define-key 'kqr-org-prefix (kbd "RET") #'narrow-or-widen-dwim)
+(define-key 'kqr-org-prefix (kbd "a") #'org-agenda)
+(define-key 'kqr-org-prefix (kbd "i") #'capture-general-inbox)
+(define-key 'kqr-org-prefix (kbd "m") #'capture-mail-inbox)
+
+;; This must happen last, when we have defined all keys in the prefix map
+(define-key global-map (kbd "<f4>") 'kqr-org-prefix)
+
+(with-eval-after-load "org"
+  (require 'org-notmuch nil 'noerror)
+  (when (require 'calendar nil 'noerror)
+    (setq-default calendar-date-style 'iso))
+
+;;;; Regular Org operation   
   (setq org-return-follows-link t
-	org-list-allow-alphabetical t
-	org-hide-emphasis-markers t
-	org-ellipsis "↴"
-	org-show-context-detail
-	'((agenda . ancestors)
-	  (bookmark-jump . lineage)
-	  (isearch . lineage)
-	  (default . ancestors)))  
+        org-list-allow-alphabetical t
+        org-hide-emphasis-markers t
+        org-ellipsis "↴"
+        org-show-context-detail
+        '((agenda . ancestors)
+          (bookmark-jump . lineage)
+          (isearch . lineage)
+          (default . ancestors)))  
 
   ;; TODO: Set faces for org-level-1 (1.618) and org-level-2 (1.618Q?)
   (when (require 'org-bullets nil 'noerror)
@@ -626,20 +649,6 @@
                    org-emphasis-regexp-components)
   
 ;;;; Using Org as a planner
-  (define-key 'kqr-org-prefix (kbd "a") #'org-agenda)
-  (defun capture-general-inbox (args)
-    "Run inbox capture with ARGS."
-    (interactive "P")
-    (org-capture args "i"))
-  (define-key 'kqr-org-prefix (kbd "i") #'capture-general-inbox)
-
-  (require 'org-notmuch nil 'noerror)
-  (defun capture-mail-inbox (args)
-    "Run mail capture with ARGS."
-    (interactive "P")
-    (org-capture args "m")) 
-  (define-key 'kqr-org-prefix (kbd "m") #'capture-mail-inbox)
-
   (setq org-todo-keywords
         '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
           (sequence "|" "DONE(d)")
@@ -758,10 +767,7 @@
               "  \\renewcommand{\\allcaps}[1]{\\textls[15]{\\MakeTextUppercase{#1}}}\n"
               " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
               " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
-              "\\fi\n"))))
-                                        ; ;
-  ;; This must happen last, when we have defined all keys in the prefix map
-  (define-key global-map (kbd "<f4>") 'kqr-org-prefix))
+              "\\fi\n")))))
 
 
 ;;; Email client
