@@ -104,6 +104,8 @@
               fill-column 80
               ;; Automatically hard wrap content instead
               auto-fill-function #'do-auto-fill
+              ;; Create new lines when moving past end of buffer
+              next-line-add-newlines t
 
               ;; Copy stuff to the X11 primary selection
               select-enable-primary t
@@ -195,7 +197,7 @@
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
 
 ;; Sidebar based on dired
-(define-key global-map (kbd "C-x C-n") 'dired-sidebar-toggle-sidebar)
+(define-key global-map (kbd "<C-tab>") 'dired-sidebar-toggle-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " .")
