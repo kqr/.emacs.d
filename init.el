@@ -434,9 +434,10 @@
 (define-key global-map (kbd "M-SPC") 'er/expand-region)
 
 ;;;; Yas-snippet
-;;(setq-default yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
-;;(when (require 'yasnippet nil 'noerror)
-;;  (yas-global-mode 1))
+(setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
+(when (require 'yasnippet nil 'noerror)
+  (setq yas-indent-line 'fixed)
+  (yas-global-mode 1))
 
 ;;;; Thesaurus/synonyms tooltip
 (define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
@@ -531,12 +532,19 @@
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
 
-;;;; JDEE for Java development
-;; NOTE: requires jdee-server to be installed separately from git?
-(autoload 'jdee-mode "jdee")
-(push '("\\.java\\'" . jdee-mode) auto-mode-alist)
-(with-eval-after-load "jdee"
-  (setq jdee-server-dir "~/.emacs.d/lib/jdee-server/"))
+;;;; Meghanada (NOT jdee!) for Java development
+;; Should automatically install meghanada-server?
+(add-hook
+ 'java-mode-hook
+ '(lambda ()
+    (require 'meghanada)
+    (meghanada-mode +1)
+    (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)
+    (setq meghanada-java-path "java")
+    (setq meghanada-maven-path "mvn")
+    (define-key global-map (kbd "C-c C-v C-b") 'meghanada-compile-project)
+    (define-key global-map (kbd "C-c C-v C-r") 'meghanada-exec-main)))
+
 
 ;;;; Haskell-mode maybe?
 (autoload 'haskell-mode "haskell")
