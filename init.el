@@ -198,7 +198,7 @@
   '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
 
 ;; Sidebar based on dired
-(define-key global-map (kbd "<C-tab>") 'dired-sidebar-toggle-sidebar)
+(define-key global-map (kbd "<C-tab>") 'dired-sidebar-jump-to-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " .")
@@ -456,7 +456,9 @@
      (require 'smartparens-config)
      (smartparens-global-strict-mode)
      (sp-use-smartparens-bindings)
-     (sp-local-pair 'ada-mode "'" nil :actions nil))))
+     (sp-local-pair 'ada-mode "'" nil :actions nil)
+     (define-key global-map (kbd "M-s") 'sp-split-sexp)
+     (define-key global-map (kbd "M-r") 'sp-join-sexp))))
 
 ;;;; Indentation/whitespace stuff
 (when (require 'aggressive-indent nil 'noerror)
@@ -539,6 +541,7 @@
  '(lambda ()
     (require 'meghanada)
     (meghanada-mode +1)
+    (setq c-basic-offset 2)
     (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)
     (setq meghanada-java-path "java")
     (setq meghanada-maven-path "mvn")
