@@ -145,6 +145,48 @@
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
+(defun prettify-programming-symbols ()
+  "Prettify programming symbols!"
+  (interactive)
+  (mapc (lambda (pair) (push pair prettify-symbols-alist))
+        '(;; Common operators
+          ("==" . (?＝ (Bc . Bl) ?＝))  ;; ==
+          ("!=" . (?＝ (Bc . Bc) ?/))  ;; =/=
+          (">=" . ?≥)
+          ("<=" . ?≤)
+          ("||" . ?∨)
+          ("or" . ?∨)
+          ("or else" . ?∨)
+          ("&&" . ?∧)
+          ("and" . ?∧)
+          ("and then" . ?∧)
+          ("!" . ?¬)
+          ("not" . ?¬)
+          ;; Common types
+          ("bool" . ?𝔹)
+          ("boolean" . ?𝔹)
+          ("Bool" . ?𝔹)
+          ("Boolean" . ?𝔹)
+          ("unsigned" . ?ℕ)
+          ("int" . ?ℤ)
+          ("Integer" . ?ℤ)
+          ("float" . ?ℝ)
+          ("double" . (?ℝ (Br . Bc) ?ℝ))  ;; RR
+          ("char" . ?Σ)
+          ("Character" . ?Σ)
+          ("string" . (?Σ (tr . cl) ?*))  ;; Σ*
+          ("String" . (?Σ (tr . cl) ?*))
+          ;; Greek
+          ("alpha" . ?α)
+          ("beta" . ?β)
+          ("gamma" . ?γ)
+          ("gamma" . ?Γ)
+          ("pi" . ?π)
+          ("psi" . ?ψ)
+          ("Psi" . ?Ψ)
+          ("Phi" . ?Φ))))
+(add-hook 'prog-mode-hook 'prettify-programming-symbols)
+(add-hook 'ess-mode-hook 'prettify-programming-symbols)
 
 ;; Highlight FIXME TODO etc. in comments
 (autoload 'fic-mode "fic-mode")
