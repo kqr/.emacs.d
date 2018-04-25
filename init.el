@@ -81,7 +81,7 @@
 
 ;;; User information and various other basic settings
 (setq user-full-name "Christoffer Stjernlöf"
-      user-mail-address "k@rdw.se")
+      user-mail-address "a@xkqr.org")
 
 (setq-default inhibit-startup-screen t
               initial-scratch-message ""
