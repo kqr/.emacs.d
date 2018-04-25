@@ -236,8 +236,7 @@
 ;;;; Navigation and fuzzy finding
 ;; Better buffer browser
 (autoload 'ibuffer "ibuffer")
-(eval-after-load "ibuffer"
-  '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
+(define-key ctl-x-map (kbd "C-b") #'ibuffer)
 
 ;; Sidebar based on dired
 (define-key global-map (kbd "<C-tab>") 'dired-sidebar-jump-to-sidebar)
