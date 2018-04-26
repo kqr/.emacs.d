@@ -28,7 +28,7 @@
 (add-to-list 'initial-frame-alist '(right-fringe . 80))
 (add-to-list 'default-frame-alist '(right-fringe . 80))
 
-;;; Custom file
+;;; Init file configuration
 ;; I don't use customize-set-variable as much anymore, but it's probably a
 ;; good idea to load the custom file anyway...
 (setq custom-file "~/.emacs.d/var/custom.el")
@@ -38,7 +38,6 @@
   (write-region "" nil custom-file))
 (load-file custom-file)
 
-;;; Package system
 ;; Set up the package system
 (require 'package)
 (mapc (lambda (elt) (push elt package-archives))
@@ -47,7 +46,6 @@
         ("sunrise" . "http://joseito.republika.pl/sunrise-commander/")))
 (package-initialize)
 
-;;; No littering
 ;; Where to put temp files
 (setq temporary-file-directory "/tmp/")
 (unless (file-directory-p temporary-file-directory)
@@ -65,19 +63,6 @@
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
 
 (load "load-path-local.el" 'noerror)
-
-;;; Fixed width font
-(when (display-graphic-p)
-  (set-frame-font (font-spec :name "Hack" :size 12) t t)
-  (custom-theme-set-faces 'user '(fixed-pitch
-                                  ((t :family "Hack" :height 1.0))))  ;; was Luxi Mono
-  (custom-theme-set-faces 'user '(variable-pitch
-                                  ((t :family "Linux Libertine O" :height 1.2))))
-  (add-to-list 'initial-frame-alist '(line-spacing . 1))
-  (add-to-list 'default-frame-alist '(line-spacing . 1)))
-
-;; Replace the default line-extends-beyond-window symbol
-(set-display-table-slot standard-display-table 0 ?›)
 
 ;;; User information and various other basic settings
 (setq user-full-name "Christoffer Stjernlöf"
@@ -133,6 +118,19 @@
 
 ;;; UI
 ;;;; Typography
+;; Fixed width font
+(when (display-graphic-p)
+  (set-frame-font (font-spec :name "Hack" :size 12) t t)
+  (custom-theme-set-faces 'user '(fixed-pitch
+                                  ((t :family "Hack" :height 1.0))))  ;; was Luxi Mono
+  (custom-theme-set-faces 'user '(variable-pitch
+                                  ((t :family "Linux Libertine O" :height 1.2))))
+  (add-to-list 'initial-frame-alist '(line-spacing . 1))
+  (add-to-list 'default-frame-alist '(line-spacing . 1)))
+
+;; Replace the default line-extends-beyond-window symbol
+(set-display-table-slot standard-display-table 0 ?›)
+
 (when (require 'face-remap nil 'noerror)
   ;; Make available smaller changes in text size
   (setq-default text-scale-mode-step 1.05)
@@ -188,8 +186,6 @@
      (display-buffer-no-window . ((allow-no-window . t))))
    display-buffer-alist))
 
-
-
 ;;; Interaction
 ;;;; Navigation and fuzzy finding
 ;; Better buffer browser
@@ -217,7 +213,7 @@
 ;; Smart M-x and fuzzy matching everywhere
 (run-with-idle-timer
  6 nil
- (lambda () 
+ (lambda ()
    (require 'smex nil 'noerror)
    (when (require 'ivy nil 'noerror)
      (diminish 'ivy-mode)
