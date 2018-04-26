@@ -66,7 +66,7 @@
 
 ;;; User information and various other basic settings
 (setq user-full-name "Christoffer Stjernlöf"
-      user-mail-address "k@rdw.se")
+      user-mail-address "a@xkqr.org")
 
 (setq-default inhibit-startup-screen t
               initial-scratch-message ""
@@ -143,6 +143,48 @@
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
+(defun prettify-programming-symbols ()
+  "Prettify programming symbols!"
+  (interactive)
+  (mapc (lambda (pair) (push pair prettify-symbols-alist))
+        '(;; Common operators
+          ("==" . (?＝ (Bc . Bl) ?＝))  ;; ==
+          ("!=" . (?＝ (Bc . Bc) ?/))  ;; =/=
+          (">=" . ?≥)
+          ("<=" . ?≤)
+          ("||" . ?∨)
+          ("or" . ?∨)
+          ("or else" . ?∨)
+          ("&&" . ?∧)
+          ("and" . ?∧)
+          ("and then" . ?∧)
+          ("!" . ?¬)
+          ("not" . ?¬)
+          ;; Common types
+          ("bool" . ?𝔹)
+          ("boolean" . ?𝔹)
+          ("Bool" . ?𝔹)
+          ("Boolean" . ?𝔹)
+          ("unsigned" . ?ℕ)
+          ("int" . ?ℤ)
+          ("Integer" . ?ℤ)
+          ("float" . ?ℝ)
+          ("double" . (?ℝ (Br . Bc) ?ℝ))  ;; RR
+          ("char" . ?Σ)
+          ("Character" . ?Σ)
+          ("string" . (?Σ (tr . cl) ?*))  ;; Σ*
+          ("String" . (?Σ (tr . cl) ?*))
+          ;; Greek
+          ("alpha" . ?α)
+          ("beta" . ?β)
+          ("gamma" . ?γ)
+          ("gamma" . ?Γ)
+          ("pi" . ?π)
+          ("psi" . ?ψ)
+          ("Psi" . ?Ψ)
+          ("Phi" . ?Φ))))
+(add-hook 'prog-mode-hook 'prettify-programming-symbols)
+(add-hook 'ess-mode-hook 'prettify-programming-symbols)
 
 ;; Highlight FIXME TODO etc. in comments
 (autoload 'fic-mode "fic-mode")
@@ -190,11 +232,10 @@
 ;;;; Navigation and fuzzy finding
 ;; Better buffer browser
 (autoload 'ibuffer "ibuffer")
-(eval-after-load "ibuffer"
-  '(define-key ctl-x-map (kbd "C-b") #'ibuffer))
+(define-key ctl-x-map (kbd "C-b") #'ibuffer)
 
 ;; Sidebar based on dired
-(define-key global-map (kbd "<C-tab>") 'dired-sidebar-toggle-sidebar)
+(define-key global-map (kbd "<C-tab>") 'dired-sidebar-jump-to-sidebar)
 (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " .")
@@ -430,9 +471,10 @@
 (define-key global-map (kbd "M-SPC") 'er/expand-region)
 
 ;;;; Yas-snippet
-;;(setq-default yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
-;;(when (require 'yasnippet nil 'noerror)
-;;  (yas-global-mode 1))
+(setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
+(when (require 'yasnippet nil 'noerror)
+  (setq yas-indent-line 'fixed)
+  (yas-global-mode 1))
 
 ;;;; Thesaurus/synonyms tooltip
 (define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
@@ -451,7 +493,9 @@
      (require 'smartparens-config)
      (smartparens-global-strict-mode)
      (sp-use-smartparens-bindings)
-     (sp-local-pair 'ada-mode "'" nil :actions nil))))
+     (sp-local-pair 'ada-mode "'" nil :actions nil)
+     (define-key global-map (kbd "M-s") 'sp-split-sexp)
+     (define-key global-map (kbd "M-r") 'sp-join-sexp))))
 
 ;;;; Indentation/whitespace stuff
 (when (require 'aggressive-indent nil 'noerror)
@@ -527,12 +571,20 @@
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
 
-;;;; JDEE for Java development
-;; NOTE: requires jdee-server to be installed separately from git?
-(autoload 'jdee-mode "jdee")
-(push '("\\.java\\'" . jdee-mode) auto-mode-alist)
-(with-eval-after-load "jdee"
-  (setq jdee-server-dir "~/.emacs.d/lib/jdee-server/"))
+;;;; Meghanada (NOT jdee!) for Java development
+;; Should automatically install meghanada-server?
+(add-hook
+ 'java-mode-hook
+ '(lambda ()
+    (require 'meghanada)
+    (meghanada-mode +1)
+    (setq c-basic-offset 2)
+    (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)
+    (setq meghanada-java-path "java")
+    (setq meghanada-maven-path "mvn")
+    (define-key global-map (kbd "C-c C-v C-b") 'meghanada-compile-project)
+    (define-key global-map (kbd "C-c C-v C-r") 'meghanada-exec-main)))
+
 
 ;;;; Haskell-mode maybe?
 (autoload 'haskell-mode "haskell")

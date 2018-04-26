@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+# name: java
+# key: java
+# --
+
+MAIN=$0
+
+JC=javac
+JAVA=java
+RM=rm -f
+
+JCFLAGS=-Xlint:unchecked
+
+.SUFFIXES:
+.SUFFIXES: .class .java
+
+.java.class:
+	$(JC) $(JCFLAGS) $<
+
+all: $(MAIN).class
+
+run: $(MAIN).class
+	$(JAVA) $(MAIN)
+
+clean:
+	$(RM) *.class
+
+.PHONY: all run clean
