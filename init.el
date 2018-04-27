@@ -181,6 +181,8 @@
           ("gamma" . ?Γ)
           ("delta" . ?δ)
           ("Delta" . ?Δ)
+          ("sigma" . σ)
+          ("Sigma" . Σ)
           ("pi" . ?π)
           ("psi" . ?ψ)
           ("Psi" . ?Ψ)
