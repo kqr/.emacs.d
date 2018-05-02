@@ -162,7 +162,10 @@
           ("and then" . ?∧)
           ("!" . ?¬)
           ("not" . ?¬)
+          ;; Control structures
+          ;;("for" . ?∀)
           ;; Common types
+          ("void" . ?∅)
           ("bool" . ?𝔹)
           ("boolean" . ?𝔹)
           ("Bool" . ?𝔹)
@@ -180,7 +183,8 @@
           ("alpha" . ?α)
           ("beta" . ?β)
           ("gamma" . ?γ)
-          ("gamma" . ?Γ)
+          ("Gamma" . ?Γ)
+          ("lambda" . ?λ)
           ("pi" . ?π)
           ("psi" . ?ψ)
           ("Psi" . ?Ψ)
@@ -223,7 +227,8 @@
 
 ;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode nil 'noerror)
-  (frames-only-mode +1)
+  ;; Trying without frames-only mode for a while
+  (frames-only-mode -1)
   ;; A new frame for each LaTeX refresh gets annoying
   (push
    '(".*Org PDF LaTeX Output.*" .
