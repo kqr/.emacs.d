@@ -160,7 +160,10 @@
           ("and then" . ?∧)
           ("!" . ?¬)
           ("not" . ?¬)
+          ;; Control structures
+          ;;("for" . ?∀)
           ;; Common types
+          ("void" . ?∅)
           ("bool" . ?𝔹)
           ("boolean" . ?𝔹)
           ("Bool" . ?𝔹)
@@ -178,9 +181,10 @@
           ("alpha" . ?α)
           ("beta" . ?β)
           ("gamma" . ?γ)
-          ("gamma" . ?Γ)
+          ("Gamma" . ?Γ)
           ("delta" . ?δ)
           ("Delta" . ?Δ)
+          ("lambda" . ?λ)
           ("sigma" . ?σ)
           ("Sigma" . ?Σ)
           ("pi" . ?π)
@@ -226,7 +230,8 @@
 
 ;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode nil 'noerror)
-  (frames-only-mode +1)
+  ;; Trying without frames-only mode for a while
+  (frames-only-mode -1)
   ;; A new frame for each LaTeX refresh gets annoying
   (push
    '(".*Org PDF LaTeX Output.*" .
@@ -245,8 +250,10 @@
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " .")
   (setq dired-sidebar-close-sidebar-on-file-open t))
-(when (and (require 'all-the-icons nil 'noerror)
-           (require 'all-the-icons-dired nil 'noerror))
+(when (and
+       (display-graphic-p)
+       (require 'all-the-icons nil 'noerror)
+       (require 'all-the-icons-dired nil 'noerror))
   (all-the-icons-dired-mode)
   (diminish 'all-the-icons-dired-mode))
 
@@ -574,7 +581,13 @@
                     (save-excursion (slime)))))
 (with-eval-after-load "slime"  
   (setq inferior-lisp-program "/usr/bin/sbcl")
-  (setq slime-contribs '(slime-fancy)))
+  (setq slime-contribs '(slime-fancy))
+  (defun popup-slime-documentation (symbol-name)
+    "Popup function- or symbol-documentation for SYMBOL-NAME."
+    (interactive (list (slime-read-symbol-name "Documentation for symbol: ")))
+    (when (not symbol-name)
+      (error "No symbol given"))
+    (slime-eval-async `(swank:documentation-symbol ,symbol-name) 'popup-tip)))
 
 ;;;; Meghanada (NOT jdee!) for Java development
 ;; Should automatically install meghanada-server?
