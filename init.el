@@ -580,7 +580,13 @@
                     (save-excursion (slime)))))
 (with-eval-after-load "slime"  
   (setq inferior-lisp-program "/usr/bin/sbcl")
-  (setq slime-contribs '(slime-fancy)))
+  (setq slime-contribs '(slime-fancy))
+  (defun popup-slime-documentation (symbol-name)
+    "Popup function- or symbol-documentation for SYMBOL-NAME."
+    (interactive (list (slime-read-symbol-name "Documentation for symbol: ")))
+    (when (not symbol-name)
+      (error "No symbol given"))
+    (slime-eval-async `(swank:documentation-symbol ,symbol-name) 'popup-tip)))
 
 ;;;; Meghanada (NOT jdee!) for Java development
 ;; Should automatically install meghanada-server?
