@@ -249,8 +249,10 @@
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " .")
   (setq dired-sidebar-close-sidebar-on-file-open t))
-(when (and (require 'all-the-icons nil 'noerror)
-           (require 'all-the-icons-dired nil 'noerror))
+(when (and
+       (display-graphic-p)
+       (require 'all-the-icons nil 'noerror)
+       (require 'all-the-icons-dired nil 'noerror))
   (all-the-icons-dired-mode)
   (diminish 'all-the-icons-dired-mode))
 
