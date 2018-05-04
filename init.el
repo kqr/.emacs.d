@@ -338,8 +338,11 @@
     (if (or god-local-mode buffer-read-only) (setq cursor-type 'box)
       (setq cursor-type 'bar))
     (if god-local-mode
-        (set-face-background 'mode-line "dodger blue")
-      (set-face-background 'mode-line "antiquewhite2")))
+        (progn
+          (set-face-background 'mode-line "dodger blue")
+          (set-face-foreground 'mode-line "dodgerblue4"))
+      (set-face-background 'mode-line "antiquewhite2")
+      (set-face-foreground'mode-line "antiquewhite4")))
 
   (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
   (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
