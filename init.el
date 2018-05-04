@@ -312,8 +312,8 @@
   (defun god-exempt-mode-p ()
     "Return non-nil if major-mode is exempt or inherits from exempt mode."
     (or (memq major-mode god-exempt-major-modes)
-        (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
-                  god-exempt-major-modes)))
+       (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
+                 god-exempt-major-modes)))
 
   (setq god-exempt-predicates '(god-exempt-mode-p god-special-mode-p))
   (setq god-exempt-major-modes
@@ -339,7 +339,7 @@
       (setq cursor-type 'bar))
     (if god-local-mode
         (set-face-background 'mode-line "dodger blue")
-      (set-face-background 'mode-line "antiquewhite4")))
+      (set-face-background 'mode-line "antiquewhite2")))
 
   (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
   (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
@@ -356,7 +356,7 @@
   (defun god-has-priority ()
     "Try to ensure that god mode keeps priority over other minor modes."
     (unless (and (consp (car minor-mode-map-alist))
-                 (eq (caar minor-mode-map-alist) 'god-local-mode-map))
+               (eq (caar minor-mode-map-alist) 'god-local-mode-map))
       (let ((godkeys (assq 'god-local-mode minor-mode-map-alist)))
         (assq-delete-all 'god-local-mode minor-mode-map-alist)
         (add-to-list 'minor-mode-map-alist godkeys))))
@@ -620,6 +620,8 @@
 ;;; Orthodox file manager
 (autoload 'sunrise-cd "sunrise-commander")
 (define-key global-map (kbd "<f2>") 'sunrise-cd)
+(with-eval-after-load "sunrise-commander"
+  (setq dired-directory))
 
 ;;; Git integration
 (autoload 'magit-status "magit")
