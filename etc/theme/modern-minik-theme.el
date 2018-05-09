@@ -149,8 +149,12 @@
       (undo-tree-visualizer-current-face     ((t :inherit warning)))
       (undo-tree-visualizer-unmodified-face  ((t :inherit font-lock-string-face)))
       
-      (org-level-1                           ((t :inherit default)))
-      (org-level-2                           ((t :inherit default)))
+      (org-level-1                           ((t :inherit default
+                                                 :height 1.2
+                                                 :weight bold)))
+      (org-level-2                           ((t :inherit default
+                                                 :height 1.1
+                                                 :slant italic)))
       (org-level-3                           ((t :inherit default)))
       (org-level-4                           ((t :inherit default)))
       (org-level-5                           ((t :inherit default)))
