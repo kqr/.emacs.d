@@ -162,6 +162,7 @@
       (org-level-7                           ((t :inherit default)))
       (org-level-8                           ((t :inherit default)))
       (org-level-9                           ((t :inherit default)))
+      
       (org-table                             ((t :inherit fixed-pitch)))
       (org-code                              ((t :inherit fixed-pitch)))
       (org-block                             ((t :inherit fixed-pitch)))
@@ -280,7 +281,20 @@
       (sr-html-face                          ((t :inherit default)))
       (sr-log-face                           ((t :inherit default)))
       (sr-packaged-face                      ((t :inherit default)))
-      (sr-xml-face                           ((t :inherit default))))))
+      (sr-xml-face                           ((t :inherit default)))
+
+      (font-latex-sedate-face                ((t :inherit default)))
+      (font-latex-warning-face               ((t :inherit default)))
+      (font-latex-sectioning-0-face          ((t :inherit default)))
+      (font-latex-sectioning-1-face          ((t :inherit default)))
+      (font-latex-sectioning-2-face          ((t :inherit default)))
+      (font-latex-sectioning-3-face          ((t :inherit default)))
+      (font-latex-sectioning-4-face          ((t :inherit default)))
+      (font-latex-sectioning-5-face          ((t :inherit default)))
+      (font-latex-sectioning-6-face          ((t :inherit default)))
+      
+
+      )))
   
   ;;(message "%S" theme-faces)
   
