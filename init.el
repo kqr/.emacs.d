@@ -797,7 +797,7 @@
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (case-fold-search nil))
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
-           subtree-end)))
+         subtree-end)))
 
   (setq org-agenda-custom-commands
         '((" " "Agenda"
@@ -816,7 +816,10 @@
 
 ;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t) (R . t) (python . t)))
+                               '((emacs-lisp . t)
+                                 (R . t)
+                                 (python . t)
+                                 (lisp . t)))
   
   (setq org-babel-python-command "python3"
         org-export-with-smart-quotes t
