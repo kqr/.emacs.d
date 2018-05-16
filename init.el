@@ -498,7 +498,7 @@
   '(setq-default synosaurus-choose-method 'popup))
 
 ;;;; LaTeX preview pane
-(require 'tex-site)
+(require 'tex-site nil :noerror)
 
 (setq-default font-latex-deactivated-keyword-classes
               '("textual" "type-command" "type-declaration"))
