@@ -292,7 +292,7 @@
      ;; Allow narrowing to subtree even when inside subtree
      (advice-add 'outshine-narrow-to-subtree :before
                  (lambda (&rest args) (unless (outline-on-heading-p t)
-                                        (outline-previous-visible-heading 1))))))
+                                   (outline-previous-visible-heading 1))))))
 
 
 ;;;; God mode
@@ -498,7 +498,7 @@
   '(setq-default synosaurus-choose-method 'popup))
 
 ;;;; LaTeX preview pane
-(require 'tex-site)
+(require 'tex-site nil :noerror)
 
 (setq-default font-latex-deactivated-keyword-classes
               '("textual" "type-command" "type-declaration"))
