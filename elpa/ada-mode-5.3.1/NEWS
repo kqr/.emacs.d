@@ -1,0 +1,336 @@
+GNU Emacs Ada mode NEWS -- history of user-visible changes.
+
+
+* Ada mode 5.3.1
+3 Oct 2017
+
+** Ada mode 5.2.2 should have been numbered 5.3.0, since it introduced
+   the GPS indentation backend major feature.
+
+** GNAT GPL 2017 is supported for gpr_query and ada_mode_gps_indent;
+   see ada_mode.info for installation instructions.
+
+** New Ada-mode submenu "Select Project" lists all loaded Ada-mode
+   project, making it easier to switch between them.
+
+** New Ada-mode menu entry "Delete project..." allows deleting a
+   loaded project, to reduce clutter in the new "Select Project"
+   menu.
+
+** `ada-add-log-for-current-function' (for a revision control commit)
+   will return a type name. However, `ada-which-function' will not.
+
+** New option `ada-fill-comment-adaptive', if non-nil, causes all
+   comments to be filled to the same width, rather than to the same
+   column. This looks better in deeply nested code.
+
+** When 'ada-auto-case' is nil, 'ada-case-adjust-at-point' used to do
+   nothing; it now capitalizes the word at point. This helps with some
+   alternate casing styles.
+
+** Improve handling of GPR_PROJECT_PATH in 'compilation-environment'
+   when selecting/deselection ada-mode project files.
+
+** ada-gnat-xref-all (used by ada-show-references) now preserves point
+   when appending more references.
+
+** Minor bug fixes.
+
+* Ada mode 5.2.2
+9 Jul 2017
+
+** GNAT GPL 2017 is _not_ supported for gpr_query; GNAT GPL 2016 is
+   supported.
+
+** New option ada-indent-hanging-rel-exp; if non-nil, indent hanging
+   lines relative to start of expression. Otherwise, indent relative
+   to previous line. Default nil.
+
+** xref-ada allows entering an identifier to search for without
+   completion. The search is only in the current file.
+
+** ada-show-references, ada-show-local-references now take an 'append'
+   argument, set by interactive prefix; if non-nil, preserve previous
+   output in references buffer.
+
+** Support GPS indentation engine, either as primary or backup. See
+   user guide for how to set it up; it requires compiling Ada code.
+
+** ada_mode_gps_indent patch level 001 fixes ada-gps bugs 2, 6. See
+   test/ada-gps for bug descriptions/tests.
+
+** ada-identifier-at-point properly handles adjacent operator and
+   identifier (ie +Tree).
+
+** When a 'use type' clause is inserted by the compile error
+   correction code, 'use all type' is inserted if the lanuage version
+   is 2012 (the default).
+
+** The context menu is simplified.
+
+** The 'obj_dir' project variable is supported.
+
+** ada-next-statement-keyword, ada-prev-statement-keyword are deleted;
+   use forward-sexp instead.
+
+** The license inserted by ada-skel-modified-gpl uses GPL version 3
+   language.
+
+** Several indentation bugs are fixed.
+
+** New option ada-gnat-debug-run controls echoing GNAT commands in
+   GNAT buffers.
+
+* Ada mode 5.2.1
+31 Oct 2016
+
+** A line starting with '(' is now always indented with
+   ada-indent-broken. Previously, in some cases it was indented by
+   ada-indent - 1. Since the defaults set ada-indent = 3,
+   ada-indent-broken = 2, this is transparent unless you use other
+   values.
+
+** GPR_PROJECT_PATH is set in the compilation process environment when
+   the Ada project is selected, and cleared when the project is
+   deselected. This allows selecting other Emacs projects, then
+   returning to an Ada project.
+
+** New function ada-show-local-references (bound to C-c C-l) searches
+   for references within the current file only.
+
+** New option ada-xref-full-path (default nil) if t, shows full paths
+   in cross references.
+
+** The indentation functions are significantly rewritten to make them
+   better organized and easier to understand and maintain. This
+   resulted in some minor indentation changes, mostly for consistency;
+   in particular, case expressions are indented by ada-indent-broken,
+   to match if espressions.
+
+* Ada mode 5.2.0
+26 Jul 2016
+
+** GNAT 2016 drops support for 'gnat find'; users must use gpr_query.
+
+** ada-xref-tool now defaults to gpr_query if gpr_query executable is
+   found in PATH.
+
+** source code for compiling gpr_query is installed with the Gnu ELPA
+   package; instructions for compiling and installing it are in
+   ada-mode.info.
+
+** better handling of cross-compile targets.
+
+** Allow trailing label in a sequence_of_statements:
+   loop
+      ...
+      goto Next;
+   <<Next>>
+   end loop;
+
+** Handle package aspects.
+
+** tested with GNAT GPL 2016.
+
+** several bug fixes
+
+* Ada mode 5.1.9
+20 Jan 2016
+
+** New option ada-indent-comment-gnat matches the GNAT style check for
+   comments in all cases (previously, there were some cases where the
+   comment indent algorithm did not match the GNAT check).
+
+** New menu command "Show source file search path"; displays
+   compilation-search-path in a buffer.
+
+** Adding missing grammar statements to allow removing parens around
+   conditional and quantified expressions.
+
+** Key binding for ada-case-create-partial-exception in ada-mode
+   changed to C-c C-M-y; this is easier to type, and matches the key
+   binding in gpr-mode.
+
+** ada-case-keyword changed to accept the symbols 'lower-case,
+   'upper-case instead of the functions downcase-word, upcase-word.
+
+** ada-case-identifier changed to accept the symbols 'mixed-case,
+   'lower-case, 'upper-case instead of the functions 'ada-mixed-case,
+   'ada-lower-case, 'ada-upper-case.
+
+** ada-fix-add-context-clause now sorts "limited with" and "private
+   with" clauses after other clauses.
+
+** ada-align now aligns '=>' in case expressions.
+
+** ada-align-paramlist now handles access function parameters:
+
+   procedure Choose
+     (X, Y, Z    :        Integer;
+      Preference : access function (A, B : Integer) return Boolean);
+
+** ada-next-statement-keyword now moves to matching close paren if on
+   open paren, ada-prev-statement-keyword moves from close paren to
+   open paren.
+
+** New hook ada-prj-parse-hook, run from ada-parse-prj-file.
+
+** GPR mode now does case adjust similar to Ada mode.
+
+** gpr parser handles nested case statements without blowing up.
+
+** gpr parser handles package renames
+
+** fix other bugs
+
+* Ada mode 5.1.8
+10 Apr 2015
+
+** requires OpenToken 6.0
+
+** ada-align handle identifiers that start with Ada keywords
+
+** functions for ada-case-identifier now take three args: start, end,
+   force-case
+
+** parsing is not required by find-other-file if the current buffer is
+   larger than wisi-size-threshold
+
+** fix misc bugs
+
+* Ada mode 5.1.7
+18 Nov 2014
+
+** add ada-find-file that prompts for a file from the current project,
+   with completion.
+
+** fix bug that prevented
+    Y : Boolean := Boolean'(if True then False);
+
+** add ada-create-select-default-prj, to simplify working with small
+   projects
+
+** Handle deleting whitespace between words, inserting whitespace in
+   the middle of a word properly.
+
+** Change ada-case-adjust to capitalize words in comments and strings
+   by default; C-u adjusts case as if code.
+
+** allow 'raise' in expressions for GNAT GPL 2014 aspects
+
+** move all except keyword face highighting to grammar; much more
+   accurate, easier to maintain, simpler, faster.
+
+** delete gnatinspect support; gpr_query is better
+
+** misc bug fixes
+
+* Ada mode 5.1.6
+28 Sep 2014
+
+** improve syntax highlighting of names after 'of', 'new', 'renames'
+
+** fix ada-format-paramlist to handle 'aliased' keyword (new in Ada
+   2012), and 'not null' without 'access'.
+
+** fix ada-find-other-file in separate bodies; now navigates to the
+   spec.
+
+** restore ada-indent-newline-indent for [return]
+
+* Ada mode 5.1.5
+12 Jul 2014
+
+** add C-c <, C-c >; goto-declaration-start, -end
+
+** improve parsing speed significantly
+
+* Ada mode 5.1.4
+26 May 2014
+
+** support expression functions
+
+** beginning-of-defun-function, end-of-defun-function are now set. A
+   "defun" is a generic, package, protected, subprogram, or task spec
+   or body.
+
+** C-c C-s is now bound to ada-goto-previous-pos, which goes to the
+   first position in ada-goto-pos-ring. Most navigation functions set
+   ada-goto-pos-ring. This allows easy navigation back to the start of
+   a cross-reference chain.
+
+** xref tool error handlers no longer show the xref tool buffer; the
+   new Ada menu item 'show xref tool buffer' can be used instead.
+
+** The parser supports more deeply nested case statements.
+
+* Ada mode 5.1.3
+19 Apr 2014
+
+** more GNAT error message auto-fixes
+
+** support aspects on subprogram declarations; format same as SPARK examples.
+
+** fix bug in ada-syntax-propertize that caused query-replace to screw up
+
+** inhibit reparse due to case adjust; case adjust entire buffer is
+   now _much_ faster.
+
+** Non-ASCII characters supported in Ada mode buffers, including GNAT
+   bracket notation.
+
+* Ada mode 5.1.2
+16 Mar 2014
+
+** fix another packaging bug; forgot to add files to ELPA git!
+
+* Ada mode 5.1.1
+14 Mar 2014
+
+** require wisi-1.0.2, to fix packaging bug
+
+** gnat-find now called with -a to include read-only .ali files in the results.
+
+* Ada mode 5.1.0
+13 Mar 2014
+
+** Emacs 24.2 supported, via cl-lib in Gnu ELPA
+
+** Better handling of aspects.
+
+** 'record' is aligned with 'type' in derived types
+
+** Several minor indentation bugs have been fixed.
+
+** Added "2.2 Upgrading from previous versions" to the user guide.
+
+** ada-align now properly handles subprograms with the opening paren
+   on the same line as the preceding code and code on the same line as
+   the closing paren:
+
+    function Foo (Param_1 : Integer;
+                  Param_2 : Integer) return Integer;
+
+** When no project file is selected, the default variables are
+   consistently used instead. Previously, the default variables were
+   only used when parsing a project file.
+
+** info files are properly visible in main info menu
+
+** 'C-c ;' used to run `comment-dim', which is bound to 'M-;' in the
+   global keymap. 'C-c ;' now gives an error with a message saying
+   'use M-; instead'.
+
+* Ada mode 5.0.1
+Feb 2 2014
+
+First public release, via ELPA
+
+* Ada mode 5.0.0
+Dec 24 2013
+
+** first release in ELPA
+
+** Previous version was 4.00, in Emacs core. 5.0.1 is a complete
+   rewrite, using a generalized LALR parser that caches syntactic
+   information in text properties.

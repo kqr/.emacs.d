@@ -41,7 +41,8 @@
 ;; Set up the package system
 (require 'package)
 (mapc (lambda (elt) (push elt package-archives))
-      '(("melpa" . "http://melpa.milkbox.net/packages/")
+      '(("elpa" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.milkbox.net/packages/")
         ("org" . "http://orgmode.org/elpa/")
         ("sunrise" . "http://joseito.republika.pl/sunrise-commander/")))
 (package-initialize)
@@ -556,7 +557,12 @@
 (with-eval-after-load "projectile"
   (projectile-mode +1)
   (when (require 'counsel-projectile nil 'noerror)
-    (counsel-projectile-mode +1)))
+    (counsel-projectile-mode +1))
+
+  (defun load-two-wrongs ()
+    (load (concat (projectile-project-root) "two-wrongs.el")))
+  
+  (add-hook 'projectile-find-file-hook #'load-two-wrongs))
 
 ;;;; C and C++ mode
 (autoload 'c-mode "cc-mode")

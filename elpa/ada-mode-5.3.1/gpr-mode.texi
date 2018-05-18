@@ -1,0 +1,305 @@
+\input texinfo  @c -*-texinfo-*-
+@setfilename ../../info/gpr-mode
+@settitle gpr Mode
+
+@copying
+Copyright @copyright{} 2013  Free Software Foundation, Inc.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover texts being ``A GNU Manual'',
+and with the Back-Cover Texts as in (a) below.  A copy of the license
+is included in the section entitled ``GNU Free Documentation License''.
+
+(a) The FSF's Back-Cover Text is: ``You have the freedom to copy and
+modify this GNU manual.  Buying copies from the FSF supports it in
+developing GNU and promoting software freedom.''
+@end quotation
+@end copying
+
+@dircategory Emacs editing modes
+@direntry
+* gpr mode: (gpr-mode).         Emacs mode for editing and navigating gpr files (gnat project files).
+@end direntry
+
+@titlepage
+@sp 10
+@title gpr Mode
+@sp 2
+@subtitle An Emacs major mode for editing and navigating gpr files
+@sp 2
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+@node Top, Overview, (dir), (dir)
+
+@ifnottex
+@insertcopying
+@end ifnottex
+
+@menu
+* Overview::
+* Installation::
+* Customization::
+* Moving Through Gpr Code::
+* Identifier completion::
+* Indentation::
+* Statement skeletons::
+* GNU Free Documentation License::
+* Index::
+@end menu
+
+@node Overview, Installation, Top, Top
+@chapter Overview
+gpr files are the project files used by the GNAT compiler and
+associated tools. They describe search paths, compiler options, etc.
+
+@xref{GNAT Project Manager,,GNAT Project Manager,gnat_ugn,GNAT Pro
+User's Guide}, for general information on gpr files.
+
+The Emacs mode for gpr files helps the user in reading
+existing code and facilitates writing new code.
+
+When you open a file with a file extension of @file{.gpr}, Emacs will
+automatically load and activate gpr mode.
+
+@node Installation, Customization, Overview, Top
+@chapter Installation
+
+gpr mode is distributed in the Gnu ELPA package archive, bundled with
+Ada mode; it can be installed via @code{M-x list-packages}
+(@pxref{Packages,,,emacs,Emacs User Guide}).
+
+gpr mode is also available as a separate distribution bundled with
+Ada mode, from the Emacs Ada mode website
+@uref{http://stephe-leake.org/emacs/ada-mode/emacs-ada-mode.html}. The
+separate distribution may be more recent.
+
+For installing the separate distribution, see the @file{README} file
+in the distribution.
+
+gpr mode does not have a separate version; it uses the Ada mode
+version number. To see what version of Ada mode you have installed, do
+@kbd{M-x ada-mode-version}.
+
+@node Customization, Moving Through Gpr Code, Installation, Top
+@chapter Customization
+
+gpr mode uses the Ada mode indentation variables; they can be set via
+the menu @samp{Ada | Customize} from an Ada mode buffer.  Click on the
+@samp{Help} button there for help on using customize.
+
+To modify a specific variable, you can directly call the function
+@code{customize-variable}; just type @kbd{M-x customize-variable
+@key{RET} @var{variable-name} @key{RET}}).
+
+Alternately, you can specify variable settings in the Emacs
+configuration file, @file{~/.emacs}. This file is coded in Emacs lisp,
+and the syntax to set a variable is the following:
+@example
+(setq variable-name value)
+@end example
+
+Some general Emacs settings that are useful for gpr files:
+@table @code
+@item delete-trailing-whitespace
+Deletes space, tab at end of line and blank lines at end of buffer.
+@item untabify
+Deletes tab characters that have crept into the file.
+@item indent-tabs-mode
+Don't insert tab characters when indenting.
+@item hippie-expand
+Bind @code{hippie-expand} to a key; it expands the word before point,
+using words from current buffer, other buffers, file names, etc; see
+@code{hippie-expand-try-functions-list}. You can also add
+@code{skeleton-hippie-try} to that list (@pxref{Statement skeletons}).
+@end table
+
+The above can all be set by the following code in your
+@file{~/.emacs}. Note that some are functions are added to
+@code{before-save-hook}; they run just before a buffer is written to disk.
+@example
+(setq-default indent-tabs-mode nil)
+(require 'gpr-mode)
+(add-to-list 'hippie-expand-try-functions-list 'skeleton-hippie-try)
+(define-key gpr-mode-map "\C-e"     'hippie-expand)
+(add-hook 'gpr-mode-hook
+   (lambda ()
+    (add-hook 'before-save-hook 'delete-trailing-whitespace nil t)
+    (add-hook 'before-save-hook
+              (lambda () (untabify (point-min) (point-max)))
+               nil t)))
+@end example
+
+@node Moving Through Gpr Code, Identifier completion, Customization, Top
+@chapter Moving Through Gpr Code
+
+These commands navigate through gpr code. All these functions are
+available through the gpr menu and keybindings.
+
+@table @kbd
+@item C-c C-o
+@findex ff-find-other-file
+If point is on a @code{with} clause, position point on the
+corresponding package declaration.
+
+@item C-u SPACE
+Jump back to the previous location.
+
+@end table
+
+@node Identifier completion, Indentation, Moving Through Gpr Code, Top
+@chapter Identifier completion
+
+Emacs provides a general way of completing identifiers: @kbd{M-/}
+(bound to @code{dabbrev-expand}). This is an easy way to type faster:
+you just have to type the first few letters of an identifier, and then
+loop through all the possible completions.
+
+@kbd{M-/} works by parsing all open gpr files for possible
+completions.
+
+For instance, if the words @samp{my_identifier} and @samp{my_subprogram}
+are the only words starting with @samp{my} in any of the open gpr files,
+then you will have this scenario:
+
+@example
+You type:  my@kbd{M-/}
+Emacs inserts:  @samp{my_identifier}
+If you press @kbd{M-/} once again, Emacs replaces @samp{my_identifier} with
+@samp{my_subprogram}.
+Pressing @kbd{M-/} once more will bring you back to @samp{my_identifier}.
+@end example
+
+This is a very fast way to do completion, and the casing of words will
+also be respected.
+
+@node Indentation, Statement skeletons, Identifier completion, Top
+@chapter Indentation
+
+gpr mode comes with a full set of rules for automatic indentation. You
+can also configure the indentation, via the following variables:
+
+@table @asis
+@item @code{ada-indent}                  (default value: 3)
+Number of columns for default indentation.
+
+@item @code{ada-indent-broken}           (default value: 2)
+Number of columns to indent the continuation of a broken line.
+
+@item @code{ada-indent-when}             (default value: 3)
+Indentation for @code{when} relative to @code{exception}, @code{case},
+or @code{or} in @code{select}.
+
+@item @code{ada-indent-with}             (default value: ada-indent-broken)
+Indentation for the lines in a @code{with} context clause.
+
+@end table
+
+The following keys indent portions of the text:
+@table @kbd
+
+@item RET
+Insert and indent a new line.
+
+@item TAB
+Indent the current line, or the current region.
+
+@item C-c TAB
+Indent the current declaration.
+
+@end table
+
+The indentation algorithm relies on a grammar parser to identify the
+syntactic role for keywords and other words in the code. If the code
+is accepted by the parser, the indentation is done according to the
+rules in the indentation engine.
+
+If the code is not accepted (because it is partially complete during
+editing), the indentation engine falls back to the trivial algorithm
+of indenting each new line the same as the previous line. Once enough
+new text has been entered to make the code acceptable to the parser,
+the declaration is properly indented.
+
+For example, if you are entering this code:
+
+@example
+   for Source_Dirs use
+     ("../../1553/test",
+      "../../system/test");
+@end example
+
+when you type @kbd{RET (}, @code{(} is indented to the same column as
+@code{for}, because the parser does not find @code{);}. Then when
+you type the final @code{;} followed by @key{TAB}, all three lines are
+indented, putting @code{(} where it belongs.
+
+To be more user friendly, the parser accepts a superset of the gpr
+grammer. For example, the parser accepts this code for a @code{case}
+statement:
+
+@example
+case is
+end case;
+@end example
+
+In general, any sequence of statements, and many expressions, may be
+omitted.
+
+One way to easily insert empty statements like this is using
+@ref{Statement skeletons}.
+
+In rare cases, the parser gets confused; it can be reset by invoking
+menu @key{gpr | Misc | Reset parser}. Please report such cases as a
+bug.
+
+@node Statement skeletons, GNU Free Documentation License, Indentation, Top
+@chapter Statement skeletons
+
+@kbd{C-c C-e} expands the previous one or two words into a statment
+skeleton. For example, @kbd{c a s e C-c C-e} expands to:
+
+@example
+case  is
+when =>
+end case;
+@end example
+
+All skeleton expansions are accepted by the indentation parser, so
+this is a convenient way to insert statements with correct
+indentation.
+
+For named packages, the name is taken from
+the word before point, and the package keyword from the word
+before that:
+
+@example
+package A_Package
+@end example
+
+expands to:
+
+@example
+package A_Package is
+end A_Package;
+@end example
+
+Some expansions prompt for more information, such as
+a choice of license.
+
+@node GNU Free Documentation License, Index, Statement skeletons, Top
+@appendix GNU Free Documentation License
+@include doclicense.texi
+
+@node Index,  , GNU Free Documentation License, Top
+@unnumbered Index
+
+@printindex fn
+
+@bye

@@ -1,0 +1,121 @@
+GNU Emacs wisi NEWS -- history of user-visible changes.
+
+Copyright (C) 2014 Free Software Foundation, Inc.
+See the end of the file for license conditions.
+
+Please send wisi bug reports to bug-gnu-emacs@gnu.org, with
+'wisi' in the subject. If possible, use M-x report-emacs-bug.
+
+
+* wisi 1.1.6
+3 Oct 2017
+
+** wisi-forward-find-cache-token - new function.
+
+** New minor-mode parse_table-mode helps navigating parse table
+   listings output by 'wisi-generate -v 1'; useful when debugging
+   grammars.
+
+* wisi 1.1.5
+9 Jul 2017
+
+** wisi-indent-fallback allows setting the indent engine to use when
+   the wisi engine fails.
+
+** wisi-comment-indent now uses comment-column for comments following
+   code on the same line.
+
+** wisi-forward-statement-keyword tolerates end of buffer, and uses
+   either cache-next or cache-end.
+
+** forward-sexp-function is set to wisi-forward-sexp, which handles
+   parens, strings, and statements.
+
+* wisi 1.1.4
+31 Oct 2016
+
+** wisi-validate-cache takes optional error-on-fail arg.
+
+* wisi 1.1.3
+26 Jul 2016
+
+** improve use of quotes in doc strings.
+
+* wisi 1.1.2
+20 Jan 2016
+
+** wisi-compile no longer requires semantic.
+
+** wisi-parse slightly faster
+
+** minor bug fixes
+
+** wisi-extend-action now takes two args (first last)
+
+** wisi-face-action-1 optional arg no-override is replaced by override-no-error.
+
+* wisi 1.1.1
+10 Apr 2015
+
+** rename wisi-font-lock-size-threshold to wisi-size-threshold, use
+   for more things in ada-mode
+
+* wisi 1.1.0
+18 Nov 2014
+
+** change wisi-forward-token to not return text; simpler, faster
+
+** remove face from wisi-cache; set font-lock-face property directly.
+
+** add support for numeric literal tokens.
+
+** change wisi-*-action to take a vector of arguments; faster for
+   external parser, catches more errors.
+
+** add wisi-font-lock-size-threshold
+
+* wisi 1.0.6
+28 Sep 2014
+
+** add face to wisi-cache
+
+** wisi-before/after-change : improve checks for invalidate-cache
+
+** wisi-motion-action takes class with each token-id
+
+** new parse actions: wisi-extend-action, wisi-face-action
+
+** new functions: wisi-goto-statement-start, -end.
+
+** fix misc bugs
+
+* wisi 1.0.5
+12 Jul 2014
+
+** wisi-parse-max-parallel-current - new variable for debugging slow parsing issues
+
+** wisi-set-end - new algorithm giving significant speedup
+
+* wisi 1.0.4
+19 Apr 2014
+
+** add support for GNAT Ada bracket hex character notation
+
+* wisi 1.0.3
+16 Mar 2014
+
+** fix another packaging bug; forgot to add files to ELPA git!
+
+* wisi 1.0.2
+14 Mar 2014
+
+** Emacs 24.2 supported, via cl-lib in Gnu ELPA
+
+* wisi 1.0.1
+
+** minor fixes for byte compiler warnings
+
+* wisi 1.0
+Feb 2 2014
+
+** first release in ELPA
