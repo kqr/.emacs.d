@@ -1,0 +1,263 @@
+2017-10-03  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release Ada mode 5.3.1, wisi 1.1.6
+
+	* packages/ada-mode/*: Release Ada mode 5.3.1.
+
+	* packages/ada-mode/ada_mode_gps_indent.gpr: Rename to 
+	ada_mode_gps_indent.gpr.gp; generate .gpr via gnatprep.
+
+	* packages/ada-mode/build.sh: New file.
+
+	* packages/wisi/parse_table-mode.el: New file.
+
+	* packages/wisi/wisi.el: Release wisi 1.1.6.
+
+2017-07-09  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Update ada-mode to version 5.2.2, wisi to version 1.1.5
+
+2017-05-19  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* ada-mode/ada-mode.el (ada-case-activate-keys): Fix compiler warning.
+
+2017-02-21  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	Clear executable bit for Emacs Lisp files.
+
+	BTW, this was done w/ shell command: find . -type f -name '*.el' -perm
+	/u+x -exec chmod -x '{}' \;
+
+	* admin/archive-contents.el: ‘chmod -x’.
+
+	* packages/ada-mode/ada-gnat-compile.el: ‘chmod -x’.
+	* packages/ada-mode/ada-gnat-xref.el: Likewise.
+	* packages/ada-mode/ada-grammar-wy.el: Likewise.
+	* packages/ada-mode/ada-mode.el: Likewise.
+	* packages/ada-mode/ada-wisi-opentoken.el: Likewise.
+	* packages/ada-mode/ada-wisi.el: Likewise.
+	* packages/ada-mode/gpr-grammar-wy.el: Likewise.
+	* packages/ada-mode/gpr-query.el: Likewise.
+	* packages/other-frame-window/other-frame-window.el: Likewise.
+	* packages/register-list/register-list.el: Likewise.
+	* packages/windresize/windresize.el: Likewise.
+
+2016-10-31  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release wisi 1.1.4, ada-mode 5.2.1
+
+2016-07-26  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Release: ada-mode: version 5.2.0. wisi: version 1.1.3
+
+2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+
+	Fix some quoting problems in doc strings
+
+	Most of these are minor issues involving, e.g., quoting `like this' 
+	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+	\= when the characters should not be turned into curved single quotes.
+
+2016-02-15  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	fix executable bits
+
+2016-01-21  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/gnome-c-style/gnome-c-tests.el: Add copyright blurb
+
+2016-01-18  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	Update ada-mode, wisi
+
+	* packages/ada-mode: Version 5.1.9.
+	* packages/wisi: Version 1.1.2.
+
+2015-07-11  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* ada-mode: Use lexical-binding since it requires Emacs-24.2 anyway
+
+	* ada-mode/ada-mode-compat-23.4.el: Remove.
+	* ada-mode/ada-build.el: Remove redundant :group arg on defcustoms.
+	* ada-mode/ada-gnat-compile.el (ada-gnat-fix-error): Remove unused vars
+	`ident', `type', and `param'.
+	* ada-mode/ada-gnat-xref.el (ada-gnat-xref-other): Remove unused var
+	`status'.
+	(ada-gnat-xref-parents): Remove unused vars `found-file', `found-line', 
+	and `found-col'.
+	(ada-gnat-xref-all): Rename (dynbound) mode-name to (lexbound) mode.
+	* ada-mode/ada-indent-user-options.el: Remove redundant :group arg on
+	defcustoms.
+	* ada-mode/ada-mode.el: Remove redundant :group arg on defcustoms.
+	(ada-case-exception-file, ada-case-keyword): Comment-out dangerous
+	:safep.
+	(ada-language-version): Remove redundant calls to
+	make-variable-buffer-local.
+	(ada-prj-current-file): Declare.
+	(ada-identifier-at-point): Remove unused var `identifier'.
+	* ada-mode/gnat-core.el (ada-gnat-ada-name-from-file-name): Remove
+	unused var `status'.
+
+2015-06-18  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/ada-mode: Miscellaneous tweaks to fix warnings
+
+	* packages/ada-mode/ada-mode.el (ada-in-numeric-literal-p): Refine call
+	to looking-back.
+	(<toplevel>): Fix broken use of cl-case.
+
+	* packages/ada-mode/ada-skel.el: Use #' to quote function names.
+
+	* packages/ada-mode/ada-wisi.el (ada-wisi-which-function-1): Remove
+	unused var
+	`region' and avoid unneeded setq.
+
+	* packages/ada-mode/gnat-inspect.el (gnat-inspect-compilation):
+	* packages/ada-mode/gpr-query.el (gpr-query-compilation): Silence
+	warning.
+
+2015-04-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	update ada-mode, wisi
+
+	* packages/ada-mode/*: version 5.1.8
+
+	* packages/wisi/*: version 1.1.1
+
+2014-11-21  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	release ada-mode 5.1.7, wisi 1.1.0; minor format changes in ada-ref-man
+	(take 2)
+
+2014-11-19  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	release ada-mode 5.1.7, wisi 1.1.0; minor format changes in ada-ref-man
+
+2014-10-15  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/ada-mode: Miscellaneous cleanups.
+
+	* ada-mode/gpr-skel.el (skeleton-hippie-try): Don't quote error name.
+	* ada-mode/gpr-query.el (gpr-query-get-src-dirs,
+	gpr-query-get-prj-dirs): Avoid add-to-list on local vars.
+	(gpr-query-compilation): Use font-lock-ensure when available.
+	* ada-mode/gnat-inspect.el (gnat-inspect-compilation): Use 
+	font-lock-ensure when available.
+	* ada-mode/gnat-core.el (gnat-prj-add-prj-dir)
+	(gnat-prj-parse-emacs-final, gnat-get-paths-1,
+	ada-gnat-make-package-body): Avoid add-to-list and `set' on local vars.
+	(gnat-get-paths-1): Don't quote error name.
+	* ada-mode/ada-wisi.el (ada-wisi-scan-paramlist): Avoid add-to-list on 
+	local var.
+	* ada-mode/ada-skel.el (ada-skel-hippie-try): Don't quote error name.
+	* ada-mode/ada-mode.el (ada-format-paramlist): Fix typo.
+	(ada-case-read-exceptions, ada-case-add-exception, ada-prj-parse-file-1)
+	(ada-case-merge-exceptions): Avoid add-to-list on local var.
+	(ada-prj-parse-file-1): Avoid `set' on local var.
+	(cl-case): Don't quote alternatives.
+	* ada-mode/ada-gnat-compile.el (ada-gnat-fix-error): Avoid add-to-list
+	on local var.  Simplify.
+	* ada-mode/ada-build.el (ada-build-prompt-select-prj-file): Remove 
+	unused var `err'.
+
+2014-09-28  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	publish ada-mode 5.1.6, wisi 1.0.6, new package ada-ref-man
+
+	* admin/archive-contents.el (archive--metadata): include 'dir' in files,
+	for doc-only packages
+	 (archive--metadata): fix typo in error message
+
+	* packages/ada-mode/ada-ref-man.el: New file.
+	* packages/ada-mode/*: version 5.1.6
+
+	* packages/ada-ref-man/: New directory.
+
+	* packages/wisi/*: version 1.0.6
+	* packages/wisi/README: New file.
+
+2014-09-24  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	remove bogus execute priv
+
+2014-07-12  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	* packages/ada-mode/* : version 5.1.5
+
+	* packages/ada-mode/ada-mode.texi: New file.
+
+	* packages/ada-mode/gpr-mode.texi: New file.
+
+	* packages/wisi/* : version 1.0.5
+
+2014-05-26  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	release ada-mode 5.1.4
+
+2014-04-19  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	ada-mode 5.1.3, wisi 1.0.4
+
+2014-03-16  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	ada-mode, wisi: bump versions again; forgot to add some files to git
+
+	* packages/ada-mode/README:
+	* packages/ada-mode/ada-mode.el: version 5.1.2
+
+	* packages/wisi/wisi.el: version 1.0.3
+
+	* packages/ada-mode/NEWS: New file.
+
+	* packages/ada-mode/ada-mode-compat-24.2.el: New file.
+
+	* packages/ada-mode/dir: New file.
+
+	* packages/wisi/NEWS: New file.
+
+	* packages/wisi/wisi-compat-24.2.el: New file.
+
+2014-03-14  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	* packages/ada-mode: version 5.1.1: fix wisi packaging bug, add -a in
+	gnat-find
+
+	* packages/wisi/wisi.el: bump version to reflect change.
+
+2014-03-13  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	release ada-mode 5.1.0, wisi 1.0.1
+
+	* packages/ada-mode/*: ada-mode 5.1.0
+
+	* packages/wisi/wisi-parse.el: wisi 1.0.1
+	* packages/wisi/wisi.el: "
+
+2014-02-02  Stephen Leake  <stephen_leake@stephe-leake.org>
+
+	update to Ada mode version 5.0.1
+
+	new Ada mode keybinding: C-c ; comment-dwim
+
+	new Ada mode menu entries: comment-dwim, ada-reset-parser
+
+	misc bug fixes
+
+	ada-indent-opentoken is now a minor mode
+
+	new gpr mode keybinding: C-c C-o ff-find-other-file
+
+	packages/ada-mode/README: New file.
+
+2013-12-24  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Fix up copyright notices.
+
+2013-12-24  U-takver\stephe  <stephe@takver.(none)>
+
+	Add ada-mode, wisi packages
+
+	* packages/ada-mode/: New directory.
+
+	* packages/wisi/: New directory.
+

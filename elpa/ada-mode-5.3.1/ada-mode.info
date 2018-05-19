@@ -1,0 +1,2753 @@
+This is ada-mode.info, produced by makeinfo version 6.4 from
+ada-mode.texi.
+
+Copyright (C) 1999 - 2017 Free Software Foundation, Inc.
+
+     Permission is granted to copy, distribute and/or modify this
+     document under the terms of the GNU Free Documentation License,
+     Version 1.3 or any later version published by the Free Software
+     Foundation; with no Invariant Sections, with the Front-Cover texts
+     being "A GNU Manual", and with the Back-Cover Texts as in (a)
+     below.  A copy of the license is included in the section entitled
+     "GNU Free Documentation License".
+
+     (a) The FSF's Back-Cover Text is: "You have the freedom to copy and
+     modify this GNU manual.  Buying copies from the FSF supports it in
+     developing GNU and promoting software freedom."
+INFO-DIR-SECTION Emacs editing modes
+START-INFO-DIR-ENTRY
+* Ada mode: (ada-mode).         Emacs mode for editing and navigating Ada code.
+END-INFO-DIR-ENTRY
+
+
+File: ada-mode.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
+
+Ada Mode Version 5.3.1
+
+   Copyright (C) 1999 - 2017 Free Software Foundation, Inc.
+
+     Permission is granted to copy, distribute and/or modify this
+     document under the terms of the GNU Free Documentation License,
+     Version 1.3 or any later version published by the Free Software
+     Foundation; with no Invariant Sections, with the Front-Cover texts
+     being "A GNU Manual", and with the Back-Cover Texts as in (a)
+     below.  A copy of the license is included in the section entitled
+     "GNU Free Documentation License".
+
+     (a) The FSF's Back-Cover Text is: "You have the freedom to copy and
+     modify this GNU manual.  Buying copies from the FSF supports it in
+     developing GNU and promoting software freedom."
+
+* Menu:
+
+* Overview::
+* Installation::                Installing Ada mode on your system
+* Customization::               Setting up Ada mode to your taste
+* Compiling Executing::         Working with your application within Emacs
+* Project files::               Describing the organization of your project
+* Moving Through Ada Code::     Moving easily through Ada sources
+* Identifier completion::       Finishing words automatically
+* Indentation::                 Indenting your code automatically as you type
+* Statement skeletons::         Some code is written for you
+* Aligning code::               Making it pretty
+* Automatic casing::            Adjusting the case of words automatically
+* Comment Handling::            Reformatting comments easily
+* Key summary::
+* Developer overview::
+* GNU Free Documentation License::
+* Index::
+
+ -- The Detailed Node Listing --
+
+Installation
+
+* Ada Reference Manual::
+* gpr_query::
+* ada_mode_gps_indent::
+
+gpr_query
+
+* Building GNATCOLL::
+* Building gpr_query::
+
+ada_mode_gps_indent
+
+* ada_mode_gps_indent install::
+* ada_mode_gps_indent configure::
+
+Customizing Ada mode
+
+* Non-standard file names::
+* Other compiler::
+* Other cross-reference::
+* Other customization::
+
+Compiling Executing
+
+* Compile commands::
+* Compiling Examples::
+* Compiler errors::
+
+Compiling Examples
+
+* No project files::            Just menus
+* Set compiler options::        A basic Ada mode project file
+* Set source search path::      Source in multiple directories
+* Use GNAT project file::
+* Use multiple GNAT project files::
+* Use a Makefile::
+
+Project files
+
+* Project file overview::
+* Project file variables::
+
+Developer overview
+
+* Directory structure::
+* Package organization::
+* OpenToken::
+* ELPA::
+* Savannah::
+* ada-france::
+
+Package organization
+
+* Ada mode::
+* gpr mode::
+* GNAT core::
+* Wisi::
+
+
+
+File: ada-mode.info,  Node: Overview,  Next: Installation,  Prev: Top,  Up: Top
+
+1 Overview
+**********
+
+The Emacs mode for programming in Ada helps the user in reading existing
+code and facilitates developing new code.
+
+   Cross-reference information output by the compiler is used to provide
+powerful code navigation (jump to definition, find all uses, etc).
+
+   When you open a file with a file extension of '.ads' or '.adb', Emacs
+will automatically load and activate Ada mode.
+
+   Ada mode works without any customization, if you are using the GNAT
+compiler (<https://libre.adacore.com/>) and the GNAT default naming
+convention.
+
+   You must customize a few things if you are using a different file
+naming convention or compiler; *Note Non-standard file names::, *Note
+Other compiler::.
+
+   In addition, you may want to customize the indentation,
+capitalization, and other things; *Note Other customization::.
+
+   Finally, for large Ada projects, you will want to set up an Emacs Ada
+mode project file for each project; *Note Project files::.  Note that
+these are different from the GNAT project files used by the GNAT tools.
+
+   *Note Debuggers: (emacs)Debuggers, for general information on
+debugging.
+
+
+File: ada-mode.info,  Node: Installation,  Next: Customization,  Prev: Overview,  Up: Top
+
+2 Installation
+**************
+
+Ada mode requires Emacs 24.3 or greater.
+
+   Ada mode is distributed in the Gnu ELPA package archive; it can be
+installed via 'M-x list-packages' (*note (emacs)Packages::).  You must
+first enable packages in your '~/.emacs', _after_ customizing
+'Info-default-directory-list' (if you do that):
+
+     (package-initialize)
+
+   Ada mode is also available as a separate distribution, from the Emacs
+Ada mode website
+<http://stephe-leake.org/emacs/ada-mode/emacs-ada-mode.html>.
+
+   For installing the separate distribution, see the 'README' file in
+the distribution.
+
+   To see what version of Ada mode you have installed, invoke 'M-x
+ada-mode-version'.
+
+   You may also want to install additional utilities:
+
+* Menu:
+
+* Ada Reference Manual::
+* gpr_query::
+* ada_mode_gps_indent::
+
+
+File: ada-mode.info,  Node: Ada Reference Manual,  Next: gpr_query,  Prev: Installation,  Up: Installation
+
+2.1 Ada Reference Manual
+========================
+
+The ELPA package ada-ref-man includes the Ada Reference Manual and
+Annotated Ada Reference Manual in info format.
+
+
+File: ada-mode.info,  Node: gpr_query,  Prev: Ada Reference Manual,  Up: Installation
+
+2.2 gpr_query
+=============
+
+Ada mode has support for an external cross reference tool 'gpr_query',
+which uses compiler-generated information.  In the case of Ada, the
+necessary '.ali' files are automatically generated by the standard
+compilation process.  For other languages, e.g.  C, C++, '.gli' files
+can be generated using the compiler switch '-fdump-xref'.  '-fdump-xref'
+is an AdaCore extension, not available in FSF GCC.
+
+   'gpr_query' is an Ada program, which is distributed as source and
+must be built.  Its source code is in the Gnu ELPA package.
+
+   'gpr_query' requires the 'GNATCOLL' library provided by AdaCore,
+distributed with GNAT GPL 2016 or 2017, and also available at Github
+(<https://github.com/AdaCore/gnatcoll>).  (The 'GNATCOLL' distributed
+with GNAT GPL 2015 does not compile cleanly).  The notes below assume
+that the compiler is installed at '$prefix', e.g.
+'/usr/local/gnat-2017', and that '$prefix/bin' is first on the 'PATH'.
+If you are running Windows, use Cygwin 'bash' to run these commands.
+
+   In general, 'gpr_query' should be compiled with the compiler version
+that is used to generate the user project '.ali' files; the 'ali' file
+format can change with each compiler version.  'gpr_query' creates a
+database of cross reference information; that database must be deleted
+if the compiler version changes, to force a complete rebuild.
+
+* Menu:
+
+* Building GNATCOLL::
+* Building gpr_query::
+
+
+File: ada-mode.info,  Node: Building GNATCOLL,  Next: Building gpr_query,  Up: gpr_query
+
+2.2.1 Building GNATCOLL
+-----------------------
+
+'GNATCOLL' may already be installed on your system: if it is,
+'$prefix/lib/gnat' will contain 'gnatcoll' GPR files.  If not, and you
+are using GNAT GPL 2017, first install the 'libiconv' library.
+
+   On Linux, use the package manager to install the development version
+of 'libiconv' (usually named 'libiconv-dev').
+
+   On Windows, one way to get the library is to install MingW32 from the
+MSYS2 project (<http://www.msys2.org/>), use its package manger 'pacman'
+to install 'libiconv', then copy the 'libiconv' files to the GNAT
+installation:
+
+     cp d:/msys64/mingw32/include/iconv.h d:/Apps/GNAT-gpl_2017/include/
+     cp d:/msys64/mingw32/lib/libiconv.a  d:/Apps/GNAT-gpl_2017/lib/gcc/i686-pc-mingw32/6.3.1/
+
+   Then configure (assuming the GPL 2017 version) by:
+
+     tar zxf ~/Downloads/gnatcoll-gpl-2017-src.tar.gz
+     cd gnatcoll-gpl-2017-src
+     ./configure --prefix=$prefix
+
+   where '$prefix' is the GNAT installation directory.
+
+   You should see at least the following lines at the end of the
+configure output:
+
+     configure:   Sqlite:                 embedded  (see --with-sqlite)
+     configure:   Iconv:                  yes (see --with-iconv)
+     configure:   Projects:               yes
+     configure:   Xref:                   yes
+
+   If you are using GNAT GPL 2016, the 'Xref' line is not present.
+
+   Then, build and install:
+
+     make
+     sudo make install
+
+   If you are debugging 'gpr_query', you may want to build an sqlite3
+executable that is compatible with the database it creates:
+
+     cd gnatcoll-gpl-2017-src/src/sqlite/amalgamation/
+     gcc -O2 -o sqlite3 shell.c sqlite3.c -ldl -lpthread
+
+
+File: ada-mode.info,  Node: Building gpr_query,  Prev: Building GNATCOLL,  Up: gpr_query
+
+2.2.2 Building 'gpr_query'
+--------------------------
+
+To build and install 'gpr_query', assuming the 'ada-mode-5.3.xx' GNU
+ELPA package is installed:
+
+     cd ~/.emacs.d/elpa/ada-mode-5.3.xx
+     ./build.sh
+
+   This also builds *note ada_mode_gps_indent::.
+
+   'ada-mode' will use 'gpr_query' for cross reference functions if
+'gpr_query' is found in 'PATH'.
+
+
+File: ada-mode.info,  Node: ada_mode_gps_indent,  Prev: gpr_query,  Up: Installation
+
+2.3 ada_mode_gps_indent
+=======================
+
+'ada_mode_gps_indent' is an alternate indentation engine, using the
+indentation engine from AdaCore's GPS. It is fast for indenting in very
+large files; the default ada-wisi is slow in that case.  It also
+tolerates most syntax errors, producing reasonable indentation.
+
+   It can be used either as the primary indentation engine, or as a
+fallback when ada-wisi fails due to syntax errors or in large files.
+
+   In either case, the ada-wisi parser is still used for syntax
+highlighting (font-lock) and navigation.
+
+   The ada-mode Gnu ELPA package includes a copy of the source code for
+the GPS indentation engine from GPS GPS 2016, patched to be more
+consistent with the ada-wisi indentation engine.
+
+* Menu:
+
+* ada_mode_gps_indent install::
+* ada_mode_gps_indent configure::
+
+
+File: ada-mode.info,  Node: ada_mode_gps_indent install,  Next: ada_mode_gps_indent configure,  Up: ada_mode_gps_indent
+
+2.3.1 Install
+-------------
+
+To install 'ada_mode_gps_indent', assuming the 'ada-mode-5.3.xx' GNU
+ELPA package is installed:
+   * Install 'gnatcoll' (*note Building GNATCOLL::).
+
+   * Compile and install 'ada_mode_gps_indent':
+          cd ~/.emacs.d/elpa/ada-mode-5.3.xx/
+          ./build.sh
+
+     This also builds *note gpr_query::.
+
+
+File: ada-mode.info,  Node: ada_mode_gps_indent configure,  Prev: ada_mode_gps_indent install,  Up: ada_mode_gps_indent
+
+2.3.2 Configure
+---------------
+
+By default, 'ada-mode' will use 'ada_mode_gps_indent' as a fallback
+indentation engine if 'ada_mode_gps_indent' is found on 'PATH'.
+
+   Large files (determined by 'ada-gps-size-threshold') will use
+'ada_mode_gps_indent' as the primary indentation engine.
+
+   To force the use of 'ada_mode_gps_indent', set
+'ada-gps-size-threshold' to 0, either globally, or in a file-local
+variable:
+
+     --  Local Variables:
+     --  ada-gps-size-threshold : 0
+     --  End:
+
+   In addition, files larger than 'wisi-size-threshold' will not run the
+wisi parser for font-lock; some syntax highlighting will be lost.  This
+provides better response in files where the parser is slow.
+
+
+File: ada-mode.info,  Node: Customization,  Next: Compiling Executing,  Prev: Installation,  Up: Top
+
+3 Customizing Ada mode
+**********************
+
+Here we assume you are familiar with setting variables in Emacs, either
+thru 'customize' or in elisp (in your '.emacs' file).  For a basic
+introduction to customize, elisp, and Emacs in general, see the tutorial
+('C-h t').
+
+* Menu:
+
+* Non-standard file names::
+* Other compiler::
+* Other cross-reference::
+* Other customization::
+
+
+File: ada-mode.info,  Node: Non-standard file names,  Next: Other compiler,  Prev: Customization,  Up: Customization
+
+3.1 Non-standard file names
+===========================
+
+By default, Ada mode is configured to use the GNAT file naming
+convention, where file names are a simple modification of the Ada names,
+and the extension for specs and bodies are '.ads' and '.adb',
+respectively.
+
+   Emacs uses the file extension to enable Ada mode; Ada mode uses the
+file extentions to allow moving from a package body to the corresponding
+spec and back.
+
+   Emacs and Ada mode support ways to use alternative file extensions
+for specs and bodies.  Note that you must also tell the compiler about
+these extensions; doing that is beyond the scope of this manual.
+
+   For instance, if your spec and bodies files are called 'UNIT_s.ada'
+and 'UNIT_b.ada', respectively, you can add the following to your
+'.emacs' file:
+
+     ;; Tell Ada mode about spec and body extensions
+     (ada-add-extensions "_s.ada" "_b.ada")
+
+     ;; Tell Emacs to use Ada mode for those extensions
+     (add-to-list 'auto-mode-alist '("\\.ada\\'" . ada-mode))
+
+   You can define additional extensions:
+
+     (ada-add-extensions ".ads" "_b.ada")
+     (ada-add-extensions ".ads" ".body")
+
+   This means that whenever Ada mode looks for the body for a file whose
+extension is '.ads', it will take the first available file that ends
+with either '.adb', '_b.ada' or '.body'.
+
+   Simililarly, if Ada mode is looking for a spec, it will look for
+'.ads' or '_s.ada'.
+
+   If the filename excluding the extension is not derived from the Ada
+name following the GNAT convention, you need to provide an alternate
+function for 'ada-file-name-from-ada-name'.  Doing that is beyond the
+scope of this manual; see the current definitions in 'ada-mode.el' and
+'ada-gnat-xref.el' for examples.
+
+
+File: ada-mode.info,  Node: Other compiler,  Next: Other cross-reference,  Prev: Non-standard file names,  Up: Customization
+
+3.2 Other compiler
+==================
+
+The project variable 'ada_compiler' (default elisp variable
+'ada-compiler') is used to index several variables that point to the
+compiler-specific functions for corresponding Ada mode operations.
+
+   To use a compiler other than GNAT, you must write Emacs lisp code
+that provides the interface to the compiler, and set 'ada-compiler' and
+the indirection variables.
+
+   See 'ada-gnat-compile.el' for an example.
+
+
+File: ada-mode.info,  Node: Other cross-reference,  Next: Other customization,  Prev: Other compiler,  Up: Customization
+
+3.3 Other cross-reference
+=========================
+
+The project variable 'ada_xref' (default elisp variable 'ada-xref-tool')
+is used to index several variables that point to the
+cross-reference-tool-specific functions for corresponding Ada mode
+operations.
+
+   If 'gpr_query' is found in 'PATH', the default cross-reference tool
+is 'gpr_query'; otherwise it is 'gnatxref'.
+
+   To use a cross reference tool other than the above, you must write
+Emacs lisp code that provides the interface to the tool, and set
+'ada-xref-tool' and the indirection variables.
+
+   See 'ada-gnat-xref.el' and 'gpr-query.el' for examples.
+
+
+File: ada-mode.info,  Node: Other customization,  Prev: Other cross-reference,  Up: Customization
+
+3.4 Other customization
+=======================
+
+All user-settable Ada mode variables can be set via the menu 'Ada |
+Customize'.  Click on the 'Help' button there for help on using
+customize.
+
+   To modify a specific variable, you can directly call the function
+'customize-variable'; just type 'M-x customize-variable <RET>
+VARIABLE-NAME <RET>'.
+
+   Alternately, you can specify variable settings in the Emacs
+configuration file, '~/.emacs'.  This file is coded in Emacs lisp, and
+the syntax to set a variable is the following:
+     (setq variable-name value)
+
+   Some general Emacs settings that are useful for Ada files:
+'context menu'
+     By default, the context menu is bound to <C-down-mouse-3>, i.e.
+     control-right-click.  <down-mouse-3> is already bound in the global
+     map; you can override that global binding in the 'ada-mode-hook'
+     (see below for code).
+'delete-trailing-whitespace'
+     Deletes space, tab at end of line and blank lines at end of buffer.
+'untabify'
+     Deletes tab characters that have crept into the file.
+'indent-tabs-mode'
+     Don't insert tab characters when indenting.
+'copyright-update'
+     Updates the copyright date in the file header comment, to the
+     current year.
+'electric-pair-mode'
+     Insert a matching right paren when you type a left paren.
+'hippie-expand'
+     Bind 'hippie-expand' to a key; it expands the word before point,
+     using words from current buffer, other buffers, file names, etc;
+     see 'hippie-expand-try-functions-list'.  You can also add
+     'ada-skel-hippie-try' to that list.  Note that 'ada-expand', which
+     defaults to 'ada-skel-expand', is bound to <C-c C-e> (*note
+     Statement skeletons::).
+'imenu'
+     Navigate to subprograms and types by name, from a minibuffer menu.
+'speedbar'
+     Navigate to subprograms and types by name, from a list in a
+     dedicated window.
+'which-func'
+     Display the current subprogram name in the mode bar.
+'jit-lock-defer-time'
+     In large files, parsing is slow, so it gets in the way of
+     interactive typing due to immediate font-lock triggering a parse.
+     Delay the font-lock by setting an Emacs file-local variable in an
+     Ada comment:
+
+          --  Local Variables:
+          --  jit-lock-defer-time: 1.5
+          --  End:
+
+   The above can all be set by the following code in your '~/.emacs'.
+Note that some are functions are added to 'before-save-hook'; they run
+just before a buffer is written to disk.  Also, the order is important;
+ada-mode does not set up the Ada-specific features of imenu and speedbar
+unless imenu is loaded first.
+
+     (setq-default indent-tabs-mode nil)
+     (electric-pair-mode 1)
+     (require 'imenu) ;; also enables speedbar
+     (require 'ada-mode)
+     (add-to-list 'hippie-expand-try-functions-list 'ada-skel-hippie-try)
+     (define-key ada-mode-map "\C-e"     'hippie-expand)
+     (define-key ada-mode-map [down-mouse-3] 'ada-popup-menu)
+     (add-hook 'ada-mode-hook
+        (lambda ()
+         (add-hook 'before-save-hook 'delete-trailing-whitespace nil t)
+         (add-hook 'before-save-hook 'copyright-update nil t)
+         (add-hook 'before-save-hook
+                   (lambda () (untabify (point-min) (point-max)))
+                    nil t)))
+
+
+File: ada-mode.info,  Node: Compiling Executing,  Next: Project files,  Prev: Customization,  Up: Top
+
+4 Compiling Executing
+*********************
+
+Ada projects can be compiled, linked, and executed using commands on the
+Ada menu.  All of these commands can be customized via a project file
+(*note Project files::), but the defaults are sufficient for using the
+GNAT compiler for simple projects (single files, or several files in a
+single directory).
+
+   For complex projects, you will want to use 'make' or some other build
+tool; in that case, you will need an Emacs Ada mode project file to tell
+Emacs about the project directory tree and other settings.
+
+* Menu:
+
+* Compile commands::
+* Compiling Examples::
+* Compiler errors::
+
+
+File: ada-mode.info,  Node: Compile commands,  Next: Compiling Examples,  Prev: Compiling Executing,  Up: Compiling Executing
+
+4.1 Compile commands
+====================
+
+Here are the commands for building an Ada project and running the main
+program.
+
+   In multi-file projects, there must be one file that is the main
+program.  That is given by the 'main' project file variable; it defaults
+to the current file if not yet set, but is also set by the "set main and
+build" command.
+
+'Check file'
+     Compiles the current file in syntax check mode, by running
+     'check_cmd' defined in the current project file.  This typically
+     runs faster than full compile mode, speeding up finding and fixing
+     compilation errors.
+
+     This sets 'main' only if it has not been set yet.
+
+'Compile file'
+     Compiles the current file, by running 'comp_cmd' from the current
+     project file.
+
+     This does not set 'main'.
+
+'Set main and Build'
+     Sets 'main' to the current file, then executes the Build command.
+
+'Show main'
+     Display 'main' in the message buffer.
+
+'Build'
+     Compiles all obsolete units of the current 'main', and links
+     'main', by running 'make_cmd' from the current project.
+
+     This sets 'main' only if it has not been set yet.
+
+'Run'
+     Executes the main program in a shell, displayed in a separate Emacs
+     buffer.  This runs 'run_cmd' from the current project.  The
+     execution buffer allows for interactive input/output.
+
+     To modify the run command, in particular to provide or change the
+     command line arguments, type 'C-u' before invoking the command.
+
+     This command is not available for a cross-compilation toolchain.
+
+   It is important when using these commands to understand how 'main' is
+used and changed.
+
+   Build runs 'gnatmake' on the main unit.  During a typical
+edit/compile session, this is the only command you need to invoke, which
+is why it is bound to 'C-c C-c'.  It will compile all files needed by
+the main unit, and display compilation errors in any of them.
+
+   Note that Build can be invoked from any Ada buffer; typically you
+will be fixing errors in files other than the main, but you don't have
+to switch back to the main to invoke the compiler again.
+
+   Novices and students typically work on single-file Ada projects.  In
+this case, 'C-c C-m' will normally be the only command needed; it will
+build the current file, rather than the last-built main.
+
+   There are two ways to change 'main':
+
+  1. Invoke 'Ada | Set main and Build', which sets 'main' to the current
+     file.
+
+  2. Invoke 'Ada | Project | Load', and load a project file that
+     specifies 'main'
+
+
+File: ada-mode.info,  Node: Compiling Examples,  Next: Compiler errors,  Prev: Compile commands,  Up: Compiling Executing
+
+4.2 Compiling Examples
+======================
+
+We present several small projects, and walk thru the process of
+compiling, linking, and running them.
+
+   The first example illustrates more Ada mode features than the others;
+you should work thru that example before doing the others.
+
+   All of these examples assume you are using GNAT.
+
+   The source for these examples is available on the Emacs Ada mode
+website mentioned in *Note Installation::.
+
+* Menu:
+
+* No project files::            Just menus
+* Set compiler options::        A basic Ada mode project file
+* Set source search path::      Source in multiple directories
+* Use GNAT project file::
+* Use multiple GNAT project files::
+* Use a Makefile::
+
+
+File: ada-mode.info,  Node: No project files,  Next: Set compiler options,  Prev: Compiling Examples,  Up: Compiling Examples
+
+4.2.1 No project files
+----------------------
+
+This example uses no project files.
+
+   First, create a directory 'Example_1', containing:
+
+   'hello.adb':
+
+     with Ada.Text_IO;
+     procedure Hello
+     is begin
+        Put_Line("Hello from hello.adb");
+     end Hello;
+
+   Yes, this is missing "use Ada.Text_IO;" - we want to demonstrate
+compiler error handling.
+
+   'hello_2.adb' has no errors:
+
+     with Hello_Pkg;
+     procedure Hello_2
+     is begin
+        Hello_Pkg.Say_Hello;
+     end Hello_2;
+
+   'hello_pkg.ads' has no errors:
+
+     package Hello_Pkg is
+        procedure Say_Hello;
+     end Hello_Pkg;
+
+   'hello_pkg.adb':
+
+     with Ada.Text_IO;
+     package Hello_Pkg is
+        procedure Say_Hello
+        is begin
+           Ada.Text_IO.Put_Line ("Hello from hello_pkg.adb");
+        end Say_Hello;
+     end Hello_Pkg;
+
+   Yes, this is missing the keyword 'body'; another compiler error
+example.  However, note that the indentation engine parser accepts this
+code with no errors, making it easier to indent slightly illegal Ada
+code.
+
+   In buffer 'hello.adb', invoke the menu entry 'Ada | Build | Check
+syntax'.  You should get a '*compilation*' buffer containing something
+like (the directory paths will be different):
+
+     -*- mode: compilation; default-directory: "c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/" -*-
+     Compilation started at Fri Oct 18 04:23:54
+
+     gnatmake -u -c -gnatc  c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/hello.adb -cargs
+     gcc -c -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/ -gnatc -I- c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/hello.adb
+     hello.adb:4:04: "Put_Line" is not visible
+     hello.adb:4:04: non-visible declaration at a-textio.ads:263
+     hello.adb:4:04: non-visible declaration at a-textio.ads:259
+     gnatmake: "c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/hello.adb" compilation error
+
+     Compilation exited abnormally with code 4 at Fri Oct 18 04:23:54
+
+   The lines with actual errors (starting with 'hello.adb') are
+highlighted, with the file name in red.
+
+   Now invoke 'Ada | Build | Next compilation error'.  Or you can click
+the middle mouse button on the first error line, or use the key binding
+shown on the menu.  The compilation buffer scrolls to put the first
+error on the top line, and point is put at the place of the error in the
+'hello.adb' buffer.
+
+   To fix the error, invoke 'Ada | Build | Fix compilation error'; this
+adds "Ada.Text_Io."  to the line:
+
+         Ada.Text_Io.Put_Line ("hello from hello.adb");
+
+   Now invoke 'Ada | Build | Show main'; this displays 'Ada mode main:
+hello'.
+
+   Now (in buffer 'hello.adb'), invoke 'Ada | Build | Build'.  You are
+prompted to save the file (if you haven't already).  Then the
+compilation buffer is displayed again, containing:
+
+     -*- mode: compilation; default-directory: "c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/" -*-
+     Compilation started at Fri Oct 18 20:39:33
+
+     gnatmake -o hello hello  -cargs  -bargs  -largs
+     gcc -c hello.adb
+     gnatbind -x hello.ali
+     gnatlink hello.ali -o hello.exe
+
+     Compilation finished at Fri Oct 18 20:39:34
+
+   The compilation has succeeded without errors; 'hello.exe' now exists
+in the same directory as 'hello.adb'.
+
+   Now invoke 'Ada | Build | Run'.  The '*compilation*' buffer is
+displayed, containing
+
+     -*- mode: compilation; default-directory: "c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_1/" -*-
+     Compilation started at Fri Oct 18 20:41:53
+
+     ./hello
+     Hello from hello.adb
+
+     Compilation finished at Fri Oct 18 20:41:53
+
+   That completes the first part of this example.
+
+   Now we will compile a multi-file project.  Open the file
+'hello_2.adb', invoke 'Ada | Build | Set main and Build'.  This finds an
+error in 'hello_pkg.adb':
+
+     hello_pkg.adb:2:08: keyword "body" expected here [see file name]
+
+   This demonstrates that gnatmake finds the files needed by the main
+program.  However, it cannot find files in a different directory, unless
+you use an Emacs Ada mode project file or a GNAT project file to specify
+the other directories; *Note Set source search path::, *note Use GNAT
+project file::.
+
+   Invoke 'Ada | Build | Show main'; this displays 'Ada mode main:
+hello_2'.
+
+   Move to the error with 'C-x `', and fix the error by adding 'body':
+
+     package body Hello_Pkg is
+
+   Now, while still in 'hello_pkg.adb', invoke 'Ada | Build | Build'.
+gnatmake successfully builds 'hello_2'.  This demonstrates that Emacs
+has remembered the main file, in the project variable 'main', and used
+it for the Build command.
+
+   Finally, again while in 'hello_pkg.adb', invoke 'Ada | Build | Run'.
+The '*compilation*' buffer displays 'Hello from hello_pkg.adb'.
+
+   One final point.  If you switch back to buffer 'hello.adb', and
+invoke 'Ada | Build | Run', 'hello_2.exe' will be run.  That is because
+'main' is still set to 'hello_2', as you can see when you invoke 'Ada |
+Build | Show main'.
+
+   There are two ways to change 'main':
+
+  1. Invoke 'Ada | Build | Set main and Build', which sets 'main' to the
+     current file.
+
+  2. Invoke 'Ada | Build | Set Project ...', and select a project file
+     that specifies 'main'.
+
+
+File: ada-mode.info,  Node: Set compiler options,  Next: Set source search path,  Prev: No project files,  Up: Compiling Examples
+
+4.2.2 Set compiler options
+--------------------------
+
+This example illustrates using an Emacs Ada mode project file to set a
+compiler option.
+
+   If you have files from 'Example_1' open in Emacs, you should close
+them so you don't get confused.  Use menu 'File | Close (current
+buffer)'.
+
+   In directory 'Example_2', create these files:
+
+   'hello.adb':
+
+     with Ada.Text_IO;
+     procedure Hello
+     is begin
+        Put_Line("Hello from hello.adb");
+     end Hello;
+
+   This is the same as 'hello.adb' from 'Example_1'.  It has two errors;
+missing "use Ada.Text_IO;", and no space between 'Put_Line' and its
+argument list.
+
+   'hello.adp':
+
+     comp_opt=-gnatyt
+
+   This tells the GNAT compiler to check for token spacing; in
+particular, there must be a space preceding a parenthesis.
+
+   In buffer 'hello.adb', invoke 'Ada | Build | Set main and Build'.
+This finds the project file 'hello.adp', uses it to set the compiler
+options, and builds the project.  You should get a '*compilation*'
+buffer containing something like (the directory paths will be
+different):
+
+     cd c:/Examples/Example_2/
+     gnatmake -o hello hello -g -cargs -gnatyt  -bargs  -largs
+     gcc -c -g -gnatyt hello.adb
+     hello.adb:4:04: "Put_Line" is not visible
+     hello.adb:4:04: non-visible declaration at a-textio.ads:264
+     hello.adb:4:04: non-visible declaration at a-textio.ads:260
+     hello.adb:4:12: (style) space required
+     gnatmake: "hello.adb" compilation error
+
+   Compare this to the compiler output in *note No project files::; the
+gnatmake option '-cargs' has been replaced by '-cargs -gnaty', and an
+additional error is reported in 'hello.adb' on line 4.  This shows that
+'hello.adp' is being used to set the compiler options.
+
+   Fixing the error, linking and running the code proceed as in *note No
+project files::.
+
+
+File: ada-mode.info,  Node: Set source search path,  Next: Use GNAT project file,  Prev: Set compiler options,  Up: Compiling Examples
+
+4.2.3 Set source search path
+----------------------------
+
+In this example, we show how to deal with files in more than one
+directory, using an Emacs Ada mode project file to set the search path.
+
+   Create the directory 'Example_3', containing:
+
+   'hello_pkg.ads':
+
+     package Hello_Pkg is
+        procedure Say_Hello;
+     end Hello_Pkg;
+
+   'hello_pkg.adb':
+
+     with Ada.Text_IO;
+     package Hello_Pkg is
+        procedure Say_Hello
+        is begin
+           Ada.Text_IO.Put_Line ("Hello from hello_pkg.adb");
+        end Say_Hello;
+     end Hello_Pkg;
+
+   These are the same files from example 1; 'hello_pkg.adb' has an error
+on line 2.
+
+   In addition, create a directory 'Example_3/Other', containing these
+files:
+
+   'Other/hello_3.adb':
+
+     with Hello_Pkg;
+     with Ada.Text_IO; use Ada.Text_IO;
+     procedure Hello_3
+     is begin
+        Hello_Pkg.Say_Hello;
+        Put_Line ("From hello_3");
+     end Hello_3;
+
+   There are no errors in this file.
+
+   'Other/other.adp':
+
+     src_dir=..
+
+   Note that there must be no trailing spaces.
+
+   In buffer 'hello_3.adb', invoke 'Ada | Project files | Find and set
+project...', and select 'Example_3/Other/other.adp'.  This tells Emacs
+Ada mode to stop using the project file from 'Example_2', and use the
+one for 'Example_3'.  Also note that since this project file is not
+named 'hello_3.adp', it would not be found by default.
+
+   Then, again in 'hello_3.adb', invoke 'Ada | Set main and Build'.  You
+should get a '*compilation*' buffer containing something like (the
+directory paths will be different):
+
+     cd c:/Examples/Example_3/Other/
+     gnatmake -o hello_3 hello_3 -g -cargs -I.. -bargs  -largs
+     gcc -c -g -I.. hello_3.adb
+     gcc -c -I./ -g -I.. -I- C:\Examples\Example_3\hello_pkg.adb
+     hello_pkg.adb:2:08: keyword "body" expected here [see file name]
+     gnatmake: "C:\Examples\Example_3\hello_pkg.adb" compilation error
+
+   Compare the '-cargs' option to the compiler output in *note Set
+compiler options::; this shows that 'other.adp' is being used to set the
+compiler options.
+
+   Move to the error with 'C-x `'.  Ada mode searches the list of
+directories given by 'src_dir' for the file mentioned in the compiler
+error message.
+
+   Fixing the error, linking and running the code proceed as in *note No
+project files::.
+
+
+File: ada-mode.info,  Node: Use GNAT project file,  Next: Use multiple GNAT project files,  Prev: Set source search path,  Up: Compiling Examples
+
+4.2.4 Use GNAT project file
+---------------------------
+
+In this example, we show how to use a GNAT project file, with no Ada
+mode project file.
+
+   Create the directory 'Example_4', containing:
+
+   'hello_pkg.ads':
+
+     package Hello_Pkg is
+        procedure Say_Hello;
+     end Hello_Pkg;
+
+   'hello_pkg.adb':
+
+     with Ada.Text_IO;
+     package Hello_Pkg is
+        procedure Say_Hello
+        is begin
+           Ada.Text_IO.Put_Line ("Hello from hello_pkg.adb");
+        end Say_Hello;
+     end Hello_Pkg;
+
+   These are the same files from example 1; 'hello_pkg.adb' has an error
+on line 2.
+
+   In addition, create a directory 'Example_4/Gnat_Project', containing
+these files:
+
+   'Gnat_Project/hello_4.adb':
+
+     with Hello_Pkg;
+     with Ada.Text_IO; use Ada.Text_IO;
+     procedure Hello_4
+     is begin
+        Hello_Pkg.Say_Hello;
+        Put_Line ("From hello_4");
+     end Hello_4;
+
+   There are no errors in this file.
+
+   'Gnat_Project/hello_4.gpr':
+
+     project Hello_4 is
+        for Source_Dirs use (".", "..");
+     end Hello_4;
+
+   In buffer 'hello_4.adb', invoke 'Ada | Project | Load...', and select
+'Example_4/Gnat_Project/hello_4.gpr'.
+
+   Then, again in 'hello_4.adb', invoke 'Ada | Set main and Build'.  You
+should get a '*compilation*' buffer containing something like (the
+directory paths will be different):
+
+     -*- mode: compilation; default-directory: "c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4/Gnat_Project/" -*-
+     Compilation started at Mon Oct 21 11:28:31
+
+     gnatmake -Pc:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4/Gnat_Project/hello_4.gpr -o hello_4 hello_4  -cargs -I. -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4/Gnat_Project -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4 -Ic:/Apps/GNAT-7.1.2/lib/gcc/i686-pc-mingw32/4.7.3/adainclude  -bargs  -largs
+     gcc -c -I. -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4/Gnat_Project -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4 -Ic:/Apps/GNAT-7.1.2/lib/gcc/i686-pc-mingw32/4.7.3/adainclude -I- -gnatA C:\Projects\org.emacs.ada-mode.stephe-1\test\Example_4\hello_pkg.adb
+     hello_pkg.adb:2:08: keyword "body" expected here [see file name]
+     gnatmake: "C:\Projects\org.emacs.ada-mode.stephe-1\test\Example_4\hello_pkg.adb" compilation error
+
+     Compilation exited abnormally with code 4 at Mon Oct 21 11:28:31
+
+   Compare the 'gcc' options to the compiler output in *note Set
+compiler options::; this shows that 'hello_4.gpr' is being used to set
+the compiler options.
+
+   Fixing the error, linking and running the code proceed as in *note No
+project files::.
+
+
+File: ada-mode.info,  Node: Use multiple GNAT project files,  Next: Use a Makefile,  Prev: Use GNAT project file,  Up: Compiling Examples
+
+4.2.5 Use multiple GNAT project files
+-------------------------------------
+
+In this example, we show how to use multiple GNAT project files,
+specifying the GNAT project search path in an Ada mode project file.
+
+   Create the directory 'Example_4' as specified in *note Use GNAT
+project file::.
+
+   Create the directory 'Example_5', containing:
+
+   'hello_5.adb':
+
+     with Hello_Pkg;
+     with Ada.Text_IO; use Ada.Text_IO;
+     procedure Hello_5
+     is begin
+        Hello_Pkg.Say_Hello;
+        Put_Line ("From hello_5");
+     end Hello_5;
+
+   There are no errors in this file.
+
+   'hello_5.adp':
+
+     ada_project_path=../Example_4/Gnat_Project
+     gpr_file=hello_5.gpr
+
+   'hello_5.gpr':
+
+     with "hello_4";
+     project Hello_5 is
+        for Source_Dirs use (".");
+        package Compiler is
+           for Default_Switches ("Ada") use ("-g", "-gnatyt");
+        end Compiler;
+     end Hello_5;
+
+   In buffer 'hello_5.adb', invoke 'Ada | Project | Find and select
+project...', and select 'Example_5/hello_5.adp'.  This would also be
+found by default if no previous project file had been selected.
+
+   Then, again in 'hello_5.adb', invoke 'Ada | Build | Set main and
+Build'.  You should get a '*compilation*' buffer containing something
+like (the directory paths will be different):
+
+     -*- mode: compilation; default-directory: "c:/Projects/org.emacs.ada-mode.stephe-1/test/Example_5/" -*-
+     Compilation started at Mon Oct 21 11:32:05
+
+     gnatmake -Pc:/Projects/org.emacs.ada-mode.stephe-1/test/Example_5/hello_5.gpr -o hello_5 hello_5  -cargs -I. -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_5 -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4/Gnat_Project -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4 -Ic:/Apps/GNAT-7.1.2/lib/gcc/i686-pc-mingw32/4.7.3/adainclude  -bargs  -largs
+     gcc -c -I. -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_5 -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4/Gnat_Project -Ic:/Projects/org.emacs.ada-mode.stephe-1/test/Example_4 -Ic:/Apps/GNAT-7.1.2/lib/gcc/i686-pc-mingw32/4.7.3/adainclude -I- -gnatA C:\Projects\org.emacs.ada-mode.stephe-1\test\Example_4\hello_pkg.adb
+     hello_pkg.adb:2:08: keyword "body" expected here [see file name]
+     gnatmake: "C:\Projects\org.emacs.ada-mode.stephe-1\test\Example_4\hello_pkg.adb" compilation error
+
+     Compilation exited abnormally with code 4 at Mon Oct 21 11:32:05
+
+   Now type 'C-x `'.  'Example_4/hello_pkg.adb' is shown, demonstrating
+that 'hello_5.gpr' and 'hello_4.gpr' are being used to set the
+compilation search path.
+
+
+File: ada-mode.info,  Node: Use a Makefile,  Prev: Use multiple GNAT project files,  Up: Compiling Examples
+
+4.2.6 Use a Makefile
+--------------------
+
+In this example, we show how to use a Makefile to build an Ada project
+with GNAT, run the result, and clean the build directories.
+
+   Create the directories 'Example_4, Example_5' as specified in *note
+Use GNAT project file::, *note Use multiple GNAT project files::.
+
+   In 'Example_5', add the file:
+
+   'Makefile':
+
+     # build and run hello_5 project
+
+     all : build run
+
+     .PHONY : force
+
+     build : force
+             gprbuild -Phello_5.gpr hello_5
+
+     run :
+             ./hello_5
+
+     clean :
+             gnatclean -r -Phello_5
+
+     export GPR_PROJECT_PATH = ../Example_4/Gnat_Project
+
+     # Local Variables:
+     # eval:(ada-parse-prj-file "hello_5.adp")
+     # eval:(ada-select-prj-file "hello_5.adp")
+     # End:
+
+   Close and re-open 'Makefile'; the 'Local Variables' section sets the
+project file to 'hello_5.adp' when the 'Makefile' is opened.  You can
+also use <C-x C-e> to execute the select line after the 'Makefile' is
+opened, to change the project file back to 'hello_5.adp'.
+
+   In 'Makefile', invoke 'Tools | Compile...', and accept the default
+make command.  This runs the 'all' target, which builds 'hello_5' and
+runs it.
+
+
+File: ada-mode.info,  Node: Compiler errors,  Prev: Compiling Examples,  Up: Compiling Executing
+
+4.3 Compiler errors
+===================
+
+The 'Check syntax' and 'Build' commands, or running 'make', place
+compilation errors in a separate buffer named '*compilation*'.
+
+   Each line in this buffer will become active: you can simply click on
+it with the middle button of the mouse, or move point to it and press
+<RET>.  Emacs will then display the relevant source file and put point
+on the line and column where the error was found.
+
+   You can also press the 'C-x `' key ('next-error'), and Emacs will
+jump to the first error.  If you press that key again, it will move you
+to the second error, and so on.
+
+   Some error messages also include references to other files.  These
+references are accessed via 'C-c `'.
+
+
+File: ada-mode.info,  Node: Project files,  Next: Moving Through Ada Code,  Prev: Compiling Executing,  Up: Top
+
+5 Project files
+***************
+
+An Emacs Ada mode project file specifies what directories hold sources
+for your project, and allows you to customize the compilation commands
+and other things on a per-project basis.
+
+   The default file extension for Ada mode project files is '*.adp' or
+'*.prj'.  You can use a different extension by adding it to
+'ada-prj-file-extensions', and a different syntax by adding a parser
+function to 'ada-prj-parser-alist'.
+
+   Note that Ada mode project files '*.adp' are different than GNAT
+compiler project files '*.gpr'.  However, Emacs Ada mode can use a GNAT
+project file to specify the project directories.  If no other
+customization is needed, a GNAT project file can be used without an
+Emacs Ada mode project file.
+
+   If no Emacs Ada mode project file is specified, some Ada mode
+functions are not available.
+
+* Menu:
+
+* Project file overview::
+* Project file variables::
+
+
+File: ada-mode.info,  Node: Project file overview,  Next: Project file variables,  Prev: Project files,  Up: Project files
+
+5.1 Project file overview
+=========================
+
+Project files have a simple syntax; they may be edited directly.  Each
+line specifies a project variable name and its value, separated by "="
+(spaces not allowed):
+     src_dir=/Projects/my_project/src_1
+     src_dir=/Projects/my_project/src_2
+
+   Any line that does not have an "=" is a comment.
+
+   Some variables (like 'src_dir') are lists; multiple occurrences are
+concatenated.
+
+   There must be no space between the variable name and "=", and no
+trailing spaces after the value.
+
+   The current project file is given by the lisp variable
+'ada-prj-default-project-file', and shown by the menu command <Ada |
+Project Files | Show project>.
+
+   To set the project file, use the menu command 'Ada | Set Project
+...', or the elisp functions 'ada-parse-prj-file, ada-select-prj-file'.
+The latter can be added to a Makefile:
+
+     # Local Variables:
+     # eval: (ada-parse-prj-file "ada-mode.prj")
+     # eval: (ada-select-prj-file ada-mode.prj")
+     # End:
+
+   You specify either a GNAT project file or an Emacs Ada mode project
+file; if the file extension is '.gpr', the file is treated as a GNAT
+project file.  Extensions given by 'ada-prj-file-extensions' (default
+'.adp, .prj') are treated as an Emacs Ada mode project file.
+
+   After a project file is parsed, you can make it current again with
+just 'ada-select-prj-file', or by selecting it from the menu.
+
+
+File: ada-mode.info,  Node: Project file variables,  Prev: Project file overview,  Up: Project files
+
+5.2 Project file variables
+==========================
+
+To set a project variable that is a list, specify each element of the
+list on a separate line in the project file.  The value on the last line
+is the last element in the list.
+
+   A variable name that starts with '$' is set as a process environment
+variable, for processes launched from Emacs for the project.
+
+   In variable values, process environment variables can be referenced
+using the normal '$var' syntax.
+
+   Most project variables have defaults that can be changed by setting
+elisp variables; the table below identifies the elisp variable for each
+project variable.  Elisp variables corresponding to project variables
+that are lists are elisp lists.
+
+   In general, project variables are evaluated when referenced in Emacs
+Ada mode commands.  Relative file paths are expanded relative to the
+directory containing the project file.
+
+   Ada mode defines some project variables; others are defined by the
+compiler.
+
+   Here is the list of variables valid for all compilers.  In the
+default values, the current directory '"."' is the directory containing
+the project file.
+
+'ada_compiler' [default: 'ada-compiler, gnat']
+     Ada compiler for this project.  It must occur in the project file
+     before any compiler-specific project variable.
+
+'auto_case' [default: 'ada-auto-case, t']
+     Non-nil means automatically change case of preceding word while
+     typing.
+
+'case_identifier' [default: 'ada-case-identifier, mixed-case']
+     Indicates how to adjust the case of an Ada identifier.
+
+'case_keyword' [default: 'ada-case-keyword, lower-case']
+     Indicates how to adjust the case of an Ada keyword.
+
+'case_strict' [default: 'ada-case-strict, t']
+     If non-nil, 'ada-mixed-case' forces 'Mixed_Case' for identifiers.
+     Otherwise, 'ada-mixed-case' allows 'UPPERCASE' for identifiers.
+
+'casing' [default: 'ada-case-exception-file, nil']
+     List of files containing casing exceptions.  *Note Automatic
+     casing::.
+
+'el_file' [default: ]
+     The value is a file name, which is loaded as an elisp file when the
+     project file is parsed or selected.  This allows setting Ada mode
+     indentation variables, and any arbitrary elisp code used to
+     customize the project.
+
+'obj_dir' [default: '"."']
+     A list of directories to search for object and cross-reference
+     files.  Only needed if you are not using GPR files.
+
+'path_sep' [default: 'path-separator']
+     Separator character used in compiler search paths.
+
+'src_dir' [default: '"."']
+     A list of directories to search for source files.  Added to the
+     source directories from a GPR file.
+
+'xref_tool' [default: 'ada-xref-tool']
+     Cross reference tool for this project.
+
+     If 'gpr_query' is found in 'PATH', 'ada-xref-tool' defaults to
+     ''gpr_query'.  Otherwise, it defaults to ''gnat', which uses 'gnat
+     find'.
+
+   The following variables are valid with the GNAT compiler:
+
+'ada_project_path' [default: '""']
+     A list of directories to search for GNAT project files.
+
+     If set, the 'GPR_PROJECT_PATH' process environment variable is set
+     to this value in the child process that runs GNAT tools.  If not
+     set, 'GPR_PROJECT_PATH' in the child process is inherited from the
+     Emacs process.
+
+     If you have the 'GPR_PROJECT_PATH' or 'ADA_PROJECT_PATH'
+     environment variable set in the Emacs process correctly for all of
+     your projects, you do not need to set this project variable.
+
+     The project search path can also be set in GNAT aggregate projects.
+     However, the gnat tools do not make that path available to Emacs,
+     so you must duplicate it in an Emacs Ada project file.
+
+'gpr_file' [default: '""']
+     The GNAT project file.
+
+     If set, the source and project directories specified in the GNAT
+     project file are appended to 'src_dir' and 'ada_project_path'.
+     This allows specifying Ada source directories with a GNAT project
+     file, and other source directories with the Emacs project file.
+
+'gpr_project_path' [default: '""']
+     Same as 'ada_project_path'.
+
+'runtime' [default: 'nil']
+     If set, the name of the runtime, used as the value of the 'RTS'
+     command line option.
+
+'target' [default: 'nil']
+     If set, the name of the cross-compilation target, prepended to the
+     'gnat' executable name.
+
+   The following project variables are used by the 'Ada | Build' menu
+commands:
+
+'check_cmd' [default: 'ada-build-check-cmd']
+     Compiler commannd to syntax check a single file.
+
+'main' [default: basename of current file name]
+     File name of executable to build.
+
+'make_cmd' [default: 'ada-build-make-cmd']
+     Command to compile and link the application.
+
+'run_cmd' [default: 'ada-build-run-cmd']
+     Command to run the application.
+
+
+File: ada-mode.info,  Node: Moving Through Ada Code,  Next: Identifier completion,  Prev: Project files,  Up: Top
+
+6 Moving Through Ada Code
+*************************
+
+There are several commands to navigate through Ada code.  All these
+functions are available through the Ada menu and keybindings.
+
+   Some of these commands rely on cross reference facilities provided by
+the compiler; the standard Emacs Ada mode only supports the GNAT
+compiler, but others can be added (*note Other cross-reference::).
+
+'C-c C-d'
+     Move from any use of an identifier to its declaration, for from a
+     declaration to its body (if there is one).
+
+'C-c M-d'
+     Move from a child type declaration to the parent type declaration;
+     display a list of references if there is more than one parent.
+
+'C-c C-n'
+     Move to the next keyword in the current statement.
+
+     For example, if point is on 'if', move to 'then'.
+
+'C-c C-p'
+     Move to the previous keyword in the current statement.
+
+     For example, if point is on 'then', move to 'if'.
+
+'C-c C-o'
+     Switch between corresponding spec and body.  There are several
+     special cases:
+
+        * If the region is active, it is assumed to contain an Ada
+          package name; position point on the corresponding package
+          declaration.
+
+        * If point is in the start line of a top level child package
+          declaration (but not package body), or a child subprogram spec
+          or body, position point on the corresponding parent package
+          declaration.
+
+        * If point is in the start line of a top level separate body,
+          position point on the corresponding separate stub declaration.
+
+        * If point is in a subprogram declaration or body, position
+          point on the corresponding body or declaration in the other
+          file.
+
+        * If point is on a 'with' clause, position point on the
+          corresponding declaration.
+
+'C-c C-r'
+     Show all references to the identifier surrounding point.  Use 'C-x
+     `' ('next-error') to visit each reference (as for compilation
+     errors).
+
+'C-c C-x'
+     Show all declarations that override the primitive procedure at
+     point.  Use 'C-x `' ('next-error') to visit each reference (as for
+     compilation errors).
+
+'C-c M-x'
+     Show the declaration that the declaration at point overrides.
+
+'C-u SPACE'
+     Jump back to the previous location.
+
+'Ada | Misc | Refresh cross reference cache'
+     Cross reference information is loaded from the compiler output when
+     the first cross reference command is issued.  If the code is
+     recompiled after that, the cross reference information is reloaded
+     by invoking this menu command.
+
+
+File: ada-mode.info,  Node: Identifier completion,  Next: Indentation,  Prev: Moving Through Ada Code,  Up: Top
+
+7 Identifier completion
+***********************
+
+Emacs provides a general way of completing identifiers: 'M-/' (bound to
+'dabbrev-expand').  This is an easy way to type faster: you just have to
+type the first few letters of an identifier, and then loop through all
+the possible completions.
+
+   'M-/' works by parsing all open Ada files for possible completions.
+
+   For instance, if the words 'my_identifier' and 'my_subprogram' are
+the only words starting with 'my' in any of the open Ada files, then you
+will have this scenario:
+
+     You type:  myM-/
+     Emacs inserts:  'my_identifier'
+     If you press M-/ once again, Emacs replaces 'my_identifier' with
+     'my_subprogram'.
+     Pressing M-/ once more will bring you back to 'my_identifier'.
+
+   This is a very fast way to do completion, and the casing of words
+will also be respected.
+
+
+File: ada-mode.info,  Node: Indentation,  Next: Statement skeletons,  Prev: Identifier completion,  Up: Top
+
+8 Indentation
+*************
+
+Ada mode comes with a full set of rules for automatic indentation.  You
+can also configure the indentation, via the following variables:
+
+'ada-indent' (default value: 3)
+     Number of columns for default indentation.
+
+'ada-indent-broken' (default value: 2)
+     Number of columns to indent the continuation of a broken line.
+
+'ada-indent-comment-col-0' (default value: nil)
+     If non-nil, comments currently starting in column 0 are left in
+     column 0.  Otherwise, they are indented with previous comments or
+     code.
+
+'ada-indent-comment-gnat' (default value: nil)
+     If non-nil, comments are indented to meet the GNAT style check; one
+     of:
+        * multiple of 'ada-indent'
+        * next non-blank line
+        * previous non-blank line
+
+     Otherwise, they are indented with previous comments or code.
+
+'ada-indent-label' (default value: -3)
+     Number of columns to indent a label.
+
+'ada-indent-record-rel-type' (default value: 3)
+     Indentation for 'record' relative to 'type' or 'use'.
+
+'ada-indent-renames' (default value: 2)
+     Indentation for 'renames' relative to the matching subprogram
+     keyword.
+
+     If the subprogram has parameters then if 'ada-indent-renames' is
+     zero or less the indentation is abs 'ada-indent-renames' relative
+     to the open parenthesis; if 'ada-indent-renames' is one or more the
+     indentation is relative to the line containing the keyword.
+
+     If the subprogram has no parameters then 'ada-indent-broken' the
+     indentation is relative to the indentation of the line containing
+     the keyword.
+
+'ada-indent-return' (default value: 0)
+     Indentation for 'return' relative to the matching 'function'.
+
+     If the function has parameters, then if 'ada-indent-return' is zero
+     or less the indentation is abs 'ada-indent-return' relative to the
+     open parenthesis; if 'ada-indent-return' is one or more,
+     indentation is relative to line containing 'function'.
+
+     If the function has no parameters, 'ada-indent-broken' is used
+     relative to line containing 'function'.
+
+'ada-indent-use' (default value: ada-indent-broken)
+     Indentation for the lines in a 'use' statement.
+
+'ada-indent-when' (default value: 3)
+     Indentation for 'when' relative to 'exception', 'case', or 'or' in
+     'select'.
+
+'ada-indent-with' (default value: ada-indent-broken)
+     Indentation for the lines in a 'with' context clause.
+
+   The indentation variables are buffer local; the global value may be
+overridden in an elisp file invoked by an 'el_file' Emacs Ada mode
+project file statement, or in a file local variable section.
+
+   The following keys indent portions of the text:
+
+'RET'
+     Insert and indent a new line.
+
+'TAB'
+     Indent the current line, or the current region.
+
+'C-c TAB'
+     Indent the current statement or declaration.
+
+   The indentation algorithm relies on a grammar parser to identify the
+syntactic role for keywords and other words in the code.  If the code is
+accepted by the parser, the indentation is done according to the rules
+in the indentation engine.
+
+   If the code is not accepted (because it is partially complete during
+editing), the indentation engine falls back to the trivial algorithm of
+indenting each new line the same as the previous line.  Once enough new
+text has been entered to make the code acceptable to the parser, the
+statement or declaration is properly indented.
+
+   For example, if you are entering this code:
+
+     if A then
+        B;
+     end if;
+
+   when you type 'RET B', 'B' is indented to the same column as 'if',
+because the parser does not find 'end if;'.  Then when you type the
+final ';' followed by <TAB>, all three lines are indented, putting 'B'
+where it belongs.
+
+   To be more user friendly, the parser accepts a superset of the Ada
+grammer.  For example, the parser accepts this code for an 'if'
+statement:
+
+     if then
+     end if;
+
+   In general, any sequence of statements, and many expressions, may be
+omitted.
+
+   One way to easily insert empty statements like this is using *note
+Statement skeletons::.
+
+   In rare cases, the parser gets confused; it can be reset by invoking
+menu <Ada | Misc | Reset parser>.  Please report such cases as a bug.
+
+
+File: ada-mode.info,  Node: Statement skeletons,  Next: Aligning code,  Prev: Indentation,  Up: Top
+
+9 Statement skeletons
+*********************
+
+'C-c C-e' expands the previous one or two words into a statment
+skeleton.  For example, 'i f C-c C-e' expands to:
+
+     if  then
+     elsif  then
+     else
+     end if;
+
+   All skeleton expansions are accepted by the indentation parser, so
+this is a convenient way to insert statements with correct indentation.
+
+   For named statements (packages, loops, etc), the name is taken from
+the word before point, and the name of the statement from the word
+before that.
+
+   Some expansions prompt for more information, such as whether a spec
+or body is desired.  For example, 'package A_Package C-c C-e' first
+prompts for "body" or "spec".  If "spec" is selected, the following code
+is inserted:
+
+     package A_Package is
+     private
+     end A_Package;
+
+   Named blocks work similarly: 'declare A_Block C-c C-e' expands
+(without prompting) to:
+
+     A_Block:
+        declare
+        begin
+        exception
+        end A_Block;
+
+   Note that the order of the keyword 'declare' and the name 'A_Block'
+are reversed in the expansion; this may take some getting used to.
+Alternately, if no name is present in the buffer, you are prompted for a
+name: 'declare C-c C-e' first prompts for a name, then expands to the
+above.
+
+   The variable 'ada-skel-initial-string' defines what to insert in a
+newly created empty buffer.  It defaults to '{header}', which is a
+placeholder defined by 'ada-skel-header', which inserts a typical header
+with a copyright license (choice of GPL or restricted).  Users will
+typically want to override the definition of 'ada-skel-initial-string'
+and/or 'ada-skel-header', or provide more choices of copyright license.
+
+
+File: ada-mode.info,  Node: Aligning code,  Next: Automatic casing,  Prev: Statement skeletons,  Up: Top
+
+10 Aligning code
+****************
+
+Aligning code adds space in each line so that similar parts of
+successive lines are aligned vertically.  For example, a sequence of
+declarations:
+
+     A : Integer;
+     Another : Float := 1.0;
+     More : Integer := 2;
+
+   changes to this when aligned:
+
+     A       : Integer;
+     Another : Float   := 1.0;
+     More    : Integer := 2;
+
+   Alignment is invoked by 'C-c C-a', which aligns the sequence of
+statements surrounding point, or within the selected region.
+
+   Parameter lists are also aligned:
+
+        procedure Foo
+          (A : in Integer;
+           Another : out Float := 1.0;
+           More : in out Integer := 2);
+
+   is aligned to:
+
+        procedure Foo
+          (A       : in     Integer;
+           Another :    out Float   := 1.0;
+           More    : in out Integer := 2);
+
+
+File: ada-mode.info,  Node: Automatic casing,  Next: Comment Handling,  Prev: Aligning code,  Up: Top
+
+11 Automatic casing
+*******************
+
+Casing of identifiers, attributes and keywords is automatically
+performed while typing when the variable 'ada-auto-case' is non-nil (the
+default).  Every time you type a word separator, the previous word is
+automatically cased.
+
+   You can customize the automatic casing with the following variables:
+
+'ada-case-keyword'
+     Value must be one of:
+     'downcase-word'
+          Ada keywords will be lowercase.
+
+     'upcase-word'
+          Ada keywords will be uppercase.
+
+'ada-case-strict'
+     If non-nil, all identifiers are forced to 'Mixed_Case'; first
+     letter, and letter following "_" are uppercase; rest are lowercase.
+
+     If nil, the mixed case characters in identifiers are forced to
+     upper case, but the other characters are not modified.  That allows
+     typing all uppercase identifiers without defining a casing
+     exception.
+
+   You can define exceptions to these rules, in files specified by the
+variable 'ada-case-exception-file'.  Each line in a case exception file
+specifies the casing of one word or word fragment.  If an exception is
+defined in multiple files, the first occurrence is used.
+
+   If the word starts with an asterisk ('*'), it defines the casing of a
+word fragment (or "substring"); part of a word between two underscores
+or word boundary.
+
+   For example:
+
+     DOD
+     *IO
+     GNAT
+
+   The word fragment '*IO' applies to any word containing "_io";
+'Text_IO', 'Hardware_IO', etc.
+
+   There are two ways to add new items to this file: you can simply edit
+it as you would edit any text file.  Or you can position point on the
+word you want to add, and select menu 'Ada | Casing | Create full
+exception' or 'Ada | Casing | Create partial exception'.  The word will
+be added to the current list of exceptions and to the file.
+
+   It is sometimes useful to have multiple exception files.  For
+example, one could be the standard Ada acronyms, the second some company
+specific exceptions, and the last one some project specific exceptions.
+If you set up the variable 'ada-case-exception-file' as a list of files,
+each of them will be parsed and used in your emacs session.  When you
+create a new exception, you are prompted for the file to save it in.
+
+   Other keys and menu entries are defined:
+
+'C-c C-w'
+     Adjust case of the word at point.  With prefix arg, adjust case
+     even if in comment.  Normally, comments are not affected by case
+     adjust.
+
+'Ada | Casing | Adjust case region'
+     Adjust case in the active region.
+
+'Ada | Casing | Adjust case buffer'
+     Adjust case in the active buffer.
+
+
+File: ada-mode.info,  Node: Comment Handling,  Next: Key summary,  Prev: Automatic casing,  Up: Top
+
+12 Comment Handling
+*******************
+
+By default, comment lines get indented like Ada code.  There are a few
+additional functions to handle comments:
+
+'M-;'
+     If the region is active, comment or uncomment it.
+
+     If the current line is empty, start a comment.
+
+     Otherwise, add a comment at the end of the line, in a column given
+     by 'comment-column'.
+
+'M-q'
+     Fill the current comment paragraph.
+
+
+File: ada-mode.info,  Node: Key summary,  Next: Developer overview,  Prev: Comment Handling,  Up: Top
+
+13 Key summary
+**************
+
+This table summarizes the keys described in this manual.  Other keys are
+bound by Ada mode; see <C-h b> for a complete list.  The Ada menu also
+displays keys bound to menu operations.
+
+'M-/'
+     *Note Identifier completion::.  Complete the word before point;
+     repeat to cycle thru possible completions.
+
+'M-;'
+     *Note Comment Handling::.  If the region is active, comment or
+     uncomment it.
+
+'M-q'
+     *Note Comment Handling::.  Fill the current comment paragraph.
+
+'RET'
+     *Note Indentation::.  Insert and indent a new line.
+
+'TAB'
+     *Note Indentation::.  Indent the current line, or the current
+     region.
+
+'C-c TAB'
+     *Note Indentation::.  Indent the current statement or declaration.
+
+'C-c `'
+     *Note Compiler errors::.  Move to the location of the secondary
+     reference in the current compilation error.
+
+'C-c C-a'
+     *Note Aligning code::.  Align code.
+
+'C-c C-c'
+     *Note Compile commands::.  Build the current main program.
+
+'C-c C-d'
+     *Note Moving Through Ada Code::.  Move from any use of an
+     identifier to its declaration, for from a declaration to its body.
+
+'C-c M-d'
+     *Note Moving Through Ada Code::.  Move from a child type
+     declaration to the parent type declaration.
+
+'C-c C-e'
+     *Note Statement skeletons::.  Expand previous one or two words into
+     a statement or declaration skeleton.
+
+'C-c C-c'
+     *Note Compile commands::.  Build the current file.
+
+'C-c C-n'
+     *Note Moving Through Ada Code::.  Move to the next keyword in the
+     current statement.
+
+'C-c C-o'
+     *Note Moving Through Ada Code::.  Switch between corresponding spec
+     and body, or find other spec.
+
+'C-c C-p'
+     *Note Moving Through Ada Code::.  Move to the previous keyword in
+     the current statement.
+
+'C-c C-r'
+     *Note Moving Through Ada Code::.  Show all references to the
+     identifier surrounding point.
+
+'C-c C-w'
+     *Note Automatic casing::.  Adjust case of the word at point.  With
+     prefix arg, adjust case even if in comment.
+
+'C-c C-x'
+     *Note Moving Through Ada Code::.  Show all declarations that
+     override the primitive procedure at point.
+
+'C-c C-y'
+     *Note Automatic casing::.  Create case exception.
+
+'C-c `'
+     *Note Compiler errors::.  Move to the location of the next
+     secondary compilation error.
+
+'C-x `'
+     *Note Compiler errors::.  Move to the location of the next
+     compilation error or show result.
+
+'M-q'
+     *Note Comment Handling::.  Fill the current comment paragraph.
+
+
+File: ada-mode.info,  Node: Developer overview,  Next: GNU Free Documentation License,  Prev: Key summary,  Up: Top
+
+14 Developer overview
+*********************
+
+If you'd like to contribute to Ada mode, or just understand the sources,
+here's an overview.
+
+* Menu:
+
+* Directory structure::
+* Package organization::
+* OpenToken::
+* ELPA::
+* Savannah::
+* ada-france::
+
+
+File: ada-mode.info,  Node: Directory structure,  Next: Package organization,  Prev: Developer overview,  Up: Developer overview
+
+14.1 Directory structure
+========================
+
+'org.emacs.ada-mode'
+     Main source.
+
+     File extensions:
+     '*.el'
+          Elisp files; main code.
+
+     '*.elc'
+          Byte-compiled elisp files, not in the distribution.  Generated
+          by the Makefile target 'byte-compile', or by the Emacs package
+          installer.
+
+          Compiling the parse tables ('*-wy.el') speeds up loading them
+          significantly.  Compiling other files speeds up parsing, but
+          not noticeably.
+
+          One reason to byte-compile files is to find errors; the byte
+          compiler reports undefined variables, wrong argument counts,
+          etc.
+
+     '*-wy.el'
+          Parse tables, generated from the corresponding grammar '*.wy'
+          by the OpenToken tool 'wisi-generate.exe'.  These are in the
+          tarball distribution and the monotone repository so users and
+          Elisp developers don't have to install OpenToken.
+
+     '*-wy.output'
+          Diagnostic output from 'wisi-generate.exe', useful for tracing
+          parses while debugging a grammar issue.  Not in the tarball
+          distribution or the monotone repository.
+
+     '*.wy'
+          Grammar files, specifying the language to be parsed.  The
+          syntax for these grammar files is similar to that for bison
+          and wisent, but not the same; see the OpenToken documentation
+          for more info.
+
+          The wisi parser (in 'wisi-parse.el') is a generalized LALR
+          parser, so it tolerates some conflicts and ambiguities.  This
+          makes the grammars easier to write, and in particular makes it
+          possible to let the Ada grammar closely match Annex P of the
+          Ada Language Reference Manual (the syntax summary).
+
+     '*.texi'
+          Texinfo source for the user guides.
+
+     '*.html'
+          Generated user guide in HTML format.
+
+     '*.info'
+          Generated user guide in Emacs info format.
+
+'build'
+     Makefile for building the user guides, publishing to the web page
+     or Gnu ELPA, and building gpr-query.  The main targets are "all"
+     which builds the ada-mode ELPA packages, and "install" which builds
+     and installs gpr-query.
+
+     Test driver files used by build/Makefile and build/wisi/Makefile.
+
+'build/wisi'
+     Makefile for building and testing with the wisi-based parser.
+     Separate from 'build', because there used to be a SMIE-based
+     parser, and there might be another parser someday.
+
+     The emacs used to byte-compile and run tests is given by the 'make'
+     variable EMACS_EXE, which defaults to 'emacs'; it can be overridden
+     on the make command line or by an environment variable.
+
+     There are two top-level targets in this Makfile; "all" and "one".
+     "all" builds everthing and runs all the tests.  "one" runs one
+     test, which makes it easier to work on one test that is failing.
+
+     All the other targets are used by the top-level targets.
+
+'test'
+     All tests for Ada mode, gpr mode, parser.
+
+     Each test is run in a separate invocation of Emacs, so it is
+     completely independent of all other tests.
+
+     The tests are driven by the elisp code in 'build/*.el'.
+
+     In general, the Ada mode tests open the file, execute test actions,
+     re-indent, and re-captialize the entire file.  The result is diffed
+     with the original, and must match.
+
+     The test actions are defined by comments with the prefix
+     '--EMACSCMD:'; they are elisp forms that invoke Ada mode functions.
+     This is used to test navigation features and other parser effects.
+
+'test/Example_*'
+     Starting files for examples in user guide.
+
+'test/gpr'
+     Tests for gpr mode.
+
+'test/subdir'
+     More tests; allows testing path search features.
+
+'test/wisi'
+     Tests of the elisp wisi grammar compiler and parser.
+
+
+File: ada-mode.info,  Node: Package organization,  Next: OpenToken,  Prev: Directory structure,  Up: Developer overview
+
+14.2 Package organization
+=========================
+
+* Menu:
+
+* Ada mode::
+* gpr mode::
+* GNAT core::
+* Wisi::
+
+
+File: ada-mode.info,  Node: Ada mode,  Next: gpr mode,  Prev: Package organization,  Up: Package organization
+
+14.2.1 Ada mode
+---------------
+
+Ada mode consists of all files with 'ada-' prefix in the file name.
+
+'ada-mode.el'
+     The main file, implementing the keymap, menu, and top level
+     functionality.
+
+     It allows for different backend implementations for compiling,
+     cross-referencing, and indenting.  The functions for each of these
+     backends dispatch thru global variables that are set by Emacs Ada
+     mode project files.  They default to the GNAT compiler, the
+     gnatxref cross reference tool, and the ada-wisi indentation engine.
+
+'ada-build.el'
+     Provides functions for compiling Ada files without a Makefile (or
+     similar tool).
+
+'ada-fix-error.el'
+     Provides an interface to utilities for automatically fixing errors
+     reported by the compiler.  It dispatches to a compiler-specific
+     backend.
+
+'ada-gnat-compile.el'
+     Implements the Ada mode compiler functions for the GNAT compiler.
+
+'ada-gnat-xref.el'
+     Implements the Ada mode cross reference functions for the GNAT
+     compiler.
+
+'ada-grammar.*'
+     The Ada language grammar, and files generated from it by the
+     OpenToken tool 'wisi-generate.exe'.
+
+'ada-indent-user-options.el'
+     All user-settable options for the Ada indentation engine.
+
+'ada-mode-compat-23.4.el'
+     Defines functions used by Ada mode that are not in Emacs 23.4.
+
+     Emacs Ada mode is written for Emacs 24.3.  Emacs version 23.4 is
+     partially supported.  Earlier versions of Emacs are not supported.
+
+'ada-mode.texi'
+     The Ada mode user guide source and compiled versions.
+
+'ada-skel.el'
+     Skeletons for expansion of Ada syntax (*note Statement
+     skeletons::).  Extends the Emacs skeleton functions with "tokens",
+     inspired by the lamented Else package (which was inspired by DEC
+     LSE).
+
+'ada-wisi-opentoken.el'
+     Indentation functions useful when editing OpenToken code; an
+     example of extending the Ada mode indentation engine for special
+     circumstances.
+
+'ada-wisi.el'
+     Implements the Ada mode indentation functions for the wisi
+     indentation engine backend.
+
+
+File: ada-mode.info,  Node: gpr mode,  Next: GNAT core,  Prev: Ada mode,  Up: Package organization
+
+14.2.2 gpr mode
+---------------
+
+gpr mode consists of all files with 'gpr-' prefix in the file name.  The
+functions in each file are similar to the similarly-named Ada mode
+files.
+
+
+File: ada-mode.info,  Node: GNAT core,  Next: Wisi,  Prev: gpr mode,  Up: Package organization
+
+14.2.3 GNAT core
+----------------
+
+'gnat-core.el'
+     GNAT is actually a multi-language tool; it builds on top of the
+     multi-language gcc.
+
+     'gnat-core.el' is a start at a language-agnostic interface to the
+     GNAT tools.  It was first factored out from 'ada-gnat.el' and
+     'ada-mode.el' to support the multi-language 'gpr_query.el'.
+
+     More code currently in 'ada-mode.el' could be migrated to
+     'gnat-core.el', in particular the project file support.
+
+'gpr-query.el'
+     Provides an interface to the external multi-language
+     cross-reference tool 'gpr_query'.
+
+     Implements the Ada mode cross-reference functions for the
+     'gpr_query' backend, and a minor mode providing similar functions
+     for C++.
+
+
+File: ada-mode.info,  Node: Wisi,  Prev: GNAT core,  Up: Package organization
+
+14.2.4 Wisi
+-----------
+
+The "wisi" parser.  "wisi" used to be an acronym, but now it's just a
+name.
+
+'wisi.el'
+     Implements the lexer, the main parser driver, parser actions that
+     cache parser information in text properties, utilities for
+     indenting and navigating using the cached information, and general
+     setup.
+
+'wisi-compile.el'
+     Implements the parse table compiler.  'wisi-generate.exe' processes
+     the grammar source '*.wy' into an elisp source representation of a
+     parse table '*-wy.el'.  That is compiled into an internal structure
+     containing the state transitions and executable actions.  The
+     actions can be any elisp form; the intent is that they be calls to
+     the action functions provided by 'wisi.el'.
+
+'wisi-parse.el'
+     Implements the generalized LALR parser.
+
+
+File: ada-mode.info,  Node: OpenToken,  Next: ELPA,  Prev: Package organization,  Up: Developer overview
+
+14.3 OpenToken
+==============
+
+Ada mode uses the OpenToken tool 'wisi-generate.exe' to process the
+grammar sources into elisp parse tables.  See
+<http://stephe-leake.org/emacs/ada-mode/emacs-ada-mode.html> for current
+information about which version of OpenToken is required, and how to get
+it.
+
+   The Makefile variable 'WISI_OPENTOKEN' gives the path to the build
+directory for OpenToken; you probably need to override it with an
+external environment variable or on the 'make' command line.
+
+
+File: ada-mode.info,  Node: ELPA,  Prev: OpenToken,  Up: Developer overview
+
+14.4 ELPA
+=========
+
+Ada mode is published via the Gnu ELPA archive.  To test a new version
+of Ada mode, we use a local Gnu ELPA archive.  That requires fetching
+Gnu ELPA via git:
+
+     cd /Projects
+     git clone git://git.savannah.gnu.org/emacs/elpa.git
+
+   If you have an Emacs Savannah developer account, you can use:
+
+     cd /Projects
+     git clone <login>@git.savannah.gnu.org/emacs/elpa.git
+
+   'build/Makefile' contains targets for copying Ada mode source to the
+elpa workspace, and for building the elpa archive there.
+
+
+File: ada-mode.info,  Node: Savannah,  Prev: OpenToken,  Up: Developer overview
+
+14.5 Savannah
+=============
+
+The ada-mode web page, mailing list, and tarball download are hosted on
+savannah.non-gnu.org, project Emacs Ada mode
+(<https://savannah.nongnu.org/projects/ada-mode/>).  See the project
+admin page there for more information.
+
+
+File: ada-mode.info,  Node: ada-france,  Prev: OpenToken,  Up: Developer overview
+
+14.6 ada-france
+===============
+
+The source code for ada-mode is maintained in a monotone repository in
+the ada-france server <mtn://www.ada-france.org>.
+
+
+File: ada-mode.info,  Node: GNU Free Documentation License,  Next: Index,  Prev: Developer overview,  Up: Top
+
+Appendix A GNU Free Documentation License
+*****************************************
+
+                     Version 1.3, 3 November 2008
+
+     Copyright (C) 2000, 2001, 2002, 2007, 2008, 2009 Free Software Foundation, Inc.
+     <http://fsf.org/>
+
+     Everyone is permitted to copy and distribute verbatim copies
+     of this license document, but changing it is not allowed.
+
+  0. PREAMBLE
+
+     The purpose of this License is to make a manual, textbook, or other
+     functional and useful document "free" in the sense of freedom: to
+     assure everyone the effective freedom to copy and redistribute it,
+     with or without modifying it, either commercially or
+     noncommercially.  Secondarily, this License preserves for the
+     author and publisher a way to get credit for their work, while not
+     being considered responsible for modifications made by others.
+
+     This License is a kind of "copyleft", which means that derivative
+     works of the document must themselves be free in the same sense.
+     It complements the GNU General Public License, which is a copyleft
+     license designed for free software.
+
+     We have designed this License in order to use it for manuals for
+     free software, because free software needs free documentation: a
+     free program should come with manuals providing the same freedoms
+     that the software does.  But this License is not limited to
+     software manuals; it can be used for any textual work, regardless
+     of subject matter or whether it is published as a printed book.  We
+     recommend this License principally for works whose purpose is
+     instruction or reference.
+
+  1. APPLICABILITY AND DEFINITIONS
+
+     This License applies to any manual or other work, in any medium,
+     that contains a notice placed by the copyright holder saying it can
+     be distributed under the terms of this License.  Such a notice
+     grants a world-wide, royalty-free license, unlimited in duration,
+     to use that work under the conditions stated herein.  The
+     "Document", below, refers to any such manual or work.  Any member
+     of the public is a licensee, and is addressed as "you".  You accept
+     the license if you copy, modify or distribute the work in a way
+     requiring permission under copyright law.
+
+     A "Modified Version" of the Document means any work containing the
+     Document or a portion of it, either copied verbatim, or with
+     modifications and/or translated into another language.
+
+     A "Secondary Section" is a named appendix or a front-matter section
+     of the Document that deals exclusively with the relationship of the
+     publishers or authors of the Document to the Document's overall
+     subject (or to related matters) and contains nothing that could
+     fall directly within that overall subject.  (Thus, if the Document
+     is in part a textbook of mathematics, a Secondary Section may not
+     explain any mathematics.)  The relationship could be a matter of
+     historical connection with the subject or with related matters, or
+     of legal, commercial, philosophical, ethical or political position
+     regarding them.
+
+     The "Invariant Sections" are certain Secondary Sections whose
+     titles are designated, as being those of Invariant Sections, in the
+     notice that says that the Document is released under this License.
+     If a section does not fit the above definition of Secondary then it
+     is not allowed to be designated as Invariant.  The Document may
+     contain zero Invariant Sections.  If the Document does not identify
+     any Invariant Sections then there are none.
+
+     The "Cover Texts" are certain short passages of text that are
+     listed, as Front-Cover Texts or Back-Cover Texts, in the notice
+     that says that the Document is released under this License.  A
+     Front-Cover Text may be at most 5 words, and a Back-Cover Text may
+     be at most 25 words.
+
+     A "Transparent" copy of the Document means a machine-readable copy,
+     represented in a format whose specification is available to the
+     general public, that is suitable for revising the document
+     straightforwardly with generic text editors or (for images composed
+     of pixels) generic paint programs or (for drawings) some widely
+     available drawing editor, and that is suitable for input to text
+     formatters or for automatic translation to a variety of formats
+     suitable for input to text formatters.  A copy made in an otherwise
+     Transparent file format whose markup, or absence of markup, has
+     been arranged to thwart or discourage subsequent modification by
+     readers is not Transparent.  An image format is not Transparent if
+     used for any substantial amount of text.  A copy that is not
+     "Transparent" is called "Opaque".
+
+     Examples of suitable formats for Transparent copies include plain
+     ASCII without markup, Texinfo input format, LaTeX input format,
+     SGML or XML using a publicly available DTD, and standard-conforming
+     simple HTML, PostScript or PDF designed for human modification.
+     Examples of transparent image formats include PNG, XCF and JPG.
+     Opaque formats include proprietary formats that can be read and
+     edited only by proprietary word processors, SGML or XML for which
+     the DTD and/or processing tools are not generally available, and
+     the machine-generated HTML, PostScript or PDF produced by some word
+     processors for output purposes only.
+
+     The "Title Page" means, for a printed book, the title page itself,
+     plus such following pages as are needed to hold, legibly, the
+     material this License requires to appear in the title page.  For
+     works in formats which do not have any title page as such, "Title
+     Page" means the text near the most prominent appearance of the
+     work's title, preceding the beginning of the body of the text.
+
+     The "publisher" means any person or entity that distributes copies
+     of the Document to the public.
+
+     A section "Entitled XYZ" means a named subunit of the Document
+     whose title either is precisely XYZ or contains XYZ in parentheses
+     following text that translates XYZ in another language.  (Here XYZ
+     stands for a specific section name mentioned below, such as
+     "Acknowledgements", "Dedications", "Endorsements", or "History".)
+     To "Preserve the Title" of such a section when you modify the
+     Document means that it remains a section "Entitled XYZ" according
+     to this definition.
+
+     The Document may include Warranty Disclaimers next to the notice
+     which states that this License applies to the Document.  These
+     Warranty Disclaimers are considered to be included by reference in
+     this License, but only as regards disclaiming warranties: any other
+     implication that these Warranty Disclaimers may have is void and
+     has no effect on the meaning of this License.
+
+  2. VERBATIM COPYING
+
+     You may copy and distribute the Document in any medium, either
+     commercially or noncommercially, provided that this License, the
+     copyright notices, and the license notice saying this License
+     applies to the Document are reproduced in all copies, and that you
+     add no other conditions whatsoever to those of this License.  You
+     may not use technical measures to obstruct or control the reading
+     or further copying of the copies you make or distribute.  However,
+     you may accept compensation in exchange for copies.  If you
+     distribute a large enough number of copies you must also follow the
+     conditions in section 3.
+
+     You may also lend copies, under the same conditions stated above,
+     and you may publicly display copies.
+
+  3. COPYING IN QUANTITY
+
+     If you publish printed copies (or copies in media that commonly
+     have printed covers) of the Document, numbering more than 100, and
+     the Document's license notice requires Cover Texts, you must
+     enclose the copies in covers that carry, clearly and legibly, all
+     these Cover Texts: Front-Cover Texts on the front cover, and
+     Back-Cover Texts on the back cover.  Both covers must also clearly
+     and legibly identify you as the publisher of these copies.  The
+     front cover must present the full title with all words of the title
+     equally prominent and visible.  You may add other material on the
+     covers in addition.  Copying with changes limited to the covers, as
+     long as they preserve the title of the Document and satisfy these
+     conditions, can be treated as verbatim copying in other respects.
+
+     If the required texts for either cover are too voluminous to fit
+     legibly, you should put the first ones listed (as many as fit
+     reasonably) on the actual cover, and continue the rest onto
+     adjacent pages.
+
+     If you publish or distribute Opaque copies of the Document
+     numbering more than 100, you must either include a machine-readable
+     Transparent copy along with each Opaque copy, or state in or with
+     each Opaque copy a computer-network location from which the general
+     network-using public has access to download using public-standard
+     network protocols a complete Transparent copy of the Document, free
+     of added material.  If you use the latter option, you must take
+     reasonably prudent steps, when you begin distribution of Opaque
+     copies in quantity, to ensure that this Transparent copy will
+     remain thus accessible at the stated location until at least one
+     year after the last time you distribute an Opaque copy (directly or
+     through your agents or retailers) of that edition to the public.
+
+     It is requested, but not required, that you contact the authors of
+     the Document well before redistributing any large number of copies,
+     to give them a chance to provide you with an updated version of the
+     Document.
+
+  4. MODIFICATIONS
+
+     You may copy and distribute a Modified Version of the Document
+     under the conditions of sections 2 and 3 above, provided that you
+     release the Modified Version under precisely this License, with the
+     Modified Version filling the role of the Document, thus licensing
+     distribution and modification of the Modified Version to whoever
+     possesses a copy of it.  In addition, you must do these things in
+     the Modified Version:
+
+       A. Use in the Title Page (and on the covers, if any) a title
+          distinct from that of the Document, and from those of previous
+          versions (which should, if there were any, be listed in the
+          History section of the Document).  You may use the same title
+          as a previous version if the original publisher of that
+          version gives permission.
+
+       B. List on the Title Page, as authors, one or more persons or
+          entities responsible for authorship of the modifications in
+          the Modified Version, together with at least five of the
+          principal authors of the Document (all of its principal
+          authors, if it has fewer than five), unless they release you
+          from this requirement.
+
+       C. State on the Title page the name of the publisher of the
+          Modified Version, as the publisher.
+
+       D. Preserve all the copyright notices of the Document.
+
+       E. Add an appropriate copyright notice for your modifications
+          adjacent to the other copyright notices.
+
+       F. Include, immediately after the copyright notices, a license
+          notice giving the public permission to use the Modified
+          Version under the terms of this License, in the form shown in
+          the Addendum below.
+
+       G. Preserve in that license notice the full lists of Invariant
+          Sections and required Cover Texts given in the Document's
+          license notice.
+
+       H. Include an unaltered copy of this License.
+
+       I. Preserve the section Entitled "History", Preserve its Title,
+          and add to it an item stating at least the title, year, new
+          authors, and publisher of the Modified Version as given on the
+          Title Page.  If there is no section Entitled "History" in the
+          Document, create one stating the title, year, authors, and
+          publisher of the Document as given on its Title Page, then add
+          an item describing the Modified Version as stated in the
+          previous sentence.
+
+       J. Preserve the network location, if any, given in the Document
+          for public access to a Transparent copy of the Document, and
+          likewise the network locations given in the Document for
+          previous versions it was based on.  These may be placed in the
+          "History" section.  You may omit a network location for a work
+          that was published at least four years before the Document
+          itself, or if the original publisher of the version it refers
+          to gives permission.
+
+       K. For any section Entitled "Acknowledgements" or "Dedications",
+          Preserve the Title of the section, and preserve in the section
+          all the substance and tone of each of the contributor
+          acknowledgements and/or dedications given therein.
+
+       L. Preserve all the Invariant Sections of the Document, unaltered
+          in their text and in their titles.  Section numbers or the
+          equivalent are not considered part of the section titles.
+
+       M. Delete any section Entitled "Endorsements".  Such a section
+          may not be included in the Modified Version.
+
+       N. Do not retitle any existing section to be Entitled
+          "Endorsements" or to conflict in title with any Invariant
+          Section.
+
+       O. Preserve any Warranty Disclaimers.
+
+     If the Modified Version includes new front-matter sections or
+     appendices that qualify as Secondary Sections and contain no
+     material copied from the Document, you may at your option designate
+     some or all of these sections as invariant.  To do this, add their
+     titles to the list of Invariant Sections in the Modified Version's
+     license notice.  These titles must be distinct from any other
+     section titles.
+
+     You may add a section Entitled "Endorsements", provided it contains
+     nothing but endorsements of your Modified Version by various
+     parties--for example, statements of peer review or that the text
+     has been approved by an organization as the authoritative
+     definition of a standard.
+
+     You may add a passage of up to five words as a Front-Cover Text,
+     and a passage of up to 25 words as a Back-Cover Text, to the end of
+     the list of Cover Texts in the Modified Version.  Only one passage
+     of Front-Cover Text and one of Back-Cover Text may be added by (or
+     through arrangements made by) any one entity.  If the Document
+     already includes a cover text for the same cover, previously added
+     by you or by arrangement made by the same entity you are acting on
+     behalf of, you may not add another; but you may replace the old
+     one, on explicit permission from the previous publisher that added
+     the old one.
+
+     The author(s) and publisher(s) of the Document do not by this
+     License give permission to use their names for publicity for or to
+     assert or imply endorsement of any Modified Version.
+
+  5. COMBINING DOCUMENTS
+
+     You may combine the Document with other documents released under
+     this License, under the terms defined in section 4 above for
+     modified versions, provided that you include in the combination all
+     of the Invariant Sections of all of the original documents,
+     unmodified, and list them all as Invariant Sections of your
+     combined work in its license notice, and that you preserve all
+     their Warranty Disclaimers.
+
+     The combined work need only contain one copy of this License, and
+     multiple identical Invariant Sections may be replaced with a single
+     copy.  If there are multiple Invariant Sections with the same name
+     but different contents, make the title of each such section unique
+     by adding at the end of it, in parentheses, the name of the
+     original author or publisher of that section if known, or else a
+     unique number.  Make the same adjustment to the section titles in
+     the list of Invariant Sections in the license notice of the
+     combined work.
+
+     In the combination, you must combine any sections Entitled
+     "History" in the various original documents, forming one section
+     Entitled "History"; likewise combine any sections Entitled
+     "Acknowledgements", and any sections Entitled "Dedications".  You
+     must delete all sections Entitled "Endorsements."
+
+  6. COLLECTIONS OF DOCUMENTS
+
+     You may make a collection consisting of the Document and other
+     documents released under this License, and replace the individual
+     copies of this License in the various documents with a single copy
+     that is included in the collection, provided that you follow the
+     rules of this License for verbatim copying of each of the documents
+     in all other respects.
+
+     You may extract a single document from such a collection, and
+     distribute it individually under this License, provided you insert
+     a copy of this License into the extracted document, and follow this
+     License in all other respects regarding verbatim copying of that
+     document.
+
+  7. AGGREGATION WITH INDEPENDENT WORKS
+
+     A compilation of the Document or its derivatives with other
+     separate and independent documents or works, in or on a volume of a
+     storage or distribution medium, is called an "aggregate" if the
+     copyright resulting from the compilation is not used to limit the
+     legal rights of the compilation's users beyond what the individual
+     works permit.  When the Document is included in an aggregate, this
+     License does not apply to the other works in the aggregate which
+     are not themselves derivative works of the Document.
+
+     If the Cover Text requirement of section 3 is applicable to these
+     copies of the Document, then if the Document is less than one half
+     of the entire aggregate, the Document's Cover Texts may be placed
+     on covers that bracket the Document within the aggregate, or the
+     electronic equivalent of covers if the Document is in electronic
+     form.  Otherwise they must appear on printed covers that bracket
+     the whole aggregate.
+
+  8. TRANSLATION
+
+     Translation is considered a kind of modification, so you may
+     distribute translations of the Document under the terms of section
+     4.  Replacing Invariant Sections with translations requires special
+     permission from their copyright holders, but you may include
+     translations of some or all Invariant Sections in addition to the
+     original versions of these Invariant Sections.  You may include a
+     translation of this License, and all the license notices in the
+     Document, and any Warranty Disclaimers, provided that you also
+     include the original English version of this License and the
+     original versions of those notices and disclaimers.  In case of a
+     disagreement between the translation and the original version of
+     this License or a notice or disclaimer, the original version will
+     prevail.
+
+     If a section in the Document is Entitled "Acknowledgements",
+     "Dedications", or "History", the requirement (section 4) to
+     Preserve its Title (section 1) will typically require changing the
+     actual title.
+
+  9. TERMINATION
+
+     You may not copy, modify, sublicense, or distribute the Document
+     except as expressly provided under this License.  Any attempt
+     otherwise to copy, modify, sublicense, or distribute it is void,
+     and will automatically terminate your rights under this License.
+
+     However, if you cease all violation of this License, then your
+     license from a particular copyright holder is reinstated (a)
+     provisionally, unless and until the copyright holder explicitly and
+     finally terminates your license, and (b) permanently, if the
+     copyright holder fails to notify you of the violation by some
+     reasonable means prior to 60 days after the cessation.
+
+     Moreover, your license from a particular copyright holder is
+     reinstated permanently if the copyright holder notifies you of the
+     violation by some reasonable means, this is the first time you have
+     received notice of violation of this License (for any work) from
+     that copyright holder, and you cure the violation prior to 30 days
+     after your receipt of the notice.
+
+     Termination of your rights under this section does not terminate
+     the licenses of parties who have received copies or rights from you
+     under this License.  If your rights have been terminated and not
+     permanently reinstated, receipt of a copy of some or all of the
+     same material does not give you any rights to use it.
+
+  10. FUTURE REVISIONS OF THIS LICENSE
+
+     The Free Software Foundation may publish new, revised versions of
+     the GNU Free Documentation License from time to time.  Such new
+     versions will be similar in spirit to the present version, but may
+     differ in detail to address new problems or concerns.  See
+     <http://www.gnu.org/copyleft/>.
+
+     Each version of the License is given a distinguishing version
+     number.  If the Document specifies that a particular numbered
+     version of this License "or any later version" applies to it, you
+     have the option of following the terms and conditions either of
+     that specified version or of any later version that has been
+     published (not as a draft) by the Free Software Foundation.  If the
+     Document does not specify a version number of this License, you may
+     choose any version ever published (not as a draft) by the Free
+     Software Foundation.  If the Document specifies that a proxy can
+     decide which future versions of this License can be used, that
+     proxy's public statement of acceptance of a version permanently
+     authorizes you to choose that version for the Document.
+
+  11. RELICENSING
+
+     "Massive Multiauthor Collaboration Site" (or "MMC Site") means any
+     World Wide Web server that publishes copyrightable works and also
+     provides prominent facilities for anybody to edit those works.  A
+     public wiki that anybody can edit is an example of such a server.
+     A "Massive Multiauthor Collaboration" (or "MMC") contained in the
+     site means any set of copyrightable works thus published on the MMC
+     site.
+
+     "CC-BY-SA" means the Creative Commons Attribution-Share Alike 3.0
+     license published by Creative Commons Corporation, a not-for-profit
+     corporation with a principal place of business in San Francisco,
+     California, as well as future copyleft versions of that license
+     published by that same organization.
+
+     "Incorporate" means to publish or republish a Document, in whole or
+     in part, as part of another Document.
+
+     An MMC is "eligible for relicensing" if it is licensed under this
+     License, and if all works that were first published under this
+     License somewhere other than this MMC, and subsequently
+     incorporated in whole or in part into the MMC, (1) had no cover
+     texts or invariant sections, and (2) were thus incorporated prior
+     to November 1, 2008.
+
+     The operator of an MMC Site may republish an MMC contained in the
+     site under CC-BY-SA on the same site at any time before August 1,
+     2009, provided the MMC is eligible for relicensing.
+
+ADDENDUM: How to use this License for your documents
+====================================================
+
+To use this License in a document you have written, include a copy of
+the License in the document and put the following copyright and license
+notices just after the title page:
+
+       Copyright (C)  YEAR  YOUR NAME.
+       Permission is granted to copy, distribute and/or modify this document
+       under the terms of the GNU Free Documentation License, Version 1.3
+       or any later version published by the Free Software Foundation;
+       with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+       Texts.  A copy of the license is included in the section entitled ``GNU
+       Free Documentation License''.
+
+   If you have Invariant Sections, Front-Cover Texts and Back-Cover
+Texts, replace the "with...Texts."  line with this:
+
+         with the Invariant Sections being LIST THEIR TITLES, with
+         the Front-Cover Texts being LIST, and with the Back-Cover Texts
+         being LIST.
+
+   If you have Invariant Sections without Cover Texts, or some other
+combination of the three, merge those two alternatives to suit the
+situation.
+
+   If your document contains nontrivial examples of program code, we
+recommend releasing these examples in parallel under your choice of free
+software license, such as the GNU General Public License, to permit
+their use in free software.
+
+
+File: ada-mode.info,  Node: Index,  Prev: GNU Free Documentation License,  Up: Top
+
+Index
+*****
+
+ [index ]
+* Menu:
+
+* ada-case-adjust-at-point:              Automatic casing.     (line 64)
+* ada-case-create-exception:             Automatic casing.     (line 48)
+* ada-find-other-file:                   Moving Through Ada Code.
+                                                               (line 32)
+* ada-goto-declaration:                  Moving Through Ada Code.
+                                                               (line 14)
+* ada-goto-declaration-parent:           Moving Through Ada Code.
+                                                               (line 18)
+* ada-next-statement-keyword:            Moving Through Ada Code.
+                                                               (line 22)
+* ada-prev-statement-keyword:            Moving Through Ada Code.
+                                                               (line 27)
+* ada-show-overridden:                   Moving Through Ada Code.
+                                                               (line 65)
+* ada-show-overriding:                   Moving Through Ada Code.
+                                                               (line 60)
+* ada-show-references:                   Moving Through Ada Code.
+                                                               (line 55)
+* comment-dwim:                          Comment Handling.     (line 10)
+* fill-paragraph:                        Comment Handling.     (line 18)
+
+
+
+Tag Table:
+Node: Top945
+Node: Overview3599
+Node: Installation4809
+Node: Ada Reference Manual5711
+Node: gpr_query5987
+Node: Building GNATCOLL7505
+Node: Building gpr_query9277
+Node: ada_mode_gps_indent9729
+Node: ada_mode_gps_indent install10643
+Node: ada_mode_gps_indent configure11103
+Node: Customization11926
+Node: Non-standard file names12408
+Node: Other compiler14249
+Node: Other cross-reference14828
+Node: Other customization15570
+Node: Compiling Executing18915
+Node: Compile commands19650
+Node: Compiling Examples22301
+Node: No project files23133
+Node: Set compiler options28499
+Node: Set source search path30461
+Node: Use GNAT project file32914
+Node: Use multiple GNAT project files35688
+Node: Use a Makefile38408
+Node: Compiler errors39723
+Node: Project files40540
+Node: Project file overview41567
+Node: Project file variables43111
+Node: Moving Through Ada Code47986
+Node: Identifier completion50685
+Node: Indentation51647
+Node: Statement skeletons55995
+Node: Aligning code57780
+Node: Automatic casing58725
+Node: Comment Handling61429
+Node: Key summary61948
+Node: Developer overview64575
+Node: Directory structure64943
+Node: Package organization68914
+Node: Ada mode69149
+Node: gpr mode71345
+Node: GNAT core71628
+Node: Wisi72462
+Node: OpenToken73362
+Node: ELPA73964
+Node: Savannah74574
+Node: ada-france74912
+Node: GNU Free Documentation License75152
+Node: Index100313
+
+End Tag Table
