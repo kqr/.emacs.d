@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "ada-mode" "ada-mode.el" (23294 52968 780307
-;;;;;;  517000))
+;;;### (autoloads nil "ada-mode" "ada-mode.el" (23296 19949 366466
+;;;;;;  882000))
 ;;; Generated autoloads from ada-mode.el
 
 (autoload 'ada-parse-prj-file "ada-mode" "\
@@ -27,7 +27,7 @@ The major mode for editing Ada code.
 ;;;***
 
 ;;;### (autoloads nil "ada-wisi-opentoken" "ada-wisi-opentoken.el"
-;;;;;;  (23294 52969 650272 941000))
+;;;;;;  (23296 19949 994449 943000))
 ;;; Generated autoloads from ada-wisi-opentoken.el
 
 (autoload 'ada-indent-opentoken-mode "ada-wisi-opentoken" "\
@@ -38,8 +38,8 @@ Enable mode if ARG is positive
 
 ;;;***
 
-;;;### (autoloads nil "gpr-mode" "gpr-mode.el" (23294 52970 661232
-;;;;;;  762000))
+;;;### (autoloads nil "gpr-mode" "gpr-mode.el" (23296 19951 46421
+;;;;;;  650000))
 ;;; Generated autoloads from gpr-mode.el
 
 (autoload 'gpr-mode "gpr-mode" "\
@@ -56,7 +56,7 @@ The major mode for editing GNAT project files.
 ;;;;;;  "ada-indent-user-options.el" "ada-mode-compat.el" "ada-mode-pkg.el"
 ;;;;;;  "ada-prj.el" "ada-skel.el" "ada-stmt.el" "ada-wisi.el" "ada-xref.el"
 ;;;;;;  "gnat-core.el" "gpr-grammar-wy.el" "gpr-query.el" "gpr-skel.el"
-;;;;;;  "gpr-wisi.el") (23294 52969 941261 376000))
+;;;;;;  "gpr-wisi.el") (23296 19950 294441 873000))
 
 ;;;***
 

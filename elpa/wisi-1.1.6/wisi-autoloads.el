@@ -5,7 +5,7 @@
 
 ;;;### (autoloads nil nil ("parse_table-mode.el" "wisi-compat-24.2.el"
 ;;;;;;  "wisi-compile.el" "wisi-parse.el" "wisi-pkg.el" "wisi.el")
-;;;;;;  (23294 52965 671431 76000))
+;;;;;;  (23296 19946 278550 575000))
 
 ;;;***
 

@@ -592,7 +592,8 @@
 (push '("\\.ads\\'" . ada-mode) auto-mode-alist)
 (with-eval-after-load "ada"
   (setq-default flycheck-gnat-args "-gnat12")
-  (setq ada-language-version 'ada2005))
+  (setq ada-language-version 'ada2012)
+  (setq ada-skel-initial-string nil))
 
 ;;;; Emacs Speaks Statistics, used for R
 (autoload 'ess-r-mode "ess-site")
@@ -603,7 +604,7 @@
 (autoload 'slime-connected-p "slime")
 (add-hook 'lisp-mode-hook
           (lambda () (or (slime-connected-p)
-                    (save-excursion (slime)))))
+                   (save-excursion (slime)))))
 (with-eval-after-load "slime"  
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
@@ -633,6 +634,7 @@
 (autoload 'haskell-mode "haskell")
 (push '("\\.hs\\'" . haskell-mode) auto-mode-alist)
 (push '("\\.lhs\\'" . haskell-mode) auto-mode-alist)
+
 
 ;;; Calculator
 (autoload 'calc "calc")
