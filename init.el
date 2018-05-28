@@ -919,6 +919,18 @@
   (setq message-hidden-headers
         '("^User-Agent:" "^Face:" "^X-Face:" "^X-Draft-From"))
 
+  (defun message-split-quote ()
+    (interactive)
+    (save-excursion
+      (message-beginning-of-line)
+      (when (equal (following-char) ?>)
+        (re-search-backward "^[^>]")
+        (copy-region-as-kill (point)
+                             (progn (end-of-visual-line)
+                                    (point)))))
+    (insert "\n\n") (yank) (insert "\n> "))
+  (define-key message-mode-map (kbd "C-M-s") 'message-split-quote)
+  
   ;; Always sign outgoing messages
   (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
 
