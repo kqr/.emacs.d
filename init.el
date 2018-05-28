@@ -886,6 +886,19 @@
         notmuch-archive-tags '("-inbox" "-unread")
         notmuch-poll-script nil)
 
+  (labels ((ebrela (gh hu us st tg)
+                   (concat us (cons ?\100 nil)
+                           hu (list ?\x2e)
+                           tg)))
+    (let ((a (ebrela "word" "xkqr" "a" "fz" "org"))
+          (k (ebrela "spam" "rdw" "k" "protection" "se"))
+          (s (ebrela "i" "kth" "stjernl" "hope" "se")))
+      (setq notmuch-fcc-dirs
+            (list (cons a (concat a "/Sent"))
+                  (cons k (concat k "/Sent"))
+                  (cons s (concat s "/Sent")) 
+                  (cons ".*" "sent")))))
+  
   (setq notmuch-hello-sections
         '(notmuch-hello-insert-saved-searches
           notmuch-hello-insert-search
