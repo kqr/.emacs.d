@@ -925,10 +925,12 @@
       (message-beginning-of-line)
       (when (equal (following-char) ?>)
         (re-search-backward "^[^>]")
-        (copy-region-as-kill (point)
-                             (progn (end-of-visual-line)
-                                    (point)))))
-    (insert "\n\n") (yank) (insert "\n> "))
+        (let ((from (point))
+              (to (progn (end-of-visual-line) (point))))
+          (copy-region-as-kill from to))))
+    (insert "\n\n")
+    (yank)
+    (insert "\n> "))
   (define-key message-mode-map (kbd "C-M-s") 'message-split-quote)
   
   ;; Always sign outgoing messages
