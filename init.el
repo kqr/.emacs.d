@@ -677,6 +677,12 @@
 (push '("\\.hs\\'" . haskell-mode) auto-mode-alist)
 (push '("\\.lhs\\'" . haskell-mode) auto-mode-alist)
 
+(autoload 'scala-mode "scala-mode")
+(push '("\\.scala\\'" . scala-mode) auto-mode-alist)
+(push '("\\.sbt\\'" . scala-mode) auto-mode-alist)
+(with-eval-after-load "scala-mode"
+  (setq sbt:prefer-nested-projects t))
+
 
 ;;; Calculator
 (autoload 'calc "calc")
