@@ -158,6 +158,9 @@
       (org-level-7                           ((t :inherit unspecified)))
       (org-level-8                           ((t :inherit unspecified)))
       (org-level-9                           ((t :inherit unspecified)))
+
+      (org-document-title                    ((t :inherit unspecified :weight bold)))
+      (org-document-info                     ((t :inherit unspecified :slant italic)))
       
       (org-table                             ((t :inherit fixed-pitch)))
       (org-code                              ((t :inherit fixed-pitch)))

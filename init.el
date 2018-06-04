@@ -117,6 +117,47 @@
 ;; Config troubleshooting
 (autoload 'bug-hunter-init-file "bug-hunter" nil t)
 
+;; Printing directly from Emacs
+(when (require 'ps-print nil :noerror) 
+  (add-to-list
+   'ps-font-info-database
+   '(kqr-mixed-family (fonts (normal . "Helvetica")
+                             (bold . "Helvetica-Bold")
+                             (italic . "Helvetica-Oblique")
+                             (bold-italic . "Helvetica-BoldOblique")
+                             (org-verse . "Courier")
+                             (fixed-pitch . "Courier"))
+                      (size . 10.0)
+                      (line-height . 11.56)
+                      (space-width . 2.78)
+                      (avg-char-width . 5.09243)))
+  (setq ps-print-header t
+        ps-header-lines 1
+        ps-font-family 'kqr-mixed-family
+        ps-font-size '(10 . 10)
+        ps-line-spacing 0
+        ps-paper-type 'a4)
+  (setq ps-number-of-columns 1
+        ps-left-margin 60
+        ps-inter-column 20
+        ps-right-margin 70)
+  (setq ps-top-margin 20
+        ps-header-pad 0
+        ps-header-offset 10
+        ps-footer-offset 20
+        ps-bottom-margin 40)
+  (setq ps-print-header-frame t
+        ps-print-only-one-header t
+        ps-header-font-family 'kqr-mixed-family
+        ps-header-title-font-size '(10 . 10)
+        ps-header-font-size '(10 . 10)
+        ps-header-frame-alist
+        '((fore-color . 0.0)
+          (back-color . 1.0)
+          (shadow-color . 1.0)
+          (border-color . 0.0)
+          (border-width . 0.4))))
+
 ;;; UI
 ;;;; Typography
 ;; Fixed width font
@@ -263,7 +304,7 @@
 ;; bind to C-x C-r because I don't use find-file-read-only too much (though I
 ;; probably should...)
 (when (require 'recentf nil 'noerror)
-  (define-key global-map (kbd "C-x C-r") #'ivy-recentf))
+  (define-key global-map (kbd "C-x C-r") #'counsel-recentf))
 
 ;; Smart M-x and fuzzy matching everywhere
 (run-with-idle-timer
@@ -730,6 +771,7 @@
   (setq org-return-follows-link t
         org-list-allow-alphabetical t
         org-hide-emphasis-markers t
+        org-fontify-quote-and-verse-blocks t
         org-ellipsis "↴"
         org-show-context-detail
         '((agenda . ancestors)
@@ -808,7 +850,7 @@
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (case-fold-search nil))
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
-         subtree-end)))
+           subtree-end)))
 
   (setq org-agenda-custom-commands
         '((" " "Agenda"
