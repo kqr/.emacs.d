@@ -268,6 +268,9 @@
   (diminish 'centered-cursor-mode)
   (global-centered-cursor-mode +1))
 
+;;;; Word count in modeline
+(require 'word-count)
+(word-count-mode)
 ;;;; Tooltips
 (require 'popup nil 'noerror)
 
@@ -597,6 +600,8 @@
 (autoload 'projectile-command-map "projectile")
 (define-key global-map (kbd "<f8>") 'projectile-command-map)
 (with-eval-after-load "projectile"
+  (when (executable-find "uctags")
+    (setq projectile-tags-command "uctags -Re -f \"%s\" %s"))
   (projectile-mode +1)
   (when (require 'counsel-projectile nil 'noerror)
     (counsel-projectile-mode +1))
@@ -672,11 +677,12 @@
     (define-key global-map (kbd "C-c C-v C-r") 'meghanada-exec-main)))
 
 
-;;;; Haskell-mode maybe?
+;;;; Haskell mode maybe?
 (autoload 'haskell-mode "haskell")
 (push '("\\.hs\\'" . haskell-mode) auto-mode-alist)
 (push '("\\.lhs\\'" . haskell-mode) auto-mode-alist)
 
+;;;; Scala mode & sbt mode
 (autoload 'scala-mode "scala-mode")
 (push '("\\.scala\\'" . scala-mode) auto-mode-alist)
 (push '("\\.sbt\\'" . scala-mode) auto-mode-alist)
