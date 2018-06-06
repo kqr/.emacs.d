@@ -269,7 +269,9 @@
   (global-centered-cursor-mode +1))
 
 ;;;; Word count in modeline
-(require 'word-count)
+(require 'wc-mode)
+(define-key global-map (kbd "M-+") 'wc-mode)
+(setq wc-modeline-format "Words:%W%w(%gw)")
 
 ;;;; Tooltips
 (require 'popup nil 'noerror)
@@ -1022,6 +1024,16 @@
 (setq frame-background-mode 'light)
 (load-theme 'modern-minik t)
 (modern-minik-set-icons)
+
+;; But we also don't want a bunch of junk in the modeline...
+(mapc #'diminish
+      '(auto-fill-function
+        abbrev-mode
+        auto-revert-mode
+        yas-minor-mode
+        aggressive-indent-mode
+        mml-mode
+        outline-minor-mode))
 
 (load "init-local.el" 'noerror)
 
