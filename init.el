@@ -1037,15 +1037,23 @@
 (modern-minik-set-icons)
 
 ;; But we also don't want a bunch of junk in the modeline...
-(mapc #'diminish
-      '(auto-fill-function
-        abbrev-mode
-        auto-revert-mode
-        yas-minor-mode
-        aggressive-indent-mode
-        mml-mode
-        outline-minor-mode
-        latex-preview-pane-mode))
+(when (require 'diminish nil :noerror)
+  (setq eldoc-minor-mode-string "")
+  (defun clean-modeline ()
+    (mapc #'diminish
+          '(auto-fill-function
+            abbrev-mode
+            auto-revert-mode
+            yas-minor-mode
+            aggressive-indent-mode
+            mml-mode
+            outline-minor-mode
+            latex-preview-pane-mode)))
+  (clean-modeline)
+
+  ;; outline-minor-mode is really persistent
+  (add-hook 'outline-minor-mode-hook 'clean-modeline))
+
 
 (load "init-local.el" 'noerror)
 
