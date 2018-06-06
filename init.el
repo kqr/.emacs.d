@@ -1033,7 +1033,8 @@
         yas-minor-mode
         aggressive-indent-mode
         mml-mode
-        outline-minor-mode))
+        outline-minor-mode
+        latex-preview-pane-mode))
 
 (load "init-local.el" 'noerror)
 
