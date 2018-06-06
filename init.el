@@ -271,6 +271,7 @@
 ;;;; Word count in modeline
 (require 'wc-mode)
 (define-key global-map (kbd "M-+") 'wc-mode)
+(add-hook 'after-save-hook #'wc-reset)
 (setq wc-modeline-format "Words:%W%w(%gw)")
 
 ;;;; Tooltips
@@ -287,6 +288,16 @@
    display-buffer-alist))
 
 ;;; Interaction
+;; Custom key translations
+(with-eval-after-load 'iso-transl
+  (mapc (lambda (mapping)
+          (message "" mapping)
+          (define-key iso-transl-ctl-x-8-map
+            (car mapping) (cdr mapping)))
+        '((" " . "\ufeff")
+          ("." . "…")
+          ("m" . "·"))))
+
 ;;;; Navigation and fuzzy finding
 ;; Better buffer browser
 (autoload 'ibuffer "ibuffer")
