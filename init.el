@@ -1052,7 +1052,8 @@
   (clean-modeline)
 
   ;; outline-minor-mode is really persistent
-  (add-hook 'outline-minor-mode-hook 'clean-modeline))
+  (add-hook 'outline-minor-mode-hook 'clean-modeline)
+  (add-hook 'latex-preview-pane-mode-hook 'clean-modeline))
 
 
 (load "init-local.el" 'noerror)
