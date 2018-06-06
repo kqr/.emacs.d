@@ -270,7 +270,7 @@
 
 ;;;; Word count in modeline
 (require 'word-count)
-(word-count-mode)
+
 ;;;; Tooltips
 (require 'popup nil 'noerror)
 
