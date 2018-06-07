@@ -462,7 +462,7 @@
   (setq htmlize-output-type 'inline-css)
   
   ;; Automatically upload HTML of region-or-buffer to remote
-  (defvar htmlize-paste-it-target-directory "/two-wrongs.com:pastes/")
+  (defvar htmlize-paste-it-target-directory "/-:two-wrongs.com:pastes/")
   (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
 
   (defun htmlize-paste-it ()
