@@ -697,6 +697,14 @@
 (autoload 'haskell-mode "haskell")
 (push '("\\.hs\\'" . haskell-mode) auto-mode-alist)
 (push '("\\.lhs\\'" . haskell-mode) auto-mode-alist)
+(with-eval-after-load "haskell"
+  (setq haskell-stylish-on-save t)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  (add-hook 'haskell-mode-hook 'haskell-interactive-bring)
+  (add-hook 'haskell-mode-hook 'aggressive-indent-mode)
+  ;;  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  ;;  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  )
 
 ;;;; Scala mode & sbt mode
 (autoload 'scala-mode "scala-mode")
@@ -704,6 +712,15 @@
 (push '("\\.sbt\\'" . scala-mode) auto-mode-alist)
 (with-eval-after-load "scala-mode"
   (setq sbt:prefer-nested-projects t))
+
+
+;;;; Ansible mode
+(autoload 'ansible "ansible")
+(add-hook 'yaml-mode-hook 'ansible)
+(with-eval-after-load "ansible"
+  (setq ansible::vault-password-file "~/.vault_pass")
+  (add-hook 'ansible-hook 'ansible::auto-decrypt-encrypt))
+
 
 
 ;;; Calculator
@@ -949,6 +966,13 @@
         (notmuch-search-tag (list "-deleted") beg end)
       (notmuch-search-tag (list "+deleted") beg end)))
   (define-key notmuch-search-mode-map "k" #'notmuch-toggle-deleted-tag)
+
+  (defun notmuch-toggle-spam-tag (&optional beg end)
+    (interactive (notmuch-search-interactive-region))
+    (if (member "spam" (notmuch-search-get-tags))
+        (notmuch-search-tag (list "-spam") beg end)
+      (notmuch-search-tag (list "+spam" "-inbox" "-unread") beg end)))
+  (define-key notmuch-search-mode-map "x" #'notmuch-toggle-spam-tag)
 
   (setq notmuch-search-line-faces '(("unread" :weight bold))
         notmuch-show-indent-messages-width 4
