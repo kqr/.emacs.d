@@ -666,10 +666,13 @@
                 c-basic-offset 4))
 
 ;;;; Web mode (multi-modal editing of templates)
+;;;; BUT also js2-mode which is neat and can do JSX
+(autoload 'js2-mode "js2-mode" nil t)
+(push '("\\.js\\'" . js2-mode) auto-mode-alist)
+
 (autoload 'web-mode "web-mode"  nil t)
 (push '("\\.html\\'" . web-mode) auto-mode-alist)
 (push '("\\.css\\'" . web-mode) auto-mode-alist)
-(push '("\\.js\\'" . web-mode) auto-mode-alist)
 (eval-after-load "web-mode"
   '(progn
      (setq-default web-mode-enable-auto-pairing t
