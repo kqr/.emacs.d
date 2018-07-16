@@ -762,6 +762,11 @@
   (add-hook 'cfengine3-mode-hook 'eldoc-mode))
 
 
+;;;; Mustasche mode
+(autoload 'mustache-mode "mustache")
+(push '("\.mustache\'" . mustache-mode) auto-mode-alist)
+
+
 ;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
