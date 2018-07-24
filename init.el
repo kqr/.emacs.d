@@ -735,10 +735,11 @@
 (with-eval-after-load "haskell"
   (setq haskell-stylish-on-save t)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  (add-hook 'haskell-mode-hook 'haskell-interactive-bring)
-  (add-hook 'haskell-mode-hook 'aggressive-indent-mode)
-  (define-key haskell-interactive-mode-map
-    (kbd "RET") 'haskell-interactive-mode-return)
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (add-hook 'haskell-mode-hook (lambda () (aggressive-indent-mode -1)))
+  (add-hook 'haskell-interactive-mode-hook
+            (lambda () (define-key haskell-interactive-mode-map
+                    (kbd "RET") 'haskell-interactive-mode-return)))
   ;;  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
   ;;  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   )
