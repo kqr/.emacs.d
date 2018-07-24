@@ -183,11 +183,12 @@
       (org-agenda-date-today                 ((t :inherit unspecified)))
       (org-agenda-date-weekend               ((t :inherit unspecified)))
       (org-warning                           ((t :inherit error)))
-      
-      (font-lock-builtin-face                ((t :inherit unspecified)))
+
+      ;; XXX: Is this useful? Then it might be worth doing something better about it!
+      (font-lock-builtin-face                ((t :inherit unspecified :foreground "saddle brown")))
       (font-lock-constant-face               ((t :inherit unspecified)))
       (font-lock-variable-name-face          ((t :inherit unspecified)))
-      (font-lock-function-name-face          ((t :inherit unspecified)))
+      (font-lock-function-name-face          ((t :inherit unspecified :slant italic)))
       (font-lock-warning-face                ((t :inherit flycheck-warning)))
       (jdee-font-lock-public-face            ((t :inherit font-lock-keyword-face)))
       (jdee-font-lock-private-face           ((t :inherit font-lock-keyword-face)))

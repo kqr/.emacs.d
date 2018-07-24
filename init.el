@@ -329,7 +329,9 @@
             (car mapping) (cdr mapping)))
         '((" " . "\ufeff")
           ("." . "…")
-          ("m" . "·"))))
+          ("m" . "·")
+          ("s" . "§")
+          ("p" . "¶"))))
 
 ;;;; Navigation and fuzzy finding
 ;; Better buffer browser
@@ -735,6 +737,8 @@
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
   (add-hook 'haskell-mode-hook 'haskell-interactive-bring)
   (add-hook 'haskell-mode-hook 'aggressive-indent-mode)
+  (define-key haskell-interactive-mode-map
+    (kbd "RET") 'haskell-interactive-mode-return)
   ;;  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
   ;;  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   )
@@ -770,10 +774,9 @@
 ;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
-(eval-after-load "calc"
-  '(progn
-     (setq calc-display-trail nil
-	   calc-simplify-mode 'units)))
+(with-eval-after-load "calc"
+  (setq calc-display-trail t
+	calc-simplify-mode 'units))
 
 ;;; Orthodox file manager
 (autoload 'sunrise-cd "sunrise-commander")
@@ -938,12 +941,16 @@
     "Skip top level trees that do have a TODO or WAIT child item"
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (case-fold-search nil))
+      ;; FIXME: Check that the item is not scheduled!
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
            subtree-end)))
-
+  
   (setq org-agenda-custom-commands
         '((" " "Agenda"
-           ((tags "FILE={inbox.org}"
+           ((tags "FILE={projects.org}+LEVEL=1-noproject"
+                  ((org-agenda-overriding-header "Stuck projects")
+                   (org-agenda-skip-function #'skip-living-projects)))
+            (tags "FILE={inbox.org}"
                   ((org-agenda-overriding-header "Inbox")))
             (agenda "" nil)
             (tags "-@out/TODO"
@@ -951,17 +958,15 @@
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
-                   (org-agenda-todo-ignore-scheduled t)))
-            (tags "FILE={projects.org}+LEVEL=1-noproject"
-                  ((org-agenda-overriding-header "Stuck projects")
-                   (org-agenda-skip-function #'skip-living-projects)))))))
+                   (org-agenda-todo-ignore-scheduled t)))))))
 
 ;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (R . t)
                                  (python . t)
-                                 (lisp . t)))
+                                 (lisp . t)
+                                 (shell . t)))
   
   (setq org-babel-python-command "python3"
         org-export-with-smart-quotes t
