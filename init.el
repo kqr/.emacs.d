@@ -563,6 +563,10 @@
         (smerge-mode 1))))
   (add-hook 'find-file-hook 'sm-try-smerge t))
 
+;;;; Ediff mode for interactive comparison of text
+(when (require 'ediff nil 'noerror)
+  (setq-default ediff-window-setup-function 'ediff-setup-windows-plain))
+
 ;;;; Visual regexp (on steroids!)
 (autoload 'vr/query-replace "visual-regexp")
 (autoload 'vr/isearch-forward "visual-regexp")
