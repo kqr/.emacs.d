@@ -199,6 +199,9 @@
       (jdee-font-lock-constructor-face       ((t :inherit unspecified)))
       (sh-heredoc                            ((t :inherit font-lock-string-face)))
       (ess-backquoted-face                   ((t :inherit unspecified)))
+
+      (shm-current-face                      ((t :inherit show-paren-match)))
+      (shm-quarantine-face                   ((t :inherit default)))
       
       (outshine-level-1                      ((t :inherit font-lock-comment-face)))
       (outshine-level-2                      ((t :inherit font-lock-comment-face)))

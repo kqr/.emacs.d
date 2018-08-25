@@ -698,10 +698,19 @@
 (push '("\\.hs\\'" . haskell-mode) auto-mode-alist)
 (push '("\\.lhs\\'" . haskell-mode) auto-mode-alist)
 (with-eval-after-load "haskell"
-  (setq haskell-stylish-on-save t)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  (add-hook 'haskell-mode-hook 'haskell-interactive-bring)
-  (add-hook 'haskell-mode-hook 'aggressive-indent-mode)
+  (push "~/.emacs.d/lib/shm/" load-path)
+  (require 'haskell-interactive-mode)
+  (require 'haskell-process)
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (when (require 'shm nil :noerror)
+    (push 'haskell-mode aggressive-indent-excluded-modes)
+    (add-hook 'haskell-mode-hook
+              (lambda ()
+                (haskell-indentation-mode 0)
+                (haskell-indent-mode 0)))
+    (require 'shm-case-split)
+    (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
+    (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   ;;  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
   ;;  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   )
@@ -721,6 +730,15 @@
   (setq ansible::vault-password-file "~/.vault_pass")
   (add-hook 'ansible-hook 'ansible::auto-decrypt-encrypt))
 
+
+;;;; C# mode
+(autoload 'csharp-mode "csharp-mode")
+(push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
+(with-eval-after-load "csharp-mode"
+  (add-hook 'csharp-mode-hook
+            (lambda ()
+              (electric-indent-local-mode -1)
+              (c-set-offset 'inline-open 0))))
 
 
 ;;; Calculator
