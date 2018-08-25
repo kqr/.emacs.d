@@ -2,6 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
+(when (display-graphic-p)
+  (set-frame-font (font-spec :name "Hack" :size 14) t t))
+
 (when (require 'notmuch nil 'noerror)
   (setq-default notmuch-command "notmuch.sh"))
 

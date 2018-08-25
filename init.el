@@ -288,6 +288,39 @@
    display-buffer-alist))
 
 ;;; Interaction
+;; Tramp
+
+(with-eval-after-load "tramp"
+
+  (defun tramp-file-name-as-hop (vec)
+    "Return VEC formatted as a hop."
+    (concat (tramp-file-name-hop vec)
+            (tramp-file-name-method vec)
+            (and (tramp-file-name-method vec)
+                 tramp-postfix-method-format)
+            (tramp-file-name-user-domain vec)
+            (and (tramp-file-name-user-domain vec)
+                 tramp-postfix-user-format)
+            (tramp-file-name-host-port vec)
+            tramp-postfix-hop-format))
+  
+  (defun sudo-edit-current-file (as-user)
+    (interactive "sAs user? ")
+    (let ((position (point)))
+      (find-alternate-file
+       (if (file-remote-p (buffer-file-name))
+           (with-parsed-tramp-file-name buffer-file-name remote
+                                        (tramp-make-tramp-file-name
+                                         "sudo" as-user remote-domain
+                                         remote-host remote-port
+                                         remote-localname
+                                         (tramp-file-name-as-hop
+                                          (tramp-dissect-file-name
+                                           (buffer-file-name)))))
+         (concat "/sudo:root@localhost:"
+                 (buffer-file-name))))
+      (goto-char position))))
+
 ;; Custom key translations
 (with-eval-after-load 'iso-transl
   (mapc (lambda (mapping)
@@ -296,7 +329,9 @@
             (car mapping) (cdr mapping)))
         '((" " . "\ufeff")
           ("." . "…")
-          ("m" . "·"))))
+          ("m" . "·")
+          ("s" . "§")
+          ("p" . "¶"))))
 
 ;;;; Navigation and fuzzy finding
 ;; Better buffer browser
@@ -371,8 +406,8 @@
   (defun god-exempt-mode-p ()
     "Return non-nil if major-mode is exempt or inherits from exempt mode."
     (or (memq major-mode god-exempt-major-modes)
-       (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
-                 god-exempt-major-modes)))
+        (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
+                  god-exempt-major-modes)))
 
   (setq god-exempt-predicates '(god-exempt-mode-p god-special-mode-p))
   (setq god-exempt-major-modes
@@ -418,7 +453,7 @@
   (defun god-has-priority ()
     "Try to ensure that god mode keeps priority over other minor modes."
     (unless (and (consp (car minor-mode-map-alist))
-               (eq (caar minor-mode-map-alist) 'god-local-mode-map))
+                 (eq (caar minor-mode-map-alist) 'god-local-mode-map))
       (let ((godkeys (assq 'god-local-mode minor-mode-map-alist)))
         (assq-delete-all 'god-local-mode minor-mode-map-alist)
         (add-to-list 'minor-mode-map-alist godkeys))))
@@ -527,6 +562,10 @@
       (when (re-search-forward "^<<<<<<< " nil t)
         (smerge-mode 1))))
   (add-hook 'find-file-hook 'sm-try-smerge t))
+
+;;;; Ediff mode for interactive comparison of text
+(when (require 'ediff nil 'noerror)
+  (setq-default ediff-window-setup-function 'ediff-setup-windows-plain))
 
 ;;;; Visual regexp (on steroids!)
 (autoload 'vr/query-replace "visual-regexp")
@@ -667,7 +706,7 @@
 (autoload 'slime-connected-p "slime")
 (add-hook 'lisp-mode-hook
           (lambda () (or (slime-connected-p)
-                   (save-excursion (slime)))))
+                    (save-excursion (slime)))))
 (with-eval-after-load "slime"  
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
@@ -741,13 +780,24 @@
               (c-set-offset 'inline-open 0))))
 
 
+;;;; CFEngine mode
+(autoload 'cfengine3-mode "cfengine")
+(push '("\\.cf\\'" . cfengine3-mode) auto-mode-alist)
+(with-eval-after-load "cfengine"
+  (add-hook 'cfengine3-mode-hook 'eldoc-mode))
+
+
+;;;; Mustasche mode
+(autoload 'mustache-mode "mustache")
+(push '("\.mustache\'" . mustache-mode) auto-mode-alist)
+
+
 ;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
-(eval-after-load "calc"
-  '(progn
-     (setq calc-display-trail nil
-	   calc-simplify-mode 'units)))
+(with-eval-after-load "calc"
+  (setq calc-display-trail t
+	calc-simplify-mode 'units))
 
 ;;; Orthodox file manager
 (autoload 'sunrise-cd "sunrise-commander")
@@ -912,12 +962,16 @@
     "Skip top level trees that do have a TODO or WAIT child item"
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (case-fold-search nil))
+      ;; FIXME: Check that the item is not scheduled!
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
            subtree-end)))
-
+  
   (setq org-agenda-custom-commands
         '((" " "Agenda"
-           ((tags "FILE={inbox.org}"
+           ((tags "FILE={projects.org}+LEVEL=1-noproject"
+                  ((org-agenda-overriding-header "Stuck projects")
+                   (org-agenda-skip-function #'skip-living-projects)))
+            (tags "FILE={inbox.org}"
                   ((org-agenda-overriding-header "Inbox")))
             (agenda "" nil)
             (tags "-@out/TODO"
@@ -925,17 +979,15 @@
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
-                   (org-agenda-todo-ignore-scheduled t)))
-            (tags "FILE={projects.org}+LEVEL=1-noproject"
-                  ((org-agenda-overriding-header "Stuck projects")
-                   (org-agenda-skip-function #'skip-living-projects)))))))
+                   (org-agenda-todo-ignore-scheduled t)))))))
 
 ;;;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (R . t)
                                  (python . t)
-                                 (lisp . t)))
+                                 (lisp . t)
+                                 (shell . t)))
   
   (setq org-babel-python-command "python3"
         org-export-with-smart-quotes t

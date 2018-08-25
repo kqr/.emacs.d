@@ -1,0 +1,7 @@
+# key: filemode
+# name: filemode
+# --
+(autoload '${2:$1-mode} "$1")
+(push '("\\.cf\\'" . $2) auto-mode-alist)
+(with-eval-after-load "$1"
+  $0)
