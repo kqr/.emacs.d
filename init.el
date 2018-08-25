@@ -287,6 +287,16 @@
      (display-buffer-no-window . ((allow-no-window . t))))
    display-buffer-alist))
 
+;;;; Retain ANSI colour sequences in things like compilation buffers
+(when (require 'ansi-color nil 'noerror)
+  (defun ansi-coloured-buffer ()
+    "Interpret ANSI colour sequences correctly in current buffer."
+    (toggle-read-only)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    (toggle-read-only))
+  (add-hook 'compilation-filter-hook 'ansi-coloured-buffer))
+
+
 ;;; Interaction
 ;; Tramp
 
