@@ -350,7 +350,7 @@
 
 ;; Sidebar based on dired
 (define-key global-map (kbd "<C-tab>") 'dired-sidebar-jump-to-sidebar)
-(autoload 'dired-sidebar-toggle-sidebar "dired-sidebar")
+(autoload 'dired-sidebar-jump-to-sidebar "dired-sidebar")
 (with-eval-after-load "dired-sidebar"
   (setq dired-sidebar-subtree-line-prefix " .")
   (setq dired-sidebar-close-sidebar-on-file-open t))
@@ -890,7 +890,10 @@
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
-;;;; Regular Org operation   
+;;;; Regular Org operation
+  ;; Disable C-tab in org (some sort of forced archive toggle)
+  ;; because it plays a better role with dired-sidebar
+  (define-key org-mode-map (kbd "<C-tab>") nil)
   (setq org-return-follows-link t
         org-list-allow-alphabetical t
         org-hide-emphasis-markers t
