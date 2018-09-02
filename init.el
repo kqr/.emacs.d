@@ -955,7 +955,8 @@
         '(("~/org/projects.org" :maxlevel . 3)
           ("~/org/tickler.org" :maxlevel . 1)
           ("~/org/someday.org" :maxlevel . 3)
-          ("~/org/notes.org" :maxlevel . 2))
+          ("~/org/notes.org" :maxlevel . 2)
+          ("~/org/loop54.org" :maxlevel . 1))
         org-refile-allow-creating-parent-nodes 'confirm
         org-refile-use-outline-path t
         org-outline-path-complete-in-steps nil
@@ -964,7 +965,10 @@
         org-archive-location "~/org/archive.org::* %s")
 
 ;;;;; Agenda
-  (setq org-agenda-files '("/home/kqr/org/inbox.org" "/home/kqr/org/projects.org" "/home/kqr/org/tickler.org")
+  (setq org-agenda-files
+        '("/home/kqr/org/inbox.org"
+          "/home/kqr/org/projects.org"
+          "/home/kqr/org/tickler.org")
         org-agenda-dim-blocked-tasks 'invisible
         org-agenda-span 'day
         org-agenda-use-time-grid nil
