@@ -806,6 +806,7 @@
 (when (require 'timeclock nil 'noerror)
   (timeclock-mode-line-display)
   (display-time-mode)
+  (setq timeclock-file "org/log.timeclock")
   (define-key ctl-x-map "ti" 'timeclock-in)
   (define-key ctl-x-map "to" 'timeclock-out)
   (define-key ctl-x-map "tc" 'timeclock-change)
