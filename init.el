@@ -43,8 +43,8 @@
 (mapc (lambda (elt) (push elt package-archives))
       '(("elpa" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.milkbox.net/packages/")
-        ("org" . "http://orgmode.org/elpa/")
-        ("sunrise" . "http://joseito.republika.pl/sunrise-commander/")))
+        ;;("sunrise" . "http://joseito.republika.pl/sunrise-commander/")
+        ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
 
 ;; Where to put temp files
