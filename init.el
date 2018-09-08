@@ -936,6 +936,7 @@
         ;; When closing an item, ask for a note – just in case there's an
         ;; important thought there that may otherwise not get recorded
         org-log-done 'note
+        org-log-into-drawer t
         ;; Don't ask for a log message if cycling through with shift-arrow keys
         org-treat-S-cursor-todo-selection-as-state-change nil
 
