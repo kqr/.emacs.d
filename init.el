@@ -802,6 +802,18 @@
 (push '("\.mustache\'" . mustache-mode) auto-mode-alist)
 
 
+;;; Time reporting, clocking etc
+(when (require 'timeclock nil 'noerror)
+  (timeclock-mode-line-display)
+  (display-time-mode)
+  (setq timeclock-file "org/log.timeclock")
+  (define-key ctl-x-map "ti" 'timeclock-in)
+  (define-key ctl-x-map "to" 'timeclock-out)
+  (define-key ctl-x-map "tc" 'timeclock-change)
+  (define-key ctl-x-map "tr" 'timeclock-reread-log)
+  (define-key ctl-x-map "tu" 'timeclock-update-mode-line)
+  (define-key ctl-x-map "tw" 'timeclock-when-to-leave-string))
+
 ;;; Calculator
 (autoload 'calc "calc")
 (define-key global-map (kbd "<f12>") 'calc)
