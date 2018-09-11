@@ -298,6 +298,9 @@
 
 
 ;;; Interaction
+(when (eq system-type 'darwin)
+  (setq mac-right-option-modifier 'none))
+
 ;; Tramp
 
 (with-eval-after-load "tramp"

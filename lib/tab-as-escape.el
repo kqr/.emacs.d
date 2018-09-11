@@ -20,6 +20,7 @@
   ;; The translation map operates globally across all emacs clients,
   ;; so we only need to do this setup once
   (define-key key-translation-map (kbd "<backtab>") (kbd "TAB"))
+  (define-key key-translation-map (kbd "<S-tab>") (kbd "TAB"))
   (define-key key-translation-map (kbd "<S-iso-lefttab>") (kbd "TAB"))
 
   ;; Then we need to set up the decode map once globally, and then again
