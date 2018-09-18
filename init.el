@@ -804,6 +804,10 @@
 (autoload 'mustache-mode "mustache")
 (push '("\.mustache\'" . mustache-mode) auto-mode-alist)
 
+;;;; PHP mode
+(autoload 'php-mode "php-mode")
+(push '("\.php\'" . php-mode) auto-mode-alist)
+
 
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
@@ -1015,7 +1019,7 @@
                    (org-agenda-todo-ignore-scheduled t)))))
           ("w" "Work"
            ((agenda "" nil)
-            (todo ""
+            (tags "/TODO"
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
             (todo "WAIT"
