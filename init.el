@@ -658,8 +658,10 @@
 
 (autoload 'global-flycheck-mode "flycheck")
 (add-hook 'prog-mode-hook 'global-flycheck-mode)
-(eval-after-load "flycheck"
-  '(diminish 'flycheck-mode))
+(with-eval-after-load "flycheck"
+  (diminish 'flycheck-mode)
+  (setq flycheck-php-phpcs-executable "/usr/local/bin/phpcs"
+        flycheck-phpcs-standard "psr2"))
 
 ;;;; Project management
 (autoload 'projectile-command-map "projectile")
@@ -807,6 +809,8 @@
 ;;;; PHP mode
 (autoload 'php-mode "php-mode")
 (push '("\.php\'" . php-mode) auto-mode-alist)
+(with-eval-after-load "php-mode"
+  (add-hook 'php-mode-hook 'php-enable-psr2-coding-style))
 
 
 ;;; Time reporting, clocking etc
