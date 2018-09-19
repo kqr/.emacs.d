@@ -970,6 +970,17 @@
         org-lowest-priority ?C
         org-default-priority ?B)
 
+  (setq org-global-properties
+        '(("Effort_ALL" . "0 0:15 1:00 4:00 8:00 16:00 40:00 80:00")))
+  (setq org-columns-default-format
+        (concat
+         "%8TODO(State)"
+         "%40ITEM(Task) "
+         "%1PRIORITY(P) "
+         "%9Effort(Estimated){:} "
+         "%9CLOCKSUM(Worked) "
+         "%TAGS(Tags)"))
+  
 ;;;;; Capturing, refiling and archiving
   (setq org-capture-templates
         '(("i" ">inbox" entry (file "") "* %?\n")
