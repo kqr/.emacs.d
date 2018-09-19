@@ -1017,7 +1017,15 @@
       ;; FIXME: Check that the item is not scheduled!
       (and (re-search-forward "TODO\\|WAIT" subtree-end t)
            subtree-end)))
-  
+
+  (defun skip-entries-with-active-children ()
+    "Skip top level trees that do have a TODO or WAIT child item"
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (case-fold-search nil))
+      ;; FIXME: Check that the item is not scheduled!
+      (and (re-search-forward "TODO\\|WAIT" subtree-end t)
+           (org-end-of-line))))
+
   (setq org-agenda-custom-commands
         '((" " "Agenda"
            ((tags "FILE={projects.org}+LEVEL=1-noproject"
@@ -1036,7 +1044,9 @@
            ((agenda "" nil)
             (tags "/TODO"
                   ((org-agenda-overriding-header "To do (not scheduled)")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
+                   (org-agenda-skip-function
+                    (lambda () (or (org-agenda-skip-entry-if 'scheduled)
+                              (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
