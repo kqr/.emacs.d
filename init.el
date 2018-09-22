@@ -962,11 +962,12 @@
         org-treat-S-cursor-todo-selection-as-state-change nil
 
         ;; Let's simplify this...
-        ;; A = screamingly important
-        ;; B = normal day-to-day "you should do this or bad things will happen"
-        ;; C = fine if rescheduled
+        ;; A = screamingly important, shall be done today
+        ;; B = normal day-to-day "if you don't do this within a week or so, bad
+        ;; things will happen."
+        ;; C = fine if rescheduled indefinitely
         org-lowest-priority ?C
-        org-default-priority ?B)
+        org-default-priority ?C)
 
   (setq org-global-properties
         '(("Effort_ALL" . "0 0:15 1:00 4:00 8:00 16:00 40:00 80:00")))
@@ -1044,7 +1045,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
