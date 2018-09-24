@@ -1006,6 +1006,7 @@
           "~/org/tickler.org")
         org-agenda-dim-blocked-tasks 'invisible
         org-agenda-span 'day
+        org-agenda-start-on-weekday nil
         org-agenda-use-time-grid nil
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-deadline-if-done t)
@@ -1046,7 +1047,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
