@@ -786,13 +786,27 @@
 
 
 ;;;; C# mode
+(defun csharp-config ()
+  "Configure settings relating to C# development."
+  (when (require 'omnisharp nil 'noerror)
+    (add-hook 'csharp-mode-hook 'omnisharp-mode)
+    (when (require 'company nil 'noerror)
+      (add-to-list 'company-backends #'company-omnisharp)))
+
+  (setq c-syntactic-indentation t)
+  (c-set-style "ellemtel")
+  (setq c-basic-offset 4)
+  (setq tab-width 4)
+  (electric-indent-local-mode -1)
+  (c-set-offset 'inline-open 0)
+
+  (local-set-key (kbd "C-c r r") 'omnisharp-run-code-action-refactoring)
+  (local-set-key (kbd "C-c C-c") 'recompile))
+
 (autoload 'csharp-mode "csharp-mode")
 (push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
 (with-eval-after-load "csharp-mode"
-  (add-hook 'csharp-mode-hook
-            (lambda ()
-              (electric-indent-local-mode -1)
-              (c-set-offset 'inline-open 0))))
+  (add-hook 'csharp-mode-hook #'csharp-config t))
 
 
 ;;;; CFEngine mode
