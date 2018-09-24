@@ -815,8 +815,6 @@
 
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
-  (timeclock-mode-line-display)
-  (display-time-mode)
   (setq timeclock-file "~/org/log.timeclock")
   (define-key ctl-x-map "ti" 'timeclock-in)
   (define-key ctl-x-map "to" 'timeclock-out)
@@ -964,11 +962,12 @@
         org-treat-S-cursor-todo-selection-as-state-change nil
 
         ;; Let's simplify this...
-        ;; A = screamingly important
-        ;; B = normal day-to-day "you should do this or bad things will happen"
-        ;; C = fine if rescheduled
+        ;; A = screamingly important, shall be done today
+        ;; B = normal day-to-day "if you don't do this within a week or so, bad
+        ;; things will happen."
+        ;; C = fine if rescheduled indefinitely
         org-lowest-priority ?C
-        org-default-priority ?B)
+        org-default-priority ?C)
 
   (setq org-global-properties
         '(("Effort_ALL" . "0 0:15 1:00 4:00 8:00 16:00 40:00 80:00")))
