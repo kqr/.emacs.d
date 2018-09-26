@@ -488,8 +488,12 @@
              (company--insert-candidate company-common)
            (company-complete-selection))))
      
-     (setq company-frontends '(company-preview-frontend)
-           company-idle-delay 0)
+     (setq company-frontends
+           '(company-pseudo-tooltip-unless-just-one-frontend
+             company-preview-if-just-one-frontend
+             company-echo-metadata-frontend))
+     (setq company-idle-delay 0)
+     (setq company-tooltip-align-annotations t)
 
      ;; We don't want completion to prevent us from actually navigating the code
      (define-key company-active-map (kbd "<return>") nil)
@@ -786,35 +790,39 @@
 
 
 ;;;; C# mode
-(defun csharp-config ()
-  "Configure settings relating to C# development."
+
+
+(autoload 'csharp-mode "csharp-mode")
+(push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
+(with-eval-after-load "csharp-mode"
+  (defun csharp-config ()
+    "Configure settings relating to C# development."
+    (setq c-syntactic-indentation t)
+    (c-set-style "ellemtel")
+    (setq c-basic-offset 4)
+    (setq tab-width 4)
+    (electric-indent-local-mode -1)
+    (c-set-offset 'inline-open 0)
+
+    (local-set-key (kbd "C-c C-c") 'recompile))
+
+  (add-hook 'csharp-mode-hook #'csharp-config t)
+  
   (when (require 'omnisharp nil 'noerror)
-    (defun omnisharp-config ()
+    (when (require 'company nil 'noerror)
+      (add-to-list 'company-backends #'company-omnisharp))
+
+    (add-hook 'csharp-mode-hook 'omnisharp-enable t)
+    
+    (defun omnisharp-enable ()
+      "Configure advanced settings related to C# development."
       (omnisharp-mode)
       (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
       (local-set-key (kbd "C-c r m") 'omnisharp-rename-interactively)
       (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
       (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
-      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages-with)
-      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))
-    
-    (add-hook 'csharp-mode-hook 'omnisharp-config)
-    (when (require 'company nil 'noerror)
-      (add-to-list 'company-backends #'company-omnisharp)))
-
-  (setq c-syntactic-indentation t)
-  (c-set-style "ellemtel")
-  (setq c-basic-offset 4)
-  (setq tab-width 4)
-  (electric-indent-local-mode -1)
-  (c-set-offset 'inline-open 0)
-
-  (local-set-key (kbd "C-c C-c") 'recompile))
-
-(autoload 'csharp-mode "csharp-mode")
-(push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
-(with-eval-after-load "csharp-mode"
-  (add-hook 'csharp-mode-hook #'csharp-config t))
+      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
+      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))))
 
 
 ;;;; CFEngine mode

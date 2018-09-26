@@ -259,7 +259,7 @@
       
       (company-tooltip                       ((t :inherit fringe)))
       (company-preview                       ((t :inherit font-lock-comment-face)))
-      (company-preview-common                ((t :inherit default)))
+      (company-preview-common                ((t :inherit font-lock-comment-face))) ;; was default
       (company-scrollbar-bg                  ((t :inherit fringe)))
       (company-scrollbar-fg                  ((t :inherit match)))
       (company-tooltip-common                ((t :inherit lazy-highlight)))
@@ -267,6 +267,8 @@
       (company-tooltip-search                ((t :inherit match)))
       (company-tooltip-search-selection      ((t :inherit match)))
       (company-tooltip-selection             ((t :inherit match)))
+      (company-tooltip-annotation            ((t :inherit font-lock-comment-face)))
+      (company-tooltip-annotation-selection  ((t :inherit font-lock-comment-face)))
       
       (dired-header                          ((t :inherit font-lock-keyword-face)))
       (dired-flagged                         ((t :inherit error)))
