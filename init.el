@@ -789,7 +789,16 @@
 (defun csharp-config ()
   "Configure settings relating to C# development."
   (when (require 'omnisharp nil 'noerror)
-    (add-hook 'csharp-mode-hook 'omnisharp-mode)
+    (defun omnisharp-config ()
+      (omnisharp-mode)
+      (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
+      (local-set-key (kbd "C-c r m") 'omnisharp-rename-interactively)
+      (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
+      (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
+      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages-with)
+      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))
+    
+    (add-hook 'csharp-mode-hook 'omnisharp-config)
     (when (require 'company nil 'noerror)
       (add-to-list 'company-backends #'company-omnisharp)))
 
@@ -800,7 +809,6 @@
   (electric-indent-local-mode -1)
   (c-set-offset 'inline-open 0)
 
-  (local-set-key (kbd "C-c r r") 'omnisharp-run-code-action-refactoring)
   (local-set-key (kbd "C-c C-c") 'recompile))
 
 (autoload 'csharp-mode "csharp-mode")
