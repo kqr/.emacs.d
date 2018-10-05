@@ -10,6 +10,8 @@
 ;;
 ;;; Code:
 (setq gc-cons-threshold 87654321)
+(add-to-list 'exec-path "/usr/local/bin")
+(add-to-list 'exec-path "~/.local/bin")
 
 ;;; GUI removal
 ;; Remove a bunch of distracting, unnecessary, silly graphic components We want
@@ -696,11 +698,12 @@
 (push '("\\.js\\'" . js2-mode) auto-mode-alist)
 
 (autoload 'web-mode "web-mode"  nil t)
-(push '("\\.html\\'" . web-mode) auto-mode-alist)
-(push '("\\.css\\'" . web-mode) auto-mode-alist)
+(push '("\\.html\\'" . web-mode) auto-mode-alist)  ;; HTML files
+(push '("\\.css\\'" . web-mode) auto-mode-alist)   ;; CSS files
+(push '("\\.hbs\\'" . web-mode) auto-mode-alist)   ;; Handlebars templating
 (eval-after-load "web-mode"
   '(progn
-     (setq-default web-mode-enable-auto-pairing t
+     (setq-default web-mode-enable-auto-pairing nil
                    web-mode-enable-css-colorization nil
                    web-mode-css-indent-offset 2)
 
@@ -768,6 +771,7 @@
                 (haskell-indent-mode 0)))
     (require 'shm-case-split)
     (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
+    (setq shm-program-name "~/.local/bin/structured-haskell-mode")
     (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   ;;  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
   ;;  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
