@@ -584,7 +584,14 @@
 
 ;;;; Ediff mode for interactive comparison of text
 (when (require 'ediff nil 'noerror)
-  (setq-default ediff-window-setup-function 'ediff-setup-windows-plain))
+  (setq ediff-split-window-function 'split-window-horizontally
+        ediff-window-setup-function 'ediff-setup-windows-plain)
+  (defun ediff-outline-show-all ()
+    (when (or (eq major-mode 'org-mode)
+              (eq major-mode 'outline-mode)
+              outline-minor-mode)
+      (outline-show-all)))
+  (add-hook 'ediff-prepare-buffer-hook #'ediff-outline-show-all))
 
 ;;;; Visual regexp (on steroids!)
 (autoload 'vr/query-replace "visual-regexp")
