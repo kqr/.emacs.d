@@ -53,7 +53,10 @@
          `(
            ;; Set the default face, which is inherited by most things
            (((t :background ,theme-background-color :foreground ,theme-default-color))
-            default
+            default)
+
+           ;; Set these without the background, so we can inherit from them
+           (((t :foreground ,theme-default-color))
             variable-pitch
             fixed-pitch)
 
@@ -145,7 +148,7 @@
       (minibuffer-prompt                     ((t :inherit font-lock-keyword-face)))
 
       (ivy-current-match                     ((t :inherit match)))
-      (ivy-minibuffer-match-face-1           ((t :inherit default)))
+      (ivy-minibuffer-match-face-1           ((t :inherit fixed-pitch)))
       (ivy-minibuffer-match-face-2           ((t :inherit lazy-highlight)))
       (ivy-minibuffer-match-face-3           ((t :inherit lazy-highlight)))
       (ivy-minibuffer-match-face-4           ((t :inherit lazy-highlight)))
@@ -156,29 +159,29 @@
       (undo-tree-visualizer-current-face     ((t :inherit warning)))
       (undo-tree-visualizer-unmodified-face  ((t :inherit font-lock-string-face)))
       
-      (org-level-1                           ((t :inherit default
+      (org-level-1                           ((t :inherit fixed-pitch
                                                  :height 1.2
                                                  :weight bold)))
-      (org-level-2                           ((t :inherit default
+      (org-level-2                           ((t :inherit fixed-pitch
                                                  :height 1.1
                                                  :slant italic)))
-      (org-level-3                           ((t :inherit default)))
-      (org-level-4                           ((t :inherit default)))
-      (org-level-5                           ((t :inherit default)))
-      (org-level-6                           ((t :inherit default)))
-      (org-level-7                           ((t :inherit default)))
-      (org-level-8                           ((t :inherit default)))
-      (org-level-9                           ((t :inherit default)))
+      (org-level-3                           ((t :inherit fixed-pitch)))
+      (org-level-4                           ((t :inherit fixed-pitch)))
+      (org-level-5                           ((t :inherit fixed-pitch)))
+      (org-level-6                           ((t :inherit fixed-pitch)))
+      (org-level-7                           ((t :inherit fixed-pitch)))
+      (org-level-8                           ((t :inherit fixed-pitch)))
+      (org-level-9                           ((t :inherit fixed-pitch)))
 
-      (org-document-title                    ((t :inherit default :weight bold)))
-      (org-document-info                     ((t :inherit default :slant italic)))
+      (org-document-title                    ((t :inherit fixed-pitch :weight bold)))
+      (org-document-info                     ((t :inherit fixed-pitch :slant italic)))
       
       (org-table                             ((t :inherit fixed-pitch)))
       (org-code                              ((t :inherit fixed-pitch)))
       (org-block                             ((t :inherit fixed-pitch)))
       (org-block-background                  ((t :inherit fixed-pitch)))
       (org-link                              ((t :inherit link)))
-      (org-footnote                          ((t :inherit font-lock-string-face)))
+      (org-footnote                          ((t :inherit font-lock-comment-face)))
       (org-special-keyword                   ((t :inherit font-lock-comment-face)))
 
       (org-todo                              ((t :inherit font-lock-keyword-face)))
@@ -186,44 +189,44 @@
       (org-agenda-done                       ((t :inherit font-lock-comment-face)))
       (org-upcoming-deadline                 ((t :inherit font-lock-keyword-face)))
       (org-scheduled                         ((t :inherit font-lock-comment-face)))
-      (org-scheduled-today                   ((t :inherit default)))
+      (org-scheduled-today                   ((t :inherit fixed-pitch)))
       (org-scheduled-previously              ((t :inherit warning)))
       (org-priority                          ((t :inherit font-lock-type-face)))
       (org-agenda-structure                  ((t :inherit font-lock-type-face)))
-      (org-agenda-date                       ((t :inherit default)))
-      (org-agenda-date-today                 ((t :inherit default)))
-      (org-agenda-date-weekend               ((t :inherit default)))
+      (org-agenda-date                       ((t :inherit fixed-pitch)))
+      (org-agenda-date-today                 ((t :inherit fixed-pitch)))
+      (org-agenda-date-weekend               ((t :inherit fixed-pitch)))
       (org-warning                           ((t :inherit error)))
 
       ;; XXX: Is this useful? Then it might be worth doing something better about it!
-      (font-lock-builtin-face                ((t :inherit default :foreground "saddle brown")))
-      (font-lock-constant-face               ((t :inherit default)))
-      (font-lock-variable-name-face          ((t :inherit default)))
-      (font-lock-function-name-face          ((t :inherit default :slant italic)))
+      (font-lock-builtin-face                ((t :inherit fixed-pitch :foreground "saddle brown")))
+      (font-lock-constant-face               ((t :inherit fixed-pitch)))
+      (font-lock-variable-name-face          ((t :inherit fixed-pitch)))
+      (font-lock-function-name-face          ((t :inherit fixed-pitch :slant italic)))
       (font-lock-warning-face                ((t :inherit flycheck-warning)))
       (jdee-font-lock-public-face            ((t :inherit font-lock-keyword-face)))
       (jdee-font-lock-private-face           ((t :inherit font-lock-keyword-face)))
       (jdee-font-lock-protected-face         ((t :inherit font-lock-keyword-face)))
       (jdee-font-lock-modifier-face          ((t :inherit font-lock-keyword-face)))
-      (jdee-font-lock-package-face           ((t :inherit default)))
-      (jdee-font-lock-number-face            ((t :inherit default)))
-      (jdee-font-lock-constant-face          ((t :inherit default)))
-      (jdee-font-lock-constructor-face       ((t :inherit default)))
+      (jdee-font-lock-package-face           ((t :inherit fixed-pitch)))
+      (jdee-font-lock-number-face            ((t :inherit fixed-pitch)))
+      (jdee-font-lock-constant-face          ((t :inherit fixed-pitch)))
+      (jdee-font-lock-constructor-face       ((t :inherit fixed-pitch)))
       (sh-heredoc                            ((t :inherit font-lock-string-face)))
-      (ess-backquoted-face                   ((t :inherit default)))
+      (ess-backquoted-face                   ((t :inherit fixed-pitch)))
 
       (shm-current-face                      ((t :inherit show-paren-match)))
-      (shm-quarantine-face                   ((t :inherit default)))
+      (shm-quarantine-face                   ((t :inherit fixed-pitch)))
       
       (outshine-level-1                      ((t :inherit font-lock-comment-face)))
       (outshine-level-2                      ((t :inherit font-lock-comment-face)))
       (outshine-level-3                      ((t :inherit font-lock-comment-face)))
       (outshine-level-4                      ((t :inherit font-lock-comment-face)))
       
-      (whitespace-hspace                     ((t :inherit default)))
-      (whitespace-newline                    ((t :inherit default)))
-      (whitespace-tab                        ((t :inherit default)))
-      (whitespace-space                      ((t :inherit default)))
+      (whitespace-hspace                     ((t :inherit fixed-pitch)))
+      (whitespace-newline                    ((t :inherit fixed-pitch)))
+      (whitespace-tab                        ((t :inherit fixed-pitch)))
+      (whitespace-space                      ((t :inherit fixed-pitch)))
       (whitespace-trailing                   ((t :inherit font-lock-keyword-face)))
       (column-enforce-face                   ((t :inherit error)))
 
@@ -233,7 +236,7 @@
       (flycheck-fringe-warning               ((t :inherit warning)))
       (flycheck-fringe-error                 ((t :inherit error)))
       
-      (message-header-subject                ((t :inherit default)))
+      (message-header-subject                ((t :inherit fixed-pitch)))
       (message-cited-text                    ((t :inherit font-lock-string-face)))
       (message-header-cc                     ((t :inherit font-lock-comment-face)))
       (message-header-name                   ((t :inherit font-lock-comment-face)))
@@ -275,15 +278,15 @@
       (dired-ignore                          ((t :inherit font-lock-comment-face)))
       (dired-mark                            ((t :inherit font-lock-string-face)))
       (dired-marked                          ((t :inherit lazy-highlight)))
-      (dired-perm-write                      ((t :inherit default)))
-      (dired-directory                       ((t :inherit default :weight bold)))
+      (dired-perm-write                      ((t :inherit fixed-pitch)))
+      (dired-directory                       ((t :inherit fixed-pitch :weight bold)))
       (dired-symlink                         ((t :inherit link)))
       (dired-warning                         ((t :inherit font-lock-warning-face)))
       
       (sr-active-path-face                   ((t :inherit dired-header)))
       (sr-editing-path-face                  ((t :inherit error)))
       (sr-highlight-path-face                ((t :inherit dired-header)))
-      (sr-passive-path-face                  ((t :inherit default)))
+      (sr-passive-path-face                  ((t :inherit fixed-pitch)))
 
       (sr-marked-file-face                   ((t :inherit lazy-highlight)))
       (sr-marked-dir-face                    ((t :inherit lazy-highlight)))
@@ -293,22 +296,22 @@
       (sr-symlink-directory-face             ((t :inherit dired-symlink :weight bold)))
       (sr-broken-link-face                   ((t :inherit dired-warning)))
       
-      (sr-compressed-face                    ((t :inherit default)))
-      (sr-encrypted-face                     ((t :inherit default)))
-      (sr-html-face                          ((t :inherit default)))
-      (sr-log-face                           ((t :inherit default)))
-      (sr-packaged-face                      ((t :inherit default)))
-      (sr-xml-face                           ((t :inherit default)))
+      (sr-compressed-face                    ((t :inherit fixed-pitch)))
+      (sr-encrypted-face                     ((t :inherit fixed-pitch)))
+      (sr-html-face                          ((t :inherit fixed-pitch)))
+      (sr-log-face                           ((t :inherit fixed-pitch)))
+      (sr-packaged-face                      ((t :inherit fixed-pitch)))
+      (sr-xml-face                           ((t :inherit fixed-pitch)))
 
-      (font-latex-sedate-face                ((t :inherit default)))
-      (font-latex-warning-face               ((t :inherit default)))
-      (font-latex-sectioning-0-face          ((t :inherit default)))
-      (font-latex-sectioning-1-face          ((t :inherit default)))
-      (font-latex-sectioning-2-face          ((t :inherit default)))
-      (font-latex-sectioning-3-face          ((t :inherit default)))
-      (font-latex-sectioning-4-face          ((t :inherit default)))
-      (font-latex-sectioning-5-face          ((t :inherit default)))
-      (font-latex-sectioning-6-face          ((t :inherit default)))
+      (font-latex-sedate-face                ((t :inherit fixed-pitch)))
+      (font-latex-warning-face               ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-0-face          ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-1-face          ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-2-face          ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-3-face          ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-4-face          ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-5-face          ((t :inherit fixed-pitch)))
+      (font-latex-sectioning-6-face          ((t :inherit fixed-pitch)))
       
 
       )))
