@@ -801,8 +801,6 @@
 
 
 ;;;; C# mode
-
-
 (autoload 'csharp-mode "csharp-mode")
 (push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
 (with-eval-after-load "csharp-mode"
@@ -811,6 +809,7 @@
     (setq c-syntactic-indentation t)
     (c-set-style "ellemtel")
     (setq c-basic-offset 4)
+    (c-set-offset 'arglist-close 0)
     (setq tab-width 4)
     (electric-indent-local-mode -1)
     (c-set-offset 'inline-open 0)
@@ -857,6 +856,7 @@
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
   (setq timeclock-file "~/org/log.timeclock")
+  (setq timeclock-workday 26640)
   (define-key ctl-x-map "ti" 'timeclock-in)
   (define-key ctl-x-map "to" 'timeclock-out)
   (define-key ctl-x-map "tc" 'timeclock-change)
