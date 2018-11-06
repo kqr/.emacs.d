@@ -653,6 +653,8 @@
      (define-key global-map (kbd "M-r") 'sp-join-sexp))))
 
 ;;;; Indentation/whitespace stuff
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
 (when (require 'aggressive-indent nil 'noerror)
   (diminish 'aggressive-indent-mode)
   (electric-indent-mode -1)
