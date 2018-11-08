@@ -109,7 +109,7 @@
 
 ;; Let text extend beyond the window width
 (setq-default truncate-lines t
-              
+
               ;; Prevent Emacs from mixing tabs and spaces.
               indent-tabs-mode nil)
 
@@ -120,7 +120,7 @@
 (autoload 'bug-hunter-init-file "bug-hunter" nil t)
 
 ;; Printing directly from Emacs
-(when (require 'ps-print nil :noerror) 
+(when (require 'ps-print nil :noerror)
   (add-to-list
    'ps-font-info-database
    '(kqr-mixed-family (fonts (normal . "Helvetica")
@@ -266,7 +266,7 @@
 
     (diminish 'simpler-centered-cursor-mode)
     (add-hook 'org-mode-hook #'switch-to-simple-scc))
-  
+
   (diminish 'centered-cursor-mode)
   (global-centered-cursor-mode +1))
 
@@ -318,7 +318,7 @@
                  tramp-postfix-user-format)
             (tramp-file-name-host-port vec)
             tramp-postfix-hop-format))
-  
+
   (defun sudo-edit-current-file (as-user)
     (interactive "sAs user? ")
     (let ((position (point)))
@@ -395,7 +395,7 @@
        #'outshine-narrow-to-subtree)
      (define-key outline-minor-mode-map (kbd "M-h")
        #'widen)
-     
+
      (setq-default outshine-startup-folded-p t)
 
      ;; Allow narrowing to subtree even when inside subtree
@@ -413,7 +413,7 @@
   (when (require 'tab-as-escape nil 'noerror)
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
-  
+
   (when (require 'god-mode-isearch nil 'noerror)
     (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
     (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable))
@@ -439,7 +439,7 @@
           notmuch-show-mode
           notmuch-tree-mode
           sldb-mode))
-  
+
   (god-mode-all)
 
   (defun god-mode-update-cursor (&optional _)
@@ -450,8 +450,8 @@
         (progn
           (set-face-background 'mode-line "dodger blue")
           (set-face-foreground 'mode-line "dodgerblue4"))
-      (set-face-background 'mode-line "antiquewhite2")
-      (set-face-foreground'mode-line "antiquewhite4")))
+      (set-face-background 'mode-line "#222222")
+      (set-face-foreground 'mode-line "peachpuff4")))
 
   (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
   (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
@@ -489,7 +489,7 @@
          (if (not (equal company-common company-prefix))
              (company--insert-candidate company-common)
            (company-complete-selection))))
-     
+
      (setq company-frontends
            '(company-pseudo-tooltip-unless-just-one-frontend
              company-preview-if-just-one-frontend
@@ -514,7 +514,7 @@
 ;; Tried autoloading but that didn't work and I don't have time to troubleshoot
 (when (require 'htmlize nil 'noerror)
   (setq htmlize-output-type 'inline-css)
-  
+
   ;; Automatically upload HTML of region-or-buffer to remote
   (defvar htmlize-paste-it-target-directory "/-:two-wrongs.com:pastes/")
   (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
@@ -665,7 +665,7 @@
 (eval-after-load "whitespace"
   '(progn
      (setq-default whitespace-style
-		   '(face trailing tabs spaces newline space-mark tab-mark newline-mark))     
+		   '(face trailing tabs spaces newline space-mark tab-mark newline-mark))
      (setq-default whitespace-display-mappings
 		   '((space-mark 32 [183] [46])
 		     (tab-mark 9 [187 9] [92 9])
@@ -690,7 +690,7 @@
 
   (defun load-two-wrongs ()
     (load (concat (projectile-project-root) "two-wrongs.el")))
-  
+
   (add-hook 'projectile-find-file-hook #'load-two-wrongs))
 
 ;;;; C and C++ mode
@@ -738,7 +738,7 @@
 (add-hook 'lisp-mode-hook
           (lambda () (or (slime-connected-p)
                     (save-excursion (slime)))))
-(with-eval-after-load "slime"  
+(with-eval-after-load "slime"
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
   (defun popup-slime-documentation (symbol-name)
@@ -819,13 +819,13 @@
     (local-set-key (kbd "C-c C-c") 'recompile))
 
   (add-hook 'csharp-mode-hook #'csharp-config t)
-  
+
   (when (require 'omnisharp nil 'noerror)
     (when (require 'company nil 'noerror)
       (add-to-list 'company-backends #'company-omnisharp))
 
     (add-hook 'csharp-mode-hook 'omnisharp-enable t)
-    
+
     (defun omnisharp-enable ()
       "Configure advanced settings related to C# development."
       (omnisharp-mode)
@@ -937,7 +937,7 @@
 (defun capture-mail-inbox (args)
   "Run mail capture with ARGS."
   (interactive "P")
-  (org-capture args "m")) 
+  (org-capture args "m"))
 
 (define-prefix-command 'kqr-org-prefix)
 (define-key 'kqr-org-prefix (kbd "l") #'org-store-link)
@@ -967,15 +967,15 @@
         '((agenda . ancestors)
           (bookmark-jump . lineage)
           (isearch . lineage)
-          (default . ancestors)))  
+          (default . ancestors)))
 
   ;; TODO: Set faces for org-level-1 (1.618) and org-level-2 (1.618Q?)
   (when (require 'org-bullets nil 'noerror)
     (setq org-bullets-bullet-list '("⊛")))
-  
+
   (org-set-emph-re 'org-emphasis-regexp-components
                    org-emphasis-regexp-components)
-  
+
 ;;;; Using Org as a planner
   (setq org-todo-keywords
         '((sequence "HOLD(h)" "WAIT(w)" "TODO(t)" "|")
@@ -993,7 +993,7 @@
         ;; repeated task it also has a new scheduled date so it's okay if it
         ;; becomes a todo because it won't clutter until scheduled anyway!
         org-todo-repeat-to-state "TODO"
-        
+
         org-enforce-todo-dependencies t
         org-hierarchical-todo-statistics nil
 
@@ -1022,7 +1022,7 @@
          "%9Effort(Estimated){:} "
          "%9CLOCKSUM(Worked) "
          "%TAGS(Tags)"))
-  
+
 ;;;;; Capturing, refiling and archiving
   (setq org-capture-templates
         '(("i" ">inbox" entry (file "") "* %?\n")
@@ -1102,13 +1102,13 @@
                                  (python . t)
                                  (lisp . t)
                                  (shell . t)))
-  
+
   (setq org-babel-python-command "python3"
         org-export-with-smart-quotes t
         org-export-with-emphasize t
         org-export-with-sub-superscripts nil
         org-export-with-footnotes t)
-  
+
   (when (require 'ox-latex nil 'noerror)
     (push (append '(("tufte-handout"
                      "\\documentclass[a4paper,11pt]{tufte-handout}"
@@ -1174,9 +1174,9 @@
       (setq notmuch-fcc-dirs
             (list (cons a (concat a "/Sent"))
                   (cons k (concat k "/Sent"))
-                  (cons s (concat s "/Sent")) 
+                  (cons s (concat s "/Sent"))
                   (cons ".*" "sent")))))
-  
+
   (setq notmuch-hello-sections
         '(notmuch-hello-insert-saved-searches
           notmuch-hello-insert-search
@@ -1223,7 +1223,7 @@
     (yank)
     (insert "\n> "))
   (define-key message-mode-map (kbd "C-M-s") 'message-split-quote)
-  
+
   ;; Always sign outgoing messages
   (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
 
@@ -1243,7 +1243,7 @@
 ;; will override it otherwise
 
 ;; We like our theme
-(setq frame-background-mode 'light)
+(setq frame-background-mode 'dark)
 (load-theme 'modern-minik t)
 (modern-minik-set-icons)
 

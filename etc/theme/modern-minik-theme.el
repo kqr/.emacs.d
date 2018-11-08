@@ -198,7 +198,6 @@
       (org-agenda-date-weekend               ((t :inherit fixed-pitch)))
       (org-warning                           ((t :inherit error)))
 
-      ;; XXX: Is this useful? Then it might be worth doing something better about it!
       (font-lock-builtin-face                ((t :inherit font-lock-keyword-face :weight normal)))
       (font-lock-constant-face               ((t :inherit fixed-pitch)))
       (font-lock-variable-name-face          ((t :inherit fixed-pitch)))
@@ -302,6 +301,8 @@
       (sr-log-face                           ((t :inherit fixed-pitch)))
       (sr-packaged-face                      ((t :inherit fixed-pitch)))
       (sr-xml-face                           ((t :inherit fixed-pitch)))
+
+      (git-commit-summary                    ((t :inherit font-lock-string-face)))
 
       (font-latex-sedate-face                ((t :inherit fixed-pitch)))
       (font-latex-warning-face               ((t :inherit fixed-pitch)))
