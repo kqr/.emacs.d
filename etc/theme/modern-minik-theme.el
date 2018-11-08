@@ -38,14 +38,14 @@
       " ")))
 
 (let* ((light? (equal 'light frame-background-mode))
-       (theme-default-color (if light? "black" "antiquewhite2"))
-       (theme-background-color (if light? "#fbf1e4" "black"))
+       (theme-default-color (if light? "black" "#e6dfd3"))
+       (theme-background-color (if light? "#fbf1e4" "#141414"))
        (theme-strong-highlight "antiquewhite3")
-       (theme-weak-highlight (if light? "antiquewhite2" "gray11"))
+       (theme-weak-highlight (if light? "antiquewhite2" "#222222"))
        (theme-error-color "red")
-       (theme-primary-accent (if light? "chocolate3" "sienna3"))
-       (theme-secondary-accent (if light? "dodgerblue3" "dodgerblue"))
-       (theme-strong-diminuitive (if light? "forest green" "palegreen3"))
+       (theme-primary-accent (if light? "chocolate3" "#E8B964"))
+       (theme-secondary-accent (if light? "dodgerblue3" "#4e8fda"))
+       (theme-strong-diminuitive (if light? "forest green" "#7abc71"))
        (theme-weak-diminuitive "peachpuff4")
 
        (theme-faces
@@ -62,7 +62,7 @@
 
            (((t :background ,theme-default-color :foreground ,theme-default-color))
             cursor)
-           
+
            ;; These are odd ones, otherwise default+bold is rarely used
            (((t :weight bold))
             undo-tree-visualizer-active-branch-face)
@@ -75,7 +75,7 @@
            (((t :foreground ,theme-weak-diminuitive
                 :background ,theme-weak-highlight))
             mode-line)
-           
+
            (((t :background ,theme-weak-highlight))
             show-paren-match
             highlight)
@@ -106,7 +106,7 @@
 
            (((t :box (:line-width 1 :color ,theme-weak-diminuitive :style pressed-button)))
             org-code)
-           
+
            (((t :underline (:color ,theme-secondary-accent :style wave)))
             flycheck-info)
 
@@ -137,11 +137,11 @@
       (query-replace                         ((t :inherit match)))
       (isearch-fail                          ((t :inherit error)))
       (show-paren-mismatch                   ((t :inherit error)))
-      
+
       (fringe                                ((t :inherit highlight)))
       (mode-line-inactive                    ((t :inherit font-lock-comment-face)))
       (secondary-selection                   ((t :inherit mode-line)))
-      
+
       (widget-field                          ((t :inherit mode-line)))
       (button                                ((t :inherit link)))
 
@@ -158,7 +158,7 @@
       (undo-tree-visualizer-default-face     ((t :inherit font-lock-comment-face)))
       (undo-tree-visualizer-current-face     ((t :inherit warning)))
       (undo-tree-visualizer-unmodified-face  ((t :inherit font-lock-string-face)))
-      
+
       (org-level-1                           ((t :inherit fixed-pitch
                                                  :height 1.2
                                                  :weight bold)))
@@ -175,7 +175,7 @@
 
       (org-document-title                    ((t :inherit fixed-pitch :weight bold)))
       (org-document-info                     ((t :inherit fixed-pitch :slant italic)))
-      
+
       (org-table                             ((t :inherit fixed-pitch)))
       (org-code                              ((t :inherit fixed-pitch)))
       (org-block                             ((t :inherit fixed-pitch)))
@@ -199,7 +199,7 @@
       (org-warning                           ((t :inherit error)))
 
       ;; XXX: Is this useful? Then it might be worth doing something better about it!
-      (font-lock-builtin-face                ((t :inherit fixed-pitch :foreground "saddle brown")))
+      (font-lock-builtin-face                ((t :inherit font-lock-keyword-face :weight normal)))
       (font-lock-constant-face               ((t :inherit fixed-pitch)))
       (font-lock-variable-name-face          ((t :inherit fixed-pitch)))
       (font-lock-function-name-face          ((t :inherit fixed-pitch :slant italic)))
@@ -217,12 +217,12 @@
 
       (shm-current-face                      ((t :inherit show-paren-match)))
       (shm-quarantine-face                   ((t :inherit fixed-pitch)))
-      
+
       (outshine-level-1                      ((t :inherit font-lock-comment-face)))
       (outshine-level-2                      ((t :inherit font-lock-comment-face)))
       (outshine-level-3                      ((t :inherit font-lock-comment-face)))
       (outshine-level-4                      ((t :inherit font-lock-comment-face)))
-      
+
       (whitespace-hspace                     ((t :inherit fixed-pitch)))
       (whitespace-newline                    ((t :inherit fixed-pitch)))
       (whitespace-tab                        ((t :inherit fixed-pitch)))
@@ -235,7 +235,7 @@
       (flycheck-fringe-info                  ((t :inherit font-lock-string-face)))
       (flycheck-fringe-warning               ((t :inherit warning)))
       (flycheck-fringe-error                 ((t :inherit error)))
-      
+
       (message-header-subject                ((t :inherit fixed-pitch)))
       (message-cited-text                    ((t :inherit font-lock-string-face)))
       (message-header-cc                     ((t :inherit font-lock-comment-face)))
@@ -245,7 +245,7 @@
       (message-separator                     ((t :inherit font-lock-comment-face)))
       (message-header-to                     ((t :inherit font-lock-comment-face)))
       (message-mml                           ((t :inherit font-lock-comment-face)))
-      
+
       (notmuch-search-matching-authors       ((t :inherit warning)))
       (notmuch-search-non-matching-authors   ((t :inherit warning)))
       (notmuch-tag-face                      ((t :inherit font-lock-type-face)))
@@ -259,7 +259,7 @@
       (notmuch-tree-no-match-date-face       ((t :inherit font-lock-comment-face)))
       (notmuch-tree-match-tag-face           ((t :inherit font-lock-type-face)))
       (notmuch-tree-no-match-tag-face        ((t :inherit font-lock-type-face)))
-      
+
       (company-tooltip                       ((t :inherit fringe)))
       (company-preview                       ((t :inherit font-lock-comment-face)))
       (company-preview-common                ((t :inherit font-lock-comment-face))) ;; was default
@@ -272,7 +272,7 @@
       (company-tooltip-selection             ((t :inherit match)))
       (company-tooltip-annotation            ((t :inherit font-lock-comment-face)))
       (company-tooltip-annotation-selection  ((t :inherit font-lock-comment-face)))
-      
+
       (dired-header                          ((t :inherit font-lock-keyword-face)))
       (dired-flagged                         ((t :inherit error)))
       (dired-ignore                          ((t :inherit font-lock-comment-face)))
@@ -282,7 +282,7 @@
       (dired-directory                       ((t :inherit fixed-pitch :weight bold)))
       (dired-symlink                         ((t :inherit link)))
       (dired-warning                         ((t :inherit font-lock-warning-face)))
-      
+
       (sr-active-path-face                   ((t :inherit dired-header)))
       (sr-editing-path-face                  ((t :inherit error)))
       (sr-highlight-path-face                ((t :inherit dired-header)))
@@ -290,12 +290,12 @@
 
       (sr-marked-file-face                   ((t :inherit lazy-highlight)))
       (sr-marked-dir-face                    ((t :inherit lazy-highlight)))
-      
+
       (sr-directory-face                     ((t :inherit dired-directory)))
       (sr-symlink-face                       ((t :inherit dired-symlink)))
       (sr-symlink-directory-face             ((t :inherit dired-symlink :weight bold)))
       (sr-broken-link-face                   ((t :inherit dired-warning)))
-      
+
       (sr-compressed-face                    ((t :inherit fixed-pitch)))
       (sr-encrypted-face                     ((t :inherit fixed-pitch)))
       (sr-html-face                          ((t :inherit fixed-pitch)))
@@ -312,18 +312,18 @@
       (font-latex-sectioning-4-face          ((t :inherit fixed-pitch)))
       (font-latex-sectioning-5-face          ((t :inherit fixed-pitch)))
       (font-latex-sectioning-6-face          ((t :inherit fixed-pitch)))
-      
+
 
       )))
-  
+
   ;;(message "%S" theme-faces)
-  
+
   (apply #'custom-theme-set-faces 'modern-minik theme-faces)
-  
+
   (custom-theme-set-variables
    'modern-minik
    '(cursor-type 'bar)
-   
+
    '(org-priority-faces
      '((65 . theme-error-color)
        (66 . theme-primary-accent)
@@ -331,7 +331,7 @@
        (68 . theme-strong-diminuitive)
        (69 . theme-weak-diminuitive)
        (70 . theme-weak-diminuitive)))
-   
+
    '(mode-line-format (list "%e"
                             '(:eval (when (buffer-local-value buffer-read-only
                                                               (window-buffer))
