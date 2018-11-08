@@ -315,6 +315,7 @@
       (font-latex-sectioning-5-face          ((t :inherit fixed-pitch)))
       (font-latex-sectioning-6-face          ((t :inherit fixed-pitch)))
 
+      (ansible::task-label-face              ((t :inherit fixed-pitch)))
 
       )))
 
