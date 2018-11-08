@@ -448,7 +448,7 @@
       (setq cursor-type 'bar))
     (if god-local-mode
         (progn
-          (set-face-background 'mode-line "dodger blue")
+          (set-face-background 'mode-line "#4e8fda")
           (set-face-foreground 'mode-line "dodgerblue4"))
       (set-face-background 'mode-line "#222222")
       (set-face-foreground 'mode-line "peachpuff4")))

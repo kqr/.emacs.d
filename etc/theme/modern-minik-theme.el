@@ -302,7 +302,8 @@
       (sr-packaged-face                      ((t :inherit fixed-pitch)))
       (sr-xml-face                           ((t :inherit fixed-pitch)))
 
-      (git-commit-summary                    ((t :inherit font-lock-string-face)))
+      (git-commit-summary                    ((t :inherit font-lock-keyword-face)))
+      (git-commit-comment-heading            ((t :inherit font-lock-comment-face)))
 
       (font-latex-sedate-face                ((t :inherit fixed-pitch)))
       (font-latex-warning-face               ((t :inherit fixed-pitch)))
