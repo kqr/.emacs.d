@@ -676,7 +676,8 @@
 (with-eval-after-load "flycheck"
   (diminish 'flycheck-mode)
   (setq flycheck-php-phpcs-executable "/usr/local/bin/phpcs"
-        flycheck-phpcs-standard "psr2"))
+        flycheck-phpcs-standard "psr2"
+        flycheck-python-pycompile-executable "python3"))
 
 ;;;; Project management
 (autoload 'projectile-command-map "projectile")
