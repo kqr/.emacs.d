@@ -201,6 +201,7 @@
       (font-lock-builtin-face                ((t :inherit font-lock-keyword-face :weight normal)))
       (font-lock-constant-face               ((t :inherit fixed-pitch)))
       (font-lock-variable-name-face          ((t :inherit fixed-pitch)))
+      (font-lock-doc-face                    ((t :inherit font-lock-comment-face)))
       (font-lock-function-name-face          ((t :inherit fixed-pitch :slant italic)))
       (font-lock-warning-face                ((t :inherit flycheck-warning)))
       (jdee-font-lock-public-face            ((t :inherit font-lock-keyword-face)))
@@ -211,6 +212,8 @@
       (jdee-font-lock-number-face            ((t :inherit fixed-pitch)))
       (jdee-font-lock-constant-face          ((t :inherit fixed-pitch)))
       (jdee-font-lock-constructor-face       ((t :inherit fixed-pitch)))
+
+
       (sh-heredoc                            ((t :inherit font-lock-string-face)))
       (ess-backquoted-face                   ((t :inherit fixed-pitch)))
 
