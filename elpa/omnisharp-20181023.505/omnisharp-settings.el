@@ -32,6 +32,10 @@ instance that works in the background."
   "The name of the temporary buffer that is used to display the
 results of a 'find usages' call.")
 
+(defvar omnisharp--unit-test-results-buffer-name "* Omnisharp : Unit Test Results *"
+  "The name of the temporary buffer that is used to display the results
+of a 'run tests' call.")
+
 (defvar omnisharp-debug nil
   "When non-nil, omnisharp-emacs will write entries a debug log")
 
@@ -87,7 +91,7 @@ Otherwise omnisharp request the user to do M-x `omnisharp-install-server` and th
 executable will be used instead."
   :type '(choice (const :tag "Not Set" nil) string))
 
-(defcustom omnisharp-expected-server-version "1.31.1"
+(defcustom omnisharp-expected-server-version "1.32.6"
   "Version of the omnisharp-roslyn server that this omnisharp-emacs package
 is built for. Also used to select version for automatic server installation."
   :group 'omnisharp
@@ -196,5 +200,14 @@ boost for completions."
   :group 'omnisharp
   :type '(choice (const :tag "Yes" t)
                  (const :tag "No" nil)))
+
+(defcustom omnisharp-completing-read-function 'omnisharp-builtin-completing-read
+  "Function to be called when requesting input from the user."
+  :group 'omnisharp
+  :type '(radio (function-item omnisharp-builtin-completing-read)
+                (function-item ido-completing-read)
+                (function-item ivy-completing-read)
+                (function-item helm--completing-read-default)
+                (function :tag "Other function")))
 
 (provide 'omnisharp-settings)

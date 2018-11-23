@@ -61,6 +61,12 @@
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
+;; A common problem e.g. on OS X is that Emacs runs in a slightly different
+;; environment than what you're used to in the user shell. This should help at
+;; least a little with that issue.
+(when (require 'exec-path-from-shell nil 'noerror)
+  (exec-path-from-shell-initialize))
+
 (push "~/.emacs.d/etc" load-path)
 (push "~/.emacs.d/lib" load-path)
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
@@ -824,6 +830,8 @@
   (when (require 'omnisharp nil 'noerror)
     (when (require 'company nil 'noerror)
       (add-to-list 'company-backends #'company-omnisharp))
+
+    (setq omnisharp-expected-server-version "1.32.8")
 
     (add-hook 'csharp-mode-hook 'omnisharp-enable t)
 

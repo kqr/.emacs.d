@@ -65,38 +65,18 @@ for the whole solution."
                          (filename (string-remove-prefix (concat default-directory "/") (cdr (assoc 'FileName item))))
                          (line (cdr (assoc 'Line item)))
                          (col (cdr (assoc 'Column item)))
-                         (text (cdr (assoc 'Text item))))
+                         (text (cdr (assoc 'Text item)))
+                         (id (or (cdr (assoc 'Id item)) "CS0000")))
                      (if (or (not errors-only)
                              (string= log-level "error"))
                          (insert (concat filename
                                          "(" (number-to-string line) "," (number-to-string col) "): "
-                                         log-level " CS0000" ": "
+                                         log-level " " id ": "
                                          text
                                          "\n")))))
                  (insert (concat "\nomnisharp-solution-errors: finished, "
                                  "took " (number-to-string time-elapsed-seconds) " seconds to complete.\n"))
                  (setq buffer-read-only t)))))))))
-
-;; TODO create omnisharp-add-to-solution that lets user choose which
-;; file to add.
-(defun omnisharp-add-to-solution-current-file ()
-  (interactive)
-  (let ((params (omnisharp--get-request-object)))
-    (omnisharp-add-to-solution-worker params)
-    (message "Added %s to the solution."
-             (omnisharp--get-filename params))))
-
-(defun omnisharp-add-to-solution-dired-selected-files ()
-  "Add the files currently selected in dired to the current solution."
-  (interactive)
-  (let ((selected-files (dired-get-marked-files)))
-    (--each selected-files
-      (let ((params
-             (cons (omnisharp--to-filename it)
-                   (omnisharp--get-request-object))))
-        (omnisharp-add-to-solution-worker params))
-      (message "Added %s files to the solution."
-               (prin1-to-string (length selected-files))))))
 
 (defun omnisharp-run-code-action-refactoring ()
   "Gets a list of refactoring code actions for the current editor

@@ -141,11 +141,19 @@ Installs OmniSharp server locally into ~/.emacs/cache/omnisharp/server/$(version
 
 ;;;***
 
+;;;### (autoloads nil "omnisharp-unit-test-actions" "omnisharp-unit-test-actions.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from omnisharp-unit-test-actions.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "omnisharp-unit-test-actions" '("omnisharp-")))
+
+;;;***
+
 ;;;### (autoloads nil "omnisharp-utils" "omnisharp-utils.el" (0 0
 ;;;;;;  0 0))
 ;;; Generated autoloads from omnisharp-utils.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "omnisharp-utils" '("omnisharp--")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "omnisharp-utils" '("omnisharp-")))
 
 ;;;***
 
