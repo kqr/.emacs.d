@@ -839,7 +839,7 @@
       "Configure advanced settings related to C# development."
       (omnisharp-mode)
       (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
-      (local-set-key (kbd "C-c r m") 'omnisharp-rename-interactively)
+      (local-set-key (kbd "C-c r r") 'omnisharp-rename-interactively)
       (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
       (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
       (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
