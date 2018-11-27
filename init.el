@@ -819,6 +819,8 @@
     (c-set-style "ellemtel")
     (setq c-basic-offset 4)
     (c-set-offset 'arglist-close 0)
+    (c-set-offset 'brace-list-open '-)
+
     (setq tab-width 4)
     (electric-indent-local-mode -1)
     (c-set-offset 'inline-open 0)
