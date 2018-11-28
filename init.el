@@ -43,8 +43,9 @@
 ;; Set up the package system
 (require 'package)
 (mapc (lambda (elt) (push elt package-archives))
-      '(("elpa" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.milkbox.net/packages/")
+      '(("elpa" . "https://elpa.gnu.org/packages/")
+        ;;("melpa" . "http://www.mirrorservice.org/sites/melpa.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
         ;;("sunrise" . "http://joseito.republika.pl/sunrise-commander/")
         ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
@@ -205,7 +206,7 @@
           ("||" . ?∨)
           ;;          ("or" . ?∨)
           ;;          ("or else" . ?∨)
-          ;;          ("&&" . ?∧)
+          ("&&" . ?∧)
           ;;          ("and" . ?∧)
           ;;          ("and then" . ?∧)
           ;;          ("!" . ?¬)
@@ -305,6 +306,10 @@
   (add-hook 'compilation-filter-hook 'ansi-coloured-buffer))
 
 
+;;;; fill-column-indicator
+(when (require 'fill-column-mode nil 'noerror)
+  (setq fci-rule-color "#222222")
+  (turn-on-fci-mode))
 ;;; Interaction
 (when (eq system-type 'darwin)
   (setq mac-right-option-modifier 'none))
