@@ -318,7 +318,13 @@
   "Execute ansible-vault (MODE STR should be 'decrypt' or 'encrypt')."
   (let ((temp-file (make-temp-file "ansible-vault-ansible")))
     (write-region str nil temp-file 'append)
-    (let* ((command (format "ansible-vault %s --vault-password-file=%s %s" mode ansible::vault-password-file temp-file))
+    (let* ((command (format "ansible-vault %s --vault-password-file=%s %s %s"
+                            mode
+                            ansible::vault-password-file
+                            (if (equal mode "encrypt")
+                                "--encrypt-vault-id=default"
+                              "")
+                            temp-file))
            (status (shell-command command))
            (output (ansible::get-string-from-file temp-file)))
       (if (/= status 0)

@@ -309,7 +309,8 @@
 ;;;; fill-column-indicator
 (when (require 'fill-column-mode nil 'noerror)
   (setq fci-rule-color "#222222")
-  (turn-on-fci-mode))
+  (add-hook 'text-mode-hook 'turn-on-fci-mode)
+  (add-hook 'prog-mode-hook 'turn-on-fci-mode))
 ;;; Interaction
 (when (eq system-type 'darwin)
   (setq mac-right-option-modifier 'none))
