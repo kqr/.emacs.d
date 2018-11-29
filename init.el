@@ -310,7 +310,24 @@
 (when (require 'fill-column-mode nil 'noerror)
   (setq fci-rule-color "#222222")
   (add-hook 'text-mode-hook 'turn-on-fci-mode)
-  (add-hook 'prog-mode-hook 'turn-on-fci-mode))
+  (add-hook 'prog-mode-hook 'turn-on-fci-mode)
+
+  ;; Fix for bad interaction between company mode and fci-mode
+  (with-eval-after-load "company"
+    (defvar-local company-fci-mode-on-p nil)
+
+    (defun company-turn-off-fci (&rest ignore)
+      (when (boundp 'fci-mode)
+        (setq company-fci-mode-on-p fci-mode)
+        (when fci-mode (fci-mode -1))))
+
+    (defun company-maybe-turn-on-fci (&rest ignore)
+      (when company-fci-mode-on-p (fci-mode 1)))
+
+    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)))
+
 ;;; Interaction
 (when (eq system-type 'darwin)
   (setq mac-right-option-modifier 'none))
