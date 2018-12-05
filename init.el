@@ -10,8 +10,6 @@
 ;;
 ;;; Code:
 (setq gc-cons-threshold 87654321)
-(add-to-list 'exec-path "/usr/local/bin")
-(add-to-list 'exec-path "~/.local/bin")
 
 ;;; GUI removal
 ;; Remove a bunch of distracting, unnecessary, silly graphic components We want
@@ -72,7 +70,16 @@
 (push "~/.emacs.d/lib" load-path)
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
 
-(load "load-path-local.el" 'noerror)
+(defun load-path-dev-emacs-refresh ()
+  "Add any repositories under ~/dev/emacs also to the load path."
+  (interactive)
+  (let ((dev-emacs (expand-file-name "~/dev/emacs/")))
+    (mapc (lambda (repo) (add-to-list 'load-path (expand-file-name repo dev-emacs)))
+          (remove-if (lambda (repo) (string-match-p "^\\." repo))
+                     (and (file-directory-p dev-emacs)
+                          (directory-files dev-emacs))))))
+(load-path-dev-emacs-refresh)
+
 
 ;;; User information and various other basic settings
 (setq user-full-name "Christoffer Stjernlöf"
@@ -307,26 +314,26 @@
 
 
 ;;;; fill-column-indicator
-(when (require 'fill-column-mode nil 'noerror)
-  (setq fci-rule-color "#222222")
-  (add-hook 'text-mode-hook 'turn-on-fci-mode)
-  (add-hook 'prog-mode-hook 'turn-on-fci-mode)
+(require 'fill-column-mode nil 'noerror)
+(setq fci-rule-color "#222222")
+(add-hook 'text-mode-hook 'turn-on-fci-mode)
+(add-hook 'prog-mode-hook 'turn-on-fci-mode)
 
-  ;; Fix for bad interaction between company mode and fci-mode
-  (with-eval-after-load "company"
-    (defvar-local company-fci-mode-on-p nil)
+;; Fix for bad interaction between company mode and fci-mode
+(with-eval-after-load "company"
+  (defvar-local company-fci-mode-on-p nil)
 
-    (defun company-turn-off-fci (&rest ignore)
-      (when (boundp 'fci-mode)
-        (setq company-fci-mode-on-p fci-mode)
-        (when fci-mode (fci-mode -1))))
+  (defun company-turn-off-fci (&rest ignore)
+    (when (boundp 'fci-mode)
+      (setq company-fci-mode-on-p fci-mode)
+      (when fci-mode (fci-mode -1))))
 
-    (defun company-maybe-turn-on-fci (&rest ignore)
-      (when company-fci-mode-on-p (fci-mode 1)))
+  (defun company-maybe-turn-on-fci (&rest ignore)
+    (when company-fci-mode-on-p (fci-mode 1)))
 
-    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)))
+  (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+  (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+  (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci))
 
 ;;; Interaction
 (when (eq system-type 'darwin)
@@ -843,6 +850,8 @@
     (setq c-basic-offset 4)
     (c-set-offset 'arglist-close 0)
     (c-set-offset 'brace-list-open '-)
+
+    (setq fill-column 140)
 
     (setq tab-width 4)
     (electric-indent-local-mode -1)
