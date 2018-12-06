@@ -901,7 +901,7 @@
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
   (setq timeclock-file "~/org/log.timeclock")
-  (setq timeclock-workday 26640)
+  (setq timeclock-workday 28800)
   (define-key ctl-x-map "ti" 'timeclock-in)
   (define-key ctl-x-map "to" 'timeclock-out)
   (define-key ctl-x-map "tc" 'timeclock-change)
