@@ -88,7 +88,7 @@
             flycheck-error)
 
            (((t :foreground ,theme-primary-accent))
-            warning)
+            font-lock-builtin-face)
 
            (((t :underline (:color ,theme-primary-accent :style wave)))
             flycheck-warning)
@@ -147,6 +147,8 @@
 
       (minibuffer-prompt                     ((t :inherit font-lock-keyword-face)))
 
+      (warning                               ((t :inherit font-lock-builtin-face)))
+
       (ivy-current-match                     ((t :inherit match)))
       (ivy-minibuffer-match-face-1           ((t :inherit fixed-pitch)))
       (ivy-minibuffer-match-face-2           ((t :inherit lazy-highlight)))
@@ -198,7 +200,6 @@
       (org-agenda-date-weekend               ((t :inherit fixed-pitch)))
       (org-warning                           ((t :inherit error)))
 
-      (font-lock-builtin-face                ((t :inherit font-lock-keyword-face :weight normal)))
       (font-lock-constant-face               ((t :inherit fixed-pitch)))
       (font-lock-variable-name-face          ((t :inherit fixed-pitch)))
       (font-lock-doc-face                    ((t :inherit font-lock-comment-face)))
@@ -307,6 +308,13 @@
 
       (git-commit-summary                    ((t :inherit font-lock-keyword-face)))
       (git-commit-comment-heading            ((t :inherit font-lock-comment-face)))
+
+      (compilation-message-face              ((t :inherit fixed-pitch)))
+      (compilation-error                     ((t :inherit font-lock-keyword-face)))
+      (compilation-line-number               ((t :inherit font-lock-builtin-face)))
+      (compilation-mode-line-run             ((t :inherit font-lock-comment-face)))
+      (compilation-mode-line-exit            ((t :inherit font-lock-string-face)))
+      (compilation-mode-line-fail            ((t :inherit error)))
 
       (font-latex-sedate-face                ((t :inherit fixed-pitch)))
       (font-latex-warning-face               ((t :inherit fixed-pitch)))
