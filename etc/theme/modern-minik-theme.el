@@ -263,10 +263,10 @@
       (notmuch-tree-match-tag-face           ((t :inherit font-lock-type-face)))
       (notmuch-tree-no-match-tag-face        ((t :inherit font-lock-type-face)))
 
-      (company-tooltip                       ((t :inherit fringe)))
+      (company-tooltip                       ((t :inherit highlight)))
       (company-preview                       ((t :inherit font-lock-comment-face)))
       (company-preview-common                ((t :inherit font-lock-comment-face))) ;; was default
-      (company-scrollbar-bg                  ((t :inherit fringe)))
+      (company-scrollbar-bg                  ((t :inherit highlight)))
       (company-scrollbar-fg                  ((t :inherit match)))
       (company-tooltip-common                ((t :inherit lazy-highlight)))
       (company-tooltip-common-selection      ((t :inherit lazy-highlight)))

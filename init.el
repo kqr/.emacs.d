@@ -23,10 +23,10 @@
 
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(tool-bar-lines . nil))
-(add-to-list 'initial-frame-alist '(left-fringe . 40))
-(add-to-list 'default-frame-alist '(left-fringe . 40))
-(add-to-list 'initial-frame-alist '(right-fringe . 80))
-(add-to-list 'default-frame-alist '(right-fringe . 80))
+(add-to-list 'initial-frame-alist '(left-fringe . 20))
+(add-to-list 'default-frame-alist '(left-fringe . 20))
+(add-to-list 'initial-frame-alist '(right-fringe . 20))
+(add-to-list 'default-frame-alist '(right-fringe . 20))
 
 ;;; Init file configuration
 ;; I don't use customize-set-variable as much anymore, but it's probably a
@@ -314,26 +314,37 @@
 
 
 ;;;; fill-column-indicator
-(require 'fill-column-mode nil 'noerror)
-(setq fci-rule-color "#222222")
-(add-hook 'text-mode-hook 'turn-on-fci-mode)
-(add-hook 'prog-mode-hook 'turn-on-fci-mode)
-
+;;
+;; Disabled in favour of olivetti, for the time being
+;;
+;;(require 'fill-column-mode nil 'noerror)
+;;(setq fci-rule-color "#222222")
+;;(add-hook 'text-mode-hook 'turn-on-fci-mode)
+;;(add-hook 'prog-mode-hook 'turn-on-fci-mode)
+;;
 ;; Fix for bad interaction between company mode and fci-mode
-(with-eval-after-load "company"
-  (defvar-local company-fci-mode-on-p nil)
+;;(with-eval-after-load "company"
+;;  (defvar-local company-fci-mode-on-p nil)
+;;
+;;  (defun company-turn-off-fci (&rest ignore)
+;;    (when (boundp 'fci-mode)
+;;      (setq company-fci-mode-on-p fci-mode)
+;;      (when fci-mode (fci-mode -1))))
+;;
+;;  (defun company-maybe-turn-on-fci (&rest ignore)
+;;    (when company-fci-mode-on-p (fci-mode 1)))
+;;
+;;  (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+;;  (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+;;  (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci))
 
-  (defun company-turn-off-fci (&rest ignore)
-    (when (boundp 'fci-mode)
-      (setq company-fci-mode-on-p fci-mode)
-      (when fci-mode (fci-mode -1))))
+;;;; Narrow buffers
+(when (require 'olivetti nil 'noerror)
+  (add-hook 'text-mode-hook 'turn-on-olivetti-mode)
+  (add-hook 'prog-mode-hook 'turn-on-olivetti-mode)
+  (add-hook 'olivetti-mode-hook
+            (lambda () (setq olivetti-body-width fill-column))))
 
-  (defun company-maybe-turn-on-fci (&rest ignore)
-    (when company-fci-mode-on-p (fci-mode 1)))
-
-  (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-  (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-  (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci))
 
 ;;; Interaction
 (when (eq system-type 'darwin)
