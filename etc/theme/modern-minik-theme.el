@@ -44,7 +44,7 @@
        (theme-weak-highlight (if light? "antiquewhite2" "#222222"))
        (theme-error-color "red")
        (theme-primary-accent (if light? "chocolate3" "#E8B964"))
-       (theme-secondary-accent (if light? "dodgerblue3" "#4e8fda"))
+       (theme-secondary-accent (if light? "dodgerblue3" "#6493e8"))
        (theme-strong-diminuitive (if light? "forest green" "#7abc71"))
        (theme-weak-diminuitive "peachpuff4")
 
