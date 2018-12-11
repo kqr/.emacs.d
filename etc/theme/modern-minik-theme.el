@@ -214,6 +214,7 @@
       (jdee-font-lock-constant-face          ((t :inherit fixed-pitch)))
       (jdee-font-lock-constructor-face       ((t :inherit fixed-pitch)))
 
+      (fsharp-ui-operator-face               ((t :inherit fixed-pitch)))
 
       (sh-heredoc                            ((t :inherit font-lock-string-face)))
       (ess-backquoted-face                   ((t :inherit fixed-pitch)))

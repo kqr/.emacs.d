@@ -342,8 +342,10 @@
 (when (require 'olivetti nil 'noerror)
   (add-hook 'text-mode-hook 'turn-on-olivetti-mode)
   (add-hook 'prog-mode-hook 'turn-on-olivetti-mode)
-  (add-hook 'olivetti-mode-hook
-            (lambda () (setq olivetti-body-width fill-column))))
+  (defun config-olivetti ()
+    (olivetti-set-width fill-column)
+    (toggle-truncate-lines +1))
+  (add-hook 'olivetti-mode-hook 'config-olivetti))
 
 
 ;;; Interaction
@@ -726,6 +728,8 @@
         flycheck-phpcs-standard "psr2"
         flycheck-python-pycompile-executable "python3"))
 
+;;;; Subword-mode allows word motions to TerminateInCamelCasedWords
+(add-hook 'prog-mode-hook 'subword-mode)
 ;;;; Project management
 (autoload 'projectile-command-map "projectile")
 (define-key global-map (kbd "<f8>") 'projectile-command-map)
@@ -862,7 +866,7 @@
     (c-set-offset 'arglist-close 0)
     (c-set-offset 'brace-list-open '-)
 
-    (setq fill-column 140)
+    (setq fill-column 152)
 
     (setq tab-width 4)
     (electric-indent-local-mode -1)
