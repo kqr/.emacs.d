@@ -348,6 +348,11 @@
   (add-hook 'olivetti-mode-hook 'config-olivetti))
 
 
+;;;; Window-divider
+(setq window-divider-default-bottom-width 5
+      window-divider-default-right-width 5)
+(window-divider-mode +1)
+
 ;;; Interaction
 (when (eq system-type 'darwin)
   (setq mac-right-option-modifier 'none))

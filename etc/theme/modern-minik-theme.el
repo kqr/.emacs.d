@@ -138,6 +138,10 @@
       (isearch-fail                          ((t :inherit error)))
       (show-paren-mismatch                   ((t :inherit error)))
 
+      (window-divider                        ((t :inherit mode-line :inverse-video t)))
+      ;; Not sure I'm a huge fan of this, but will try it out for a while anyway
+      (window-divider-first-pixel            ((t :foreground "#333333")))
+      (window-divider-last-pixel             ((t :foreground "#333333")))
       (fringe                                ((t :inherit highlight)))
       (mode-line-inactive                    ((t :inherit font-lock-comment-face)))
       (secondary-selection                   ((t :inherit mode-line)))
