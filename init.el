@@ -357,6 +357,9 @@
 (when (eq system-type 'darwin)
   (setq mac-right-option-modifier 'none))
 
+(unless (eq system-type 'darwin)
+  (define-key global-map (kbd "s-n") 'make-frame))
+
 ;; Tramp
 
 (with-eval-after-load "tramp"
@@ -379,13 +382,13 @@
       (find-alternate-file
        (if (file-remote-p (buffer-file-name))
            (with-parsed-tramp-file-name buffer-file-name remote
-                                        (tramp-make-tramp-file-name
-                                         "sudo" as-user remote-domain
-                                         remote-host remote-port
-                                         remote-localname
-                                         (tramp-file-name-as-hop
-                                          (tramp-dissect-file-name
-                                           (buffer-file-name)))))
+             (tramp-make-tramp-file-name
+              "sudo" as-user remote-domain
+              remote-host remote-port
+              remote-localname
+              (tramp-file-name-as-hop
+               (tramp-dissect-file-name
+                (buffer-file-name)))))
          (concat "/sudo:root@localhost:"
                  (buffer-file-name))))
       (goto-char position))))
