@@ -70,14 +70,16 @@
 (push "~/.emacs.d/lib" load-path)
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
 
+(require 'cl-lib)
+
 (defun load-path-dev-emacs-refresh ()
   "Add any repositories under ~/dev/emacs also to the load path."
   (interactive)
   (let ((dev-emacs (expand-file-name "~/dev/emacs/")))
     (mapc (lambda (repo) (add-to-list 'load-path (expand-file-name repo dev-emacs)))
-          (remove-if (lambda (repo) (string-match-p "^\\." repo))
-                     (and (file-directory-p dev-emacs)
-                          (directory-files dev-emacs))))))
+          (cl-remove-if (lambda (repo) (string-match-p "^\\." repo))
+                        (and (file-directory-p dev-emacs)
+                             (directory-files dev-emacs))))))
 (load-path-dev-emacs-refresh)
 
 
@@ -120,6 +122,9 @@
 
               browse-url-browser-function 'browse-url-generic
               browse-url-generic-program "firefox")
+
+(when (string-equal system-type "darwin")
+  (setq browse-url-generic-program "open_firefox"))
 
 ;; Let text extend beyond the window width
 (setq-default truncate-lines t
