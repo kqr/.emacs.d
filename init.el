@@ -867,11 +867,33 @@
   (add-hook 'ansible-hook 'ansible::auto-decrypt-encrypt))
 
 
-;;;; C# mode
+;;;; dotnet (C# mode and F# mode)
 (autoload 'csharp-mode "csharp-mode")
+(autoload 'fsharp-mode "fsharp-mode")
 (push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
+(push '("\\.fs\\'" . fsharp-mode) auto-mode-alist)
+
+(defun configure-omnisharp ()
+  "Set up omnisharp for C# and F# the way I'm used to."
+  (when (require 'omnisharp nil 'noerror)
+    (when (require 'company nil 'noerror)
+      (add-to-list 'company-backends #'company-omnisharp))
+
+    (setq omnisharp-expected-server-version "1.32.8")
+
+    (defun omnisharp-enable ()
+      "Configure advanced settings related to C# development."
+      (omnisharp-mode)
+      (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
+      (local-set-key (kbd "C-c r r") 'omnisharp-rename-interactively)
+      (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
+      (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
+      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
+      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))
+    t))
+
 (with-eval-after-load "csharp-mode"
-  (defun csharp-config ()
+  (defun csharp-mode-enable ()
     "Configure settings relating to C# development."
     (setq c-syntactic-indentation t)
     (c-set-style "ellemtel")
@@ -884,28 +906,16 @@
     (setq tab-width 4)
     (electric-indent-local-mode -1)
     (c-set-offset 'inline-open 0)
+    (when (configure-omnisharp)
+      (add-hook 'csharp-mode-hook 'omnisharp-enable)))
+  (add-hook 'csharp-mode-hook 'csharp-mode-enable))
 
-    (local-set-key (kbd "C-c C-c") 'recompile))
-
-  (add-hook 'csharp-mode-hook #'csharp-config t)
-
-  (when (require 'omnisharp nil 'noerror)
-    (when (require 'company nil 'noerror)
-      (add-to-list 'company-backends #'company-omnisharp))
-
-    (setq omnisharp-expected-server-version "1.32.8")
-
-    (add-hook 'csharp-mode-hook 'omnisharp-enable t)
-
-    (defun omnisharp-enable ()
-      "Configure advanced settings related to C# development."
-      (omnisharp-mode)
-      (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
-      (local-set-key (kbd "C-c r r") 'omnisharp-rename-interactively)
-      (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
-      (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
-      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
-      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))))
+(with-eval-after-load "fsharp-mode"
+  (defun fsharp-mode-enable ()
+    (aggressive-indent-mode -1)
+    (when (configure-omnisharp)
+      (add-hook 'fsharp-mode-hook 'omnisharp-enable)))
+  (add-hook 'fsharp-mode-hook 'fsharp-mode-enable))
 
 
 ;;;; CFEngine mode
@@ -1033,7 +1043,7 @@
         org-list-allow-alphabetical t
         org-hide-emphasis-markers t
         org-fontify-quote-and-verse-blocks t
-        org-ellipsis "↴"
+        org-ellipsis " ↴ "
         org-show-context-detail
         '((agenda . ancestors)
           (bookmark-jump . lineage)

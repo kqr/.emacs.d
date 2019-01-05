@@ -190,6 +190,7 @@
       (org-footnote                          ((t :inherit font-lock-comment-face)))
       (org-special-keyword                   ((t :inherit font-lock-comment-face)))
 
+      (org-ellipsis                          ((t :inherit font-lock-keyword-face)))
       (org-todo                              ((t :inherit font-lock-keyword-face)))
       (org-done                              ((t :inherit font-lock-comment-face)))
       (org-agenda-done                       ((t :inherit font-lock-comment-face)))
