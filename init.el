@@ -938,6 +938,10 @@
   (add-hook 'php-mode-hook 'php-enable-psr2-coding-style))
 
 
+;;;; Python mode
+(defun python-mode-enable ()
+  (setq python-shell-interpreter "python3"))
+(add-hook 'python-mode-hook 'python-mode-enable)
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
   (setq timeclock-file "~/org/log.timeclock")

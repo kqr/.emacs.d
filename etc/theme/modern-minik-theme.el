@@ -217,6 +217,11 @@
       (jdee-font-lock-constant-face          ((t :inherit fixed-pitch)))
       (jdee-font-lock-constructor-face       ((t :inherit fixed-pitch)))
 
+      (js2-function-param                    ((t :inherit fixed-pitch)))
+      (js2-function-call                     ((t :inherit fixed-pitch)))
+      (js2-external-variable                 ((t :inherit flycheck-warning)))
+      (js2-warning                           ((t :inherit flycheck-warning)))
+
       (fsharp-ui-operator-face               ((t :inherit fixed-pitch)))
 
       (sh-heredoc                            ((t :inherit font-lock-string-face)))
