@@ -104,7 +104,7 @@
            (((t :foreground ,theme-secondary-accent))
             font-lock-type-face)
 
-           (((t :box (:line-width 1 :color ,theme-weak-diminuitive :style pressed-button)))
+           (((t :box (:line-width 1 :color ,theme-background-color :style pressed-button)))
             org-code)
 
            (((t :underline (:color ,theme-secondary-accent :style wave)))
@@ -120,10 +120,6 @@
 
            (((t :foreground ,theme-strong-diminuitive))
             font-lock-string-face)
-
-           (((t :foreground ,theme-strong-diminuitive
-                :inverse-video t))
-            escape-glyph)
 
            (((t :foreground ,theme-weak-diminuitive))
             font-lock-comment-face)))))
@@ -145,6 +141,8 @@
       (fringe                                ((t :inherit highlight)))
       (mode-line-inactive                    ((t :inherit font-lock-comment-face)))
       (secondary-selection                   ((t :inherit mode-line)))
+
+      (escape-glyph                          ((t :inherit org-code :height 0.7)))
 
       (widget-field                          ((t :inherit mode-line)))
       (button                                ((t :inherit link)))

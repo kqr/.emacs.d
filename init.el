@@ -902,6 +902,7 @@
     (c-set-offset 'brace-list-open '-)
 
     (setq fill-column 152)
+    (olivetti-set-width fill-column)
 
     (setq tab-width 4)
     (electric-indent-local-mode -1)
@@ -913,6 +914,7 @@
 (with-eval-after-load "fsharp-mode"
   (defun fsharp-mode-enable ()
     (aggressive-indent-mode -1)
+
     (when (configure-omnisharp)
       (add-hook 'fsharp-mode-hook 'omnisharp-enable)))
   (add-hook 'fsharp-mode-hook 'fsharp-mode-enable))
