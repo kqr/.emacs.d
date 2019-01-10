@@ -675,7 +675,9 @@
 (setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
 (when (require 'yasnippet nil 'noerror)
   (setq yas-indent-line 'fixed)
-  (yas-global-mode 1))
+  ;; This may be causing a lot of lag so let's turn it off instead.
+  ;; I rarely use it anyway!
+  (yas-global-mode -1))
 
 ;;;; Thesaurus/synonyms tooltip
 (define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
