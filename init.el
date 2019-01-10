@@ -939,9 +939,12 @@
 
 
 ;;;; Python mode
-(defun python-mode-enable ()
-  (setq python-shell-interpreter "python3"))
-(add-hook 'python-mode-hook 'python-mode-enable)
+(with-eval-after-load "python"
+  (defun python-mode-configure ()
+    (aggressive-indent-mode -1))
+  (setq python-shell-interpreter "python3")
+  (add-hook 'python-mode-hook 'python-mode-configure))
+
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
   (setq timeclock-file "~/org/log.timeclock")
