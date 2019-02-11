@@ -472,32 +472,33 @@
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
 
-  (when (require 'spaceline-config nil 'noerror)
-    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-    (spaceline-emacs-theme))
-
-  (when (require 'evil-commentary nil 'noerror)
-    (evil-commentary-mode))
-
-  (when (require 'evil-easymotion)
-    (setq evilem-keys '(?a ?r ?s ?t ?n ?e ?i ?o)
-          evilem-style 'de-bruijn
-          avy-background t)
-    (evilem-define "k" 'evil-backward-word-begin)
-    (evilem-define "j" 'evil-forward-word-begin))
-
-  (Define-key evil-normal-state-map (kbd ";") #'evil-ex)
-
-  (add-hook 'with-editor-mode-hook 'evil-insert-state)
-
   (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
+  (define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
+  (when (require 'spaceline-config nil 'noerror)
+    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+    (spaceline-emacs-theme))
+
+  (let ((leader-key-map (make-sparse-keymap)))
+    (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
+    (when (require 'evil-commentary nil 'noerror)
+      (evil-commentary-mode))
+    (when (require 'avy)
+      (setq avy-keys'(?a ?r ?s ?t ?n ?e ?i ?o)
+            avy-background t
+            avy-all-windows t)
+      (define-key leader-key-map (kbd "w") 'avy-goto-word-1)
+      (define-key leader-key-map (kbd "k") 'avy-goto-line))
+
+    (define-key evil-normal-state-map (kbd "") nil)
+    (define-key evil-normal-state-map (kbd "SPC") leader-key-map))
+
+  (add-hook 'with-editor-mode-hook 'evil-insert-state)
   (evil-mode 1))
 
 ;;;; Completion with company mode (hopefully practically intrusion-free)
