@@ -477,6 +477,7 @@
     (spaceline-emacs-theme))
 
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
+  (define-key evil-motion-state-map (kbd "TAB") nil)  ;; kills evil-jump-forward
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
 

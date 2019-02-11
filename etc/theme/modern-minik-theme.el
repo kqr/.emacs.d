@@ -122,7 +122,25 @@
             font-lock-string-face)
 
            (((t :foreground ,theme-weak-diminuitive))
-            font-lock-comment-face)))))
+            font-lock-comment-face)
+
+           (((t :background ,theme-weak-diminuitive
+                :foreground ,theme-background-color))
+            spaceline-evil-insert)
+
+           (((t :background ,theme-primary-accent
+                :foreground ,theme-background-color))
+            spaceline-evil-normal)
+
+           (((t :background ,theme-strong-diminuitive
+                :foreground ,theme-background-color))
+            spaceline-evil-emacs)
+
+           (((t :background ,theme-secondary-accent
+                :foreground ,theme-background-color))
+            spaceline-evil-visual)
+
+           ))))
 
   (setq
    theme-faces
@@ -360,7 +378,8 @@
        (69 . theme-weak-diminuitive)
        (70 . theme-weak-diminuitive)))
 
-   '(powerline-default-separator 'wave)))
+   '(powerline-default-separator 'wave)
+   '(powerline-reset)))
 
 (defvar modern-minik-mode-icon-alist
   "Alist mapping mode symbol to two strings – one unicode and one ascii.")
