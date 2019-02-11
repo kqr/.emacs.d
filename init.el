@@ -484,6 +484,8 @@
 
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
+  (setq evil-want-fine-undo t)
+
   (when (require 'spaceline-config nil 'noerror)
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
     (spaceline-emacs-theme))
