@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "hamlet-mode" "20131208.724" "Hamlet editing mode" '((cl-lib "0.3") (dash "2.3.0") (s "1.7.0")) :commit "7362b955e556a3d007fa06945a27e5b99349527d" :keywords '("wp" "languages" "comm") :authors '((nil . "Kata <lightquake@amateurtopologist.com")) :maintainer '(nil . "Kata <lightquake@amateurtopologist.com") :url "https://github.com/lightquake/hamlet-mode")

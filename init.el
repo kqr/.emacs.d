@@ -463,78 +463,30 @@
      ;; Allow narrowing to subtree even when inside subtree
      (advice-add 'outshine-narrow-to-subtree :before
                  (lambda (&rest args) (unless (outline-on-heading-p t)
-                                   (outline-previous-visible-heading 1))))))
+                                        (outline-previous-visible-heading 1))))))
 
 
-;;;; God mode
-;; Modal editing *is* the greatest. This reduces hand-strain in an Emacs
-;; default friendly sort of way. Very cool, actually.
-(when (require 'god-mode nil 'noerror)
-  (define-key global-map (kbd "<escape>") #'god-local-mode)
-
+;;;; Evil mode
+(when (require 'evil nil 'noerror)
   (when (require 'tab-as-escape nil 'noerror)
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
 
-  (when (require 'god-mode-isearch nil 'noerror)
-    (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
-    (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable))
+  (when (require 'spaceline-config nil 'noerror)
+    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+    (spaceline-emacs-theme))
 
-  (defun god-exempt-mode-p ()
-    "Return non-nil if major-mode is exempt or inherits from exempt mode."
-    (or (memq major-mode god-exempt-major-modes)
-        (seq-some (lambda (exempt) (god-mode-child-of-p major-mode exempt))
-                  god-exempt-major-modes)))
+  (define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
-  (setq god-exempt-predicates '(god-exempt-mode-p god-special-mode-p))
-  (setq god-exempt-major-modes
-        '(org-agenda-mode
-          dired-mode
-          sr-mode
-          eshell-mode
-          doc-view-mode
-          magit-popup-mode
-          calc-mode
-          Custom-mode
-          notmuch-hello-mode
-          notmuch-search-mode
-          notmuch-show-mode
-          notmuch-tree-mode
-          sldb-mode))
+  (add-hook 'with-editor-mode-hook 'evil-insert-state)
 
-  (god-mode-all)
+  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-  (defun god-mode-update-cursor (&optional _)
-    "Make sure the modeline and cursor is updated with god mode state."
-    (if (or god-local-mode buffer-read-only) (setq cursor-type 'box)
-      (setq cursor-type 'bar))
-    (if god-local-mode
-        (progn
-          (set-face-background 'mode-line "#4e8fda")
-          (set-face-foreground 'mode-line "dodgerblue4"))
-      (set-face-background 'mode-line "#222222")
-      (set-face-foreground 'mode-line "peachpuff4")))
-
-  (add-hook 'god-mode-enabled-hook #'god-mode-update-cursor)
-  (add-hook 'god-mode-disabled-hook #'god-mode-update-cursor)
-  (add-hook 'read-only-mode-hook #'god-mode-update-cursor)
-
-  ;; I have barely any idea what I'm doing here... I'm just spamming these
-  ;; to ensure the modeline is updated timely...
-  (add-hook 'after-change-major-mode-hook #'god-mode-update-cursor)
-  (add-hook 'window-configuration-change-hook #'god-mode-update-cursor)
-  (add-hook 'mode-selection-hook #'god-mode-update-cursor)
-  (add-hook 'buffer-selection-hook #'god-mode-update-cursor)
-  (add-hook 'find-file-hook #'god-mode-update-cursor)
-
-  (defun god-has-priority ()
-    "Try to ensure that god mode keeps priority over other minor modes."
-    (unless (and (consp (car minor-mode-map-alist))
-                 (eq (caar minor-mode-map-alist) 'god-local-mode-map))
-      (let ((godkeys (assq 'god-local-mode minor-mode-map-alist)))
-        (assq-delete-all 'god-local-mode minor-mode-map-alist)
-        (add-to-list 'minor-mode-map-alist godkeys))))
-  (add-hook 'god-mode-enabled-hook #'god-has-priority))
+  (evil-mode 1))
 
 ;;;; Completion with company mode (hopefully practically intrusion-free)
 (run-with-idle-timer

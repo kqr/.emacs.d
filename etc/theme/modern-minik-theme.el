@@ -151,6 +151,11 @@
 
       (warning                               ((t :inherit font-lock-builtin-face)))
 
+      (powerline-active1                     ((t :inherit mode-line :background "gray11")))
+      (powerline-active2                     ((t :inherit mode-line :background "gray20")))
+      (powerline-inactive1                   ((t :inherit mode-line-inactive)))
+      (powerline-inactive2                   ((t :inherit mode-line-inactive)))
+
       (ivy-current-match                     ((t :inherit match)))
       (ivy-minibuffer-match-face-1           ((t :inherit fixed-pitch)))
       (ivy-minibuffer-match-face-2           ((t :inherit lazy-highlight)))
@@ -355,24 +360,7 @@
        (69 . theme-weak-diminuitive)
        (70 . theme-weak-diminuitive)))
 
-   '(mode-line-format (list "%e"
-                            '(:eval (when (buffer-local-value buffer-read-only
-                                                              (window-buffer))
-                                      "(read-only)"))
-                            '(:eval (when (buffer-modified-p)
-                                      "(***)"))
-                            " "
-                            #'mode-line-buffer-identification
-                            ":"
-                            '(:eval (propertize "(%l,%c)"))
-                            " [%["
-                            '(:eval mode-name)
-                            " ("
-                            '(:eval minor-mode-alist)
-                            " )"
-                            '(:eval (propertize "%n"))
-                            "%]]"
-                            #'mode-line-misc-info))))
+   '(powerline-default-separator 'wave)))
 
 (defvar modern-minik-mode-icon-alist
   "Alist mapping mode symbol to two strings – one unicode and one ascii.")
