@@ -487,6 +487,8 @@
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
+  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
+
   (evil-mode 1))
 
 ;;;; Completion with company mode (hopefully practically intrusion-free)
