@@ -476,7 +476,17 @@
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
     (spaceline-emacs-theme))
 
-  (define-key evil-normal-state-map (kbd ";") #'evil-ex)
+  (when (require 'evil-commentary nil 'noerror)
+    (evil-commentary-mode))
+
+  (when (require 'evil-easymotion)
+    (setq evilem-keys '(?a ?r ?s ?t ?n ?e ?i ?o)
+          evilem-style 'de-bruijn
+          avy-background t)
+    (evilem-define "k" 'evil-backward-word-begin)
+    (evilem-define "j" 'evil-forward-word-begin))
+
+  (Define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
 

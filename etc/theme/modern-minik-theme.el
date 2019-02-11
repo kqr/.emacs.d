@@ -174,6 +174,11 @@
       (powerline-inactive1                   ((t :inherit mode-line-inactive)))
       (powerline-inactive2                   ((t :inherit mode-line-inactive)))
 
+      (avy-lead-face                         ((t :inherit lazy-highlight)))
+      (avy-lead-face-0                       ((t :inherit lazy-highlight)))
+      (avy-lead-face-1                       ((t :inherit match)))
+      (avy-lead-face-2                       ((t :inherit lazy-highlight)))
+
       (ivy-current-match                     ((t :inherit match)))
       (ivy-minibuffer-match-face-1           ((t :inherit fixed-pitch)))
       (ivy-minibuffer-match-face-2           ((t :inherit lazy-highlight)))
