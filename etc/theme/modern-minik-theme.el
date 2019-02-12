@@ -270,6 +270,15 @@
       (whitespace-trailing                   ((t :inherit font-lock-keyword-face)))
       (column-enforce-face                   ((t :inherit error)))
 
+      (ediff-even-diff-Ancestor              ((t :inherit powerline-active1)))
+      (ediff-even-diff-A                     ((t :inherit powerline-active2)))
+      (ediff-even-diff-B                     ((t :inherit powerline-active1)))
+      (ediff-even-diff-C                     ((t :inherit powerline-active2)))
+      (ediff-odd-diff-Ancestor               ((t :inherit powerline-active2)))
+      (ediff-odd-diff-A                      ((t :inherit powerline-active1)))
+      (ediff-odd-diff-B                      ((t :inherit powerline-active2)))
+      (ediff-odd-diff-C                      ((t :inherit powerline-active1)))
+
       (fic-face                              ((t :inherit error)))
       (fic-author-face                       ((t :inherit font-lock-keyword-face)))
       (flycheck-fringe-info                  ((t :inherit font-lock-string-face)))
