@@ -505,6 +505,7 @@
     (define-key evil-normal-state-map (kbd "SPC") leader-key-map))
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
+  (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (evil-mode 1))
 
 ;;;; Completion with company mode (hopefully practically intrusion-free)
