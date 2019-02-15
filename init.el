@@ -1027,6 +1027,11 @@
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
+  (defun org-mode-enable ()
+    (setq fill-column 80)
+    (olivetti-set-width fill-column))
+  (add-hook 'org-mode-hook 'org-mode-enable)
+
 ;;;; Regular Org operation
   ;; Disable C-tab in org (some sort of forced archive toggle)
   ;; because it plays a better role with dired-sidebar
@@ -1162,7 +1167,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                                   (skip-entries-with-active-children))))))
+                              (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
