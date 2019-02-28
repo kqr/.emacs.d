@@ -209,58 +209,56 @@
 (defun prettify-programming-symbols ()
   "Prettify programming symbols!"
   (interactive)
-  (mapc (lambda (pair) (push pair prettify-symbols-alist))
-        '(;; Common operators
-          ("==" . (?＝ (Bc . Bl) ?＝))  ;; ==
-          ("!=" . (?＝ (Bc . Bc) ?/))  ;; =/=
-          (">=" . ?≥)
-          ("<=" . ?≤)
-          ("->" . ?⟼)
-          ("<-" . ?⟵)
-          ("=>" . ?⤇)
-          ("|>" . ?▷)
-          (">>" . ?»)
-          ("||" . ?∨)
-          ;;          ("or" . ?∨)
-          ;;          ("or else" . ?∨)
-          ("&&" . ?∧)
-          ;;          ("and" . ?∧)
-          ;;          ("and then" . ?∧)
-          ;;          ("!" . ?¬)
-          ;;          ("not" . ?¬)
-          ;; Control structures
-          ;;("for" . ?∀)
-          ;; Common types
-          ;;          ("void" . ?∅)
-          ;;          ("bool" . ?𝔹)
-          ;;          ("boolean" . ?𝔹)
-          ;;          ("Bool" . ?𝔹)
-          ;;          ("Boolean" . ?𝔹)
-          ;;          ("unsigned" . ?ℕ)
-          ;;          ("int" . ?ℤ)
-          ;;          ("integer" . ?ℤ)
-          ;;          ("Integer" . ?ℤ)
-          ;;          ("float" . ?ℝ)
-          ;;          ("double" . (?ℝ (Br . Bc) ?ℝ))  ;; RR
-          ;;          ("char" . ?Σ)
-          ;;          ("Character" . ?Σ)
-          ;;          ("string" . (?Σ (tr . cl) ?*))  ;; Σ*
-          ;;          ("String" . (?Σ (tr . cl) ?*))
-          ;; Greek
-          ("alpha" . ?α)
-          ("beta" . ?β)
-          ("gamma" . ?γ)
-          ("Gamma" . ?Γ)
-          ("delta" . ?δ)
-          ("Delta" . ?Δ)
-          ("lambda" . ?λ)
-          ("sigma" . ?σ)
-          ("Sigma" . ?Σ)
-          ("pi" . ?π)
-          ("tau" . ?τ)
-          ("psi" . ?ψ)
-          ("Psi" . ?Ψ)
-          ("Phi" . ?Φ))))
+  (let ((local-symbols
+         (pcase major-mode
+           ('fsharp-mode '((">>" . ?»)))
+           ('csharp-mode '(("=>" . ?⤇)
+                           ("foreach" . ?∀)))
+           (_ ())))
+        (global-symbols
+         '(;; Common operators
+           ("==" . (?＝ (Bc . Bl) ?＝))  ;; ==
+           ("!=" . (?＝ (Bc . Bc) ?/))  ;; =/=
+           (">=" . ?≥)
+           ("<=" . ?≤)
+           ("->" . ?⟼)
+           ("<-" . ?⟵)
+           ("|>" . ?▷)
+           ("||" . ?∨)
+           ("&&" . ?∧)
+           ("!" . ?¬)
+
+           ;; Common types
+           ;; Some of these are known under multiple names, but care should be
+           ;; taken to only prettify ONE of them per mode, or things get
+           ;; confusing. The choice here is strongly influenced by my current
+           ;; day job in .NET, mainly C#.
+           ("void" . ?∅)
+           ("bool" . ?𝔹)  ;; aka boolean, Bool, Boolean – but pick just one
+           ("unsigned" . ?ℕ)
+           ("int" . ?ℤ)
+           ("float" . ?ℝ)
+           ("double" . (?ℝ (Br . Bc) ?ℝ))  ;; RR
+           ("char" . ?Σ)
+           ("string" . (?Σ (tr . cl) ?*))  ;; Σ*
+
+           ;; Greek
+           ("alpha" . ?α)
+           ("beta" . ?β)
+           ("gamma" . ?γ)
+           ("Gamma" . ?Γ)
+           ("delta" . ?δ)
+           ("Delta" . ?Δ)
+           ("lambda" . ?λ)
+           ("sigma" . ?σ)
+           ("Sigma" . ?Σ)
+           ("pi" . ?π)
+           ("tau" . ?τ)
+           ("psi" . ?ψ)
+           ("Psi" . ?Ψ)
+           ("Phi" . ?Φ))))
+    (mapc (lambda (pair) (push pair prettify-symbols-alist))
+          (append local-symbols global-symbols))))
 (add-hook 'prog-mode-hook 'prettify-programming-symbols)
 (add-hook 'ess-mode-hook 'prettify-programming-symbols)
 
