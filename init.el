@@ -681,6 +681,14 @@
 
 (add-hook 'LaTeX-mode-hook #'configure-latex)
 
+;;;; JavaScript-mode config for JSON
+(defun json-configuration ()
+  "Set up JS-MODE with settings more common for JSON."
+  (when (string-match "\\.json\\'" buffer-file-name)
+    (setq c-basic-offset 2)
+    (setq js-indent-level 2)))
+(add-hook 'js-mode-hook 'json-configuration)
+
 ;;; Programming
 ;;;; Edit by balanced parentheses
 ;; Trying out smartparens-strict-mode instead of paredit
