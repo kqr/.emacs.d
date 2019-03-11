@@ -489,8 +489,10 @@
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
     (spaceline-emacs-theme))
 
+  (when (require 'evil-cleverparens nil 'noerror)
+    (add-hook 'smartparens-enabled-hook 'evil-cleverparens-mode))
+
   (let ((leader-key-map (make-sparse-keymap)))
-    (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
     (when (require 'evil-commentary nil 'noerror)
       (evil-commentary-mode))
     (when (require 'avy nil 'noerror)
