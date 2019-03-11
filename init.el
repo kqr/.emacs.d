@@ -483,7 +483,9 @@
 
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
-  (setq evil-want-fine-undo t)
+  (setq evil-want-fine-undo t
+        evil-move-beyond-eol t
+        evil-move-cursor-back nil)
 
   (when (require 'spaceline-config nil 'noerror)
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
@@ -937,6 +939,8 @@
   (setq python-shell-interpreter "python3")
   (add-hook 'python-mode-hook 'python-mode-configure))
 
+;;;; REST client mode
+(require 'restclient nil 'noerror)
 ;;; Time reporting, clocking etc
 (when (require 'timeclock nil 'noerror)
   (setq timeclock-file "~/org/log.timeclock")
