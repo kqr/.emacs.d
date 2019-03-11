@@ -466,8 +466,7 @@
      ;; Allow narrowing to subtree even when inside subtree
      (advice-add 'outshine-narrow-to-subtree :before
                  (lambda (&rest args) (unless (outline-on-heading-p t)
-                                        (outline-previous-visible-heading 1))))))
-
+                                   (outline-previous-visible-heading 1))))))
 
 ;;;; Evil mode
 (when (require 'evil nil 'noerror)
@@ -493,6 +492,11 @@
 
   (when (require 'evil-cleverparens nil 'noerror)
     (add-hook 'smartparens-enabled-hook 'evil-cleverparens-mode))
+
+  (when (and (require 'vimish-fold nil 'noerror)
+             (require 'evil-vimish-fold nil 'noerror))
+    (setq vimish-fold-header-width 70)
+    (evil-vimish-fold-mode +1))
 
   (let ((leader-key-map (make-sparse-keymap)))
     (when (require 'evil-commentary nil 'noerror)
@@ -688,7 +692,7 @@
 ;;;; JavaScript-mode config for JSON
 (defun json-configuration ()
   "Set up JS-MODE with settings more common for JSON."
-  (when (string-match "\\.json\\'" buffer-file-name)
+  (when (and buffer-file-name (string-match "\\.json\\'" buffer-file-name))
     (setq c-basic-offset 2)
     (setq js-indent-level 2)))
 (add-hook 'js-mode-hook 'json-configuration)
