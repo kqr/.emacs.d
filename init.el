@@ -886,7 +886,7 @@
       (local-set-key (kbd "C-c r r") 'omnisharp-rename)
       (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
       (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
-      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages-with-ido)
+      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
       (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))
     t))
 
