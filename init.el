@@ -262,6 +262,7 @@
 (add-hook 'prog-mode-hook 'prettify-programming-symbols)
 (add-hook 'ess-mode-hook 'prettify-programming-symbols)
 
+
 ;; Highlight FIXME TODO etc. in comments
 (autoload 'fic-mode "fic-mode")
 (add-hook 'prog-mode-hook 'fic-mode)
@@ -276,6 +277,7 @@
                 show-paren-style 'expression)
   ;; This is in order for region to take priority over show-paren highlighting
   (setq-default show-paren-priority -200))
+
 
 ;;;; Centered cursor and scrolling
 (when (require 'centered-cursor-mode nil 'noerror)
@@ -292,14 +294,17 @@
   (diminish 'centered-cursor-mode)
   (global-centered-cursor-mode +1))
 
+
 ;;;; Word count in modeline
 (require 'wc-mode)
 (define-key global-map (kbd "M-+") 'wc-mode)
 (add-hook 'after-save-hook #'wc-reset)
 (setq wc-modeline-format "Words:%W%w(%gw)")
 
+
 ;;;; Tooltips
 (require 'popup nil 'noerror)
+
 
 ;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode nil 'noerror)
@@ -311,6 +316,7 @@
      (display-buffer-no-window . ((allow-no-window . t))))
    display-buffer-alist))
 
+
 ;;;; Retain ANSI colour sequences in things like compilation buffers
 (when (require 'ansi-color nil 'noerror)
   (defun ansi-coloured-buffer ()
@@ -321,31 +327,6 @@
   (add-hook 'compilation-filter-hook 'ansi-coloured-buffer))
 
 
-;;;; fill-column-indicator
-;;
-;; Disabled in favour of olivetti, for the time being
-;;
-;;(require 'fill-column-mode nil 'noerror)
-;;(setq fci-rule-color "#222222")
-;;(add-hook 'text-mode-hook 'turn-on-fci-mode)
-;;(add-hook 'prog-mode-hook 'turn-on-fci-mode)
-;;
-;; Fix for bad interaction between company mode and fci-mode
-;;(with-eval-after-load "company"
-;;  (defvar-local company-fci-mode-on-p nil)
-;;
-;;  (defun company-turn-off-fci (&rest ignore)
-;;    (when (boundp 'fci-mode)
-;;      (setq company-fci-mode-on-p fci-mode)
-;;      (when fci-mode (fci-mode -1))))
-;;
-;;  (defun company-maybe-turn-on-fci (&rest ignore)
-;;    (when company-fci-mode-on-p (fci-mode 1)))
-;;
-;;  (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-;;  (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-;;  (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci))
-
 ;;;; Narrow buffers
 (when (require 'olivetti nil 'noerror)
   (add-hook 'text-mode-hook 'turn-on-olivetti-mode)
@@ -354,6 +335,13 @@
     (olivetti-set-width fill-column)
     (toggle-truncate-lines +1))
   (add-hook 'olivetti-mode-hook 'config-olivetti))
+
+
+;;;; Highlight the current stack of parentheses we are inside
+(when (require 'highlight-parentheses nil 'noerror)
+  (setq hl-paren-colors '("#ff7328" "#f99759" "#f2a06d" "#eaa472"))
+  (setq hl-paren-background-colors 'nil)
+  (global-highlight-parentheses-mode +1))
 
 
 ;;;; Window-divider
@@ -1237,7 +1225,6 @@
               " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
               "\\fi\n")))))
 
-
 ;;; Email client
 (when (require 'notmuch nil 'noerror)
   (define-key global-map (kbd "<f5>") 'notmuch)
@@ -1330,8 +1317,6 @@
     (setq mail-envelope-from 'header
           sendmail-program "/usr/bin/msmtp")))
 
-
-
 ;;; Theming
 ;; Location of my themes
 (setq custom-theme-directory "~/.emacs.d/etc/theme/")
@@ -1363,7 +1348,6 @@
   ;; outline-minor-mode is really persistent
   (add-hook 'outline-minor-mode-hook 'clean-modeline)
   (add-hook 'latex-preview-pane-mode-hook 'clean-modeline))
-
 
 (load "init-local.el" 'noerror)
 
