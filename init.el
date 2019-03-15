@@ -452,9 +452,10 @@
      (setq-default outshine-startup-folded-p t)
 
      ;; Allow narrowing to subtree even when inside subtree
-     (advice-add 'outshine-narrow-to-subtree :before
-                 (lambda (&rest args) (unless (outline-on-heading-p t)
-                                   (outline-previous-visible-heading 1))))))
+     (define-advice outshine-narrow-to-subtree
+         (:before (&rest args) narrow-to-subtree-when-inside-subtree)
+       (unless (outline-on-heading-p t)
+         (outline-previous-visible-heading 1)))))
 
 ;;;; Evil mode
 (when (require 'evil nil 'noerror)
@@ -469,6 +470,14 @@
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
+
+  (define-advice evil-quit
+      (:before-until (&rest args) evil-quit-kills-buffer-first)
+    (kill-buffer))
+
+  (advice-add 'outshine-narrow-to-subtree :before
+              (lambda (&rest args) (unless (outline-on-heading-p t)
+                                (outline-previous-visible-heading 1))))
 
   (setq evil-want-fine-undo t
         evil-move-beyond-eol t
@@ -723,7 +732,10 @@
 (add-hook 'prog-mode-hook 'global-flycheck-mode)
 (with-eval-after-load "flycheck"
   (diminish 'flycheck-mode)
-  (setq flycheck-php-phpcs-executable "/usr/local/bin/phpcs"
+  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+        flycheck-display-errors-delay 0.1
+        flycheck-idle-change-delay 2.0
+        flycheck-php-phpcs-executable "/usr/local/bin/phpcs"
         flycheck-phpcs-standard "psr2"
         flycheck-python-pycompile-executable "python3"))
 
