@@ -870,6 +870,7 @@
 (autoload 'fsharp-mode "fsharp-mode")
 (push '("\\.cs\\'" . csharp-mode) auto-mode-alist)
 (push '("\\.fs\\'" . fsharp-mode) auto-mode-alist)
+(push '("\\..sproj\\'" . nxml-mode) auto-mode-alist)
 
 (defun configure-omnisharp ()
   "Set up omnisharp for C# and F# the way I'm used to."
