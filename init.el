@@ -462,6 +462,8 @@
   (when (require 'tab-as-escape nil 'noerror)
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
+  ;; Don't override tab as outline mode subtree cycle
+  (define-key evil-motion-state-map (kbd "TAB") nil)
 
   (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
