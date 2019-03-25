@@ -541,7 +541,10 @@
            '(company-pseudo-tooltip-unless-just-one-frontend
              company-preview-if-just-one-frontend
              company-echo-metadata-frontend))
-     (setq company-idle-delay 0)
+     ;; Setting 0 idle delay was a nice idea, but it's way too slow for that
+     ;; Someone reports 0.3 working okay with omnisharp too, but let's ramp
+     ;; up slightly more slowly, to get maximum mileage out of it too.
+     (setq company-idle-delay 0.1)
      (setq company-tooltip-align-annotations t)
 
      ;; We don't want completion to prevent us from actually navigating the code
