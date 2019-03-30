@@ -403,7 +403,13 @@
    '(org-drill-use-visible-cloze-face-p t)
 
    '(powerline-default-separator 'wave)
-   '(powerline-reset)))
+   '(powerline-reset))
+
+  (when (require 'spaceline-config nil 'noerror)
+    (custom-theme-set-variables
+     'modern-minik
+     '(spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
+    (spaceline-emacs-theme)))
 
 (defvar modern-minik-mode-icon-alist
   "Alist mapping mode symbol to two strings – one unicode and one ascii.")
@@ -433,6 +439,7 @@ Chooses based on `display-graphic-p'."
   (dolist (mode (mapcar #'car modern-minik-mode-icon-alist))
     (unless (member mode '(flycheck-mode))
       (diminish mode (modern-minik-mode-icon mode)))))
+
 
 (provide-theme 'modern-minik)
 
