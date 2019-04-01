@@ -231,6 +231,10 @@
       (org-agenda-date-weekend               ((t :inherit fixed-pitch)))
       (org-warning                           ((t :inherit error)))
 
+      (org-drill-hidden-cloze-face           ((t :inherit widget-field)))
+      (org-drill-visible-cloze-face          ((t :inherit font-lock-string-face)))
+      (org-drill-visible-cloze-hint-face     ((t :inherit font-lock-comment-face)))
+
       (font-lock-constant-face               ((t :inherit fixed-pitch)))
       (font-lock-variable-name-face          ((t :inherit fixed-pitch)))
       (font-lock-doc-face                    ((t :inherit font-lock-comment-face)))
@@ -384,13 +388,19 @@
    'modern-minik
    '(cursor-type 'bar)
 
-   '(org-priority-faces
-     '((65 . theme-error-color)
-       (66 . theme-primary-accent)
-       (67 . theme-secondary-accent)
-       (68 . theme-strong-diminuitive)
-       (69 . theme-weak-diminuitive)
-       (70 . theme-weak-diminuitive)))
+   `(org-priority-faces
+     '((65 . ,theme-error-color)
+       (66 . ,theme-primary-accent)
+       (67 . ,theme-secondary-accent)
+       (68 . ,theme-strong-diminuitive)
+       (69 . ,theme-weak-diminuitive)
+       (70 . ,theme-weak-diminuitive)))
+
+   `(org-drill-new-count-color ,theme-primary-accent)
+   `(org-drill-done-count-color ,theme-weak-diminuitive)
+   `(org-drill-failed-count-color ,theme-error-color)
+   `(org-drill-mature-count-color ,theme-strong-diminuitive)
+   '(org-drill-use-visible-cloze-face-p t)
 
    '(powerline-default-separator 'wave)
    '(powerline-reset)))

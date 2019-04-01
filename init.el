@@ -1031,12 +1031,26 @@
 (defun capture-general-inbox (args)
   "Run inbox capture with ARGS."
   (interactive "P")
-  (org-capture args "i"))
+  (org-captudre args "i")
+  (evil-insert-state))
 
 (defun capture-mail-inbox (args)
   "Run mail capture with ARGS."
   (interactive "P")
-  (org-capture args "m"))
+  (org-capture args "m")
+  (evil-insert-state))
+
+(defun capture-flashcard (args)
+  "Capture a new flashcard with ARGS for use with org-drill."
+  (interactive "P")
+  (org-capture args "f")
+  (evil-insert-state))
+
+(defun capture-general-inbox (args)
+  "Run inbox capture with ARGS."
+  (interactive "P")
+  (org-capture args "i")
+  (evil-insert-state))
 
 (define-prefix-command 'kqr-org-prefix)
 (define-key 'kqr-org-prefix (kbd "l") #'org-store-link)
@@ -1044,12 +1058,14 @@
 (define-key 'kqr-org-prefix (kbd "a") #'org-agenda)
 (define-key 'kqr-org-prefix (kbd "i") #'capture-general-inbox)
 (define-key 'kqr-org-prefix (kbd "m") #'capture-mail-inbox)
+(define-key 'kqr-org-prefix (kbd "f") #'capture-flashcard)
 
 ;; This must happen last, when we have defined all keys in the prefix map
 (define-key global-map (kbd "<f4>") 'kqr-org-prefix)
 
 (with-eval-after-load "org"
   (require 'org-notmuch nil 'noerror)
+  (require 'org-drill nil 'noerror)
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
@@ -1130,14 +1146,15 @@
 ;;;;; Capturing, refiling and archiving
   (setq org-capture-templates
         '(("i" ">inbox" entry (file "") "* %?\n")
-          ("m" "mail>inbox" entry (file "") "* %?\n%a\n"))
+          ("m" "mail>inbox" entry (file "") "* %?\n%a\n")
+          ("f" "mail>inbox" entry (file "~/org/flashcards.org") "* %? :drill:\n"))
         org-default-notes-file "~/org/inbox.org"
         org-refile-targets
-        '(("~/org/projects.org" :maxlevel . 3)
+        '(("~/org/projects.org" :maxlevel . 2)
           ("~/org/tickler.org" :maxlevel . 1)
           ("~/org/someday.org" :maxlevel . 3)
           ("~/org/notes.org" :maxlevel . 2)
-          ("~/org/loop54.org" :maxlevel . 1))
+          ("~/org/loop54.org" :maxlevel . 2))
         org-refile-allow-creating-parent-nodes 'confirm
         org-refile-use-outline-path t
         org-outline-path-complete-in-steps nil
