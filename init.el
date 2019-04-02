@@ -337,11 +337,6 @@
   (add-hook 'olivetti-mode-hook 'config-olivetti))
 
 
-;;;; Highlight the current stack of parentheses we are inside
-(when (require 'highlight-parentheses nil 'noerror)
-  (setq hl-paren-colors '("#ff7328" "#f99759" "#f2a06d" "#eaa472"))
-  (setq hl-paren-background-colors 'nil)
-  (global-highlight-parentheses-mode +1))
 
 
 ;;;; Window-divider
@@ -1364,6 +1359,12 @@
 (setq frame-background-mode 'dark)
 (load-theme 'modern-minik t)
 (modern-minik-set-icons)
+
+;;;; Highlight the current stack of parentheses we are inside
+(when (require 'highlight-parentheses nil 'noerror)
+  (setq hl-paren-colors '("#ff7328" "#f99759" "#f2a06d" "#eaa472"))
+  (setq hl-paren-background-colors 'nil)
+  (global-highlight-parentheses-mode +1))
 
 ;; But we also don't want a bunch of junk in the modeline...
 (when (require 'diminish nil :noerror)
