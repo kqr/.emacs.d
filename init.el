@@ -1075,7 +1075,7 @@
   (define-key org-mode-map (kbd "<C-tab>") nil)
   (setq org-return-follows-link t
         org-list-allow-alphabetical t
-        org-hide-emphasis-markers t
+        org-hide-emphasis-markers nil
         org-fontify-quote-and-verse-blocks t
         org-ellipsis " ↴ "
         org-show-context-detail
@@ -1205,7 +1205,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
