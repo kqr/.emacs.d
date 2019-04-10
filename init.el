@@ -767,7 +767,7 @@
 ;;;; Web mode (multi-modal editing of templates)
 ;;;; BUT also js2-mode which is neat and can do JSX
 (autoload 'js2-mode "js2-mode" nil t)
-(push '("\\.js\\'" . js2-mode) auto-mode-alist)
+(push '("\\.js\\'" . js2-jsx-mode) auto-mode-alist)
 
 (autoload 'web-mode "web-mode"  nil t)
 (push '("\\.html\\'" . web-mode) auto-mode-alist)  ;; HTML files
