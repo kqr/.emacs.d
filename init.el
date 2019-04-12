@@ -1060,7 +1060,9 @@
 
 (with-eval-after-load "org"
   (require 'org-notmuch nil 'noerror)
-  (require 'org-drill nil 'noerror)
+  (when (require 'org-drill nil 'noerror)
+    (setq org-drill-left-cloze-delimiter ?{
+          org-drill-right-cloze-delimiter ?}))
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
@@ -1205,7 +1207,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                                   (skip-entries-with-active-children))))))
+                              (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
