@@ -706,6 +706,7 @@
      (smartparens-global-strict-mode)
      (sp-use-smartparens-bindings)
      (sp-local-pair 'ada-mode "'" nil :actions nil)
+     (sp-local-pair 'fsharp-mode "'" nil :actions nil)
      (define-key global-map (kbd "M-s") 'sp-split-sexp)
      (define-key global-map (kbd "M-r") 'sp-join-sexp))))
 
