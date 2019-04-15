@@ -317,6 +317,14 @@
    display-buffer-alist))
 
 
+;;;; When making new frame, switch it to scratch buffer
+(defun switch-to-scratch-buffer (frame)
+  "Switch to scratch buffer in FRAME."
+  (with-selected-frame frame
+    (switch-to-buffer "*scratch*")))
+
+(push 'switch-to-scratch-buffer after-make-frame-functions)
+
 ;;;; Retain ANSI colour sequences in things like compilation buffers
 (when (require 'ansi-color nil 'noerror)
   (defun ansi-coloured-buffer ()
