@@ -1139,7 +1139,7 @@
         org-default-priority ?C)
 
   (setq org-global-properties
-        '(("Effort_ALL" . "0 0:15 1:00 4:00 8:00 16:00 40:00 80:00")))
+        '(("Effort_ALL" . "0 0:15 0:30 1:00 2:00 4:00 6:00 8:00 12:00 16:00 24:00 36:00")))
   (setq org-columns-default-format
         (concat
          "%8TODO(State)"
@@ -1216,7 +1216,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
