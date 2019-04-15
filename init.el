@@ -1070,8 +1070,8 @@
 (with-eval-after-load "org"
   (require 'org-notmuch nil 'noerror)
   (when (require 'org-drill nil 'noerror)
-    (setq org-drill-left-cloze-delimiter ?{
-          org-drill-right-cloze-delimiter ?}))
+    (setq org-drill-left-cloze-delimiter "{{"
+          org-drill-right-cloze-delimiter "}}"))
   (when (require 'calendar nil 'noerror)
     (setq-default calendar-date-style 'iso))
 
