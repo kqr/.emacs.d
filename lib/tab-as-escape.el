@@ -5,11 +5,11 @@
 
 (defun decode-tab-into-escape (&optional frame)
   "Set the decode map of (optional) FRAME to interpret tab as escape."
-  (when frame
-    (with-selected-frame frame
-      (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
-      (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
-      (define-key input-decode-map "\e[Z" [backtab]))))
+  (with-selected-frame (or frame (window-frame))
+    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+    (define-key input-decode-map (kbd "<tab>") (kbd "<escape>"))
+    (define-key input-decode-map (kbd "C-i") (kbd "<escape>"))
+    (define-key input-decode-map "\e[Z" [backtab])))
 
 (define-minor-mode tab-as-escape-mode
   "Toggle swappage of the tab and escape keys."
