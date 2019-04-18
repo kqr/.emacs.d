@@ -63,11 +63,11 @@
 ;; A common problem e.g. on OS X is that Emacs runs in a slightly different
 ;; environment than what you're used to in the user shell. This should help at
 ;; least a little with that issue.
-(when (require 'exec-path-from-shell nil 'noerror)
+(when (require 'exec-path-from-shell nil)
   (exec-path-from-shell-initialize))
 
-(push "~/.emacs.d/etc" load-path)
-(push "~/.emacs.d/lib" load-path)
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lib"))
 ;;(eval-and-compile (push "~/.emacs.d/etc" load-path))
 
 (require 'cl-lib)
@@ -139,7 +139,7 @@
 (autoload 'bug-hunter-init-file "bug-hunter" nil t)
 
 ;; Printing directly from Emacs
-(when (require 'ps-print nil :noerror)
+(when (require 'ps-print nil)
   (add-to-list
    'ps-font-info-database
    '(kqr-mixed-family (fonts (normal . "Helvetica")
@@ -194,7 +194,7 @@
 ;; Replace the default line-extends-beyond-window symbol
 (set-display-table-slot standard-display-table 0 ?›)
 
-(when (require 'face-remap nil 'noerror)
+(when (require 'face-remap nil)
   ;; Make available smaller changes in text size
   (setq-default text-scale-mode-step 1.05)
 
@@ -270,7 +270,7 @@
   '(setq-default fic-highlighted-words
                  (split-string "FIXME TODO BUG XXX")))
 
-(when (require 'paren nil 'noerror)
+(when (require 'paren nil)
   (show-paren-mode +1)
   (setq-default show-paren-delay 0
                 show-paren-when-point-inside-paren t
@@ -280,8 +280,8 @@
 
 
 ;;;; Centered cursor and scrolling
-(when (require 'centered-cursor-mode nil 'noerror)
-  (when (require 'simpler-centered-cursor-mode nil 'noerror)
+(when (require 'centered-cursor-mode nil)
+  (when (require 'simpler-centered-cursor-mode nil)
     (defun switch-to-simple-scc ()
       "If this is a large file, switch to simpler-centered-cursor-mode."
       (when (> (buffer-size) 32000)
@@ -303,11 +303,11 @@
 
 
 ;;;; Tooltips
-(require 'popup nil 'noerror)
+(require 'popup nil)
 
 
 ;;;; Prefer opening frames instead of windows in Emacs
-(when (require 'frames-only-mode nil 'noerror)
+(when (require 'frames-only-mode nil)
   ;; Trying without frames-only mode for a while
   (frames-only-mode -1)
   ;; A new frame for each LaTeX refresh gets annoying
@@ -326,7 +326,7 @@
 (push 'switch-to-scratch-buffer after-make-frame-functions)
 
 ;;;; Retain ANSI colour sequences in things like compilation buffers
-(when (require 'ansi-color nil 'noerror)
+(when (require 'ansi-color nil)
   (defun ansi-coloured-buffer ()
     "Interpret ANSI colour sequences correctly in current buffer."
     (toggle-read-only)
@@ -336,7 +336,7 @@
 
 
 ;;;; Narrow buffers
-(when (require 'olivetti nil 'noerror)
+(when (require 'olivetti nil)
   (add-hook 'text-mode-hook 'turn-on-olivetti-mode)
   (add-hook 'prog-mode-hook 'turn-on-olivetti-mode)
   (defun config-olivetti ()
@@ -417,23 +417,23 @@
   (setq dired-sidebar-close-sidebar-on-file-open t))
 (when (and
        (display-graphic-p)
-       (require 'all-the-icons nil 'noerror)
-       (require 'all-the-icons-dired nil 'noerror))
+       (require 'all-the-icons nil)
+       (require 'all-the-icons-dired nil))
   (all-the-icons-dired-mode)
   (diminish 'all-the-icons-dired-mode))
 
 ;; Provide a list of recently opened files
 ;; bind to C-x C-r because I don't use find-file-read-only too much (though I
 ;; probably should...)
-(when (require 'recentf nil 'noerror)
+(when (require 'recentf nil)
   (define-key global-map (kbd "C-x C-r") #'counsel-recentf))
 
 ;; Smart M-x and fuzzy matching everywhere
 (run-with-idle-timer
  6 nil
  (lambda ()
-   (require 'smex nil 'noerror)
-   (when (require 'ivy nil 'noerror)
+   (require 'smex nil)
+   (when (require 'ivy nil)
      (diminish 'ivy-mode)
      (setq-default ivy-initial-inputs-alist nil)
      (ivy-mode +1)
@@ -442,8 +442,8 @@
      (define-key global-map (kbd "M-x") #'counsel-M-x))))
 
 ;;;;; Org-like outlining of ANY document, not only Org files
-(autoload 'outshine-mode "outshine")
-(add-hook 'outline-minor-mode-hook #'outshine-mode)
+(autoload 'outshine-minor-mode "outshine")
+(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
 (add-hook 'prog-mode-hook #'outline-minor-mode)
 (eval-after-load "outshine"
   '(progn
@@ -461,8 +461,8 @@
          (outline-previous-visible-heading 1)))))
 
 ;;;; Evil mode
-(when (require 'evil nil 'noerror)
-  (when (require 'tab-as-escape nil 'noerror)
+(when (require 'evil nil)
+  (when (require 'tab-as-escape nil)
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
   ;; Don't override tab as outline mode subtree cycle
@@ -488,32 +488,32 @@
         evil-move-beyond-eol t
         evil-move-cursor-back nil)
 
-  (when (require 'spaceline-config nil 'noerror)
+  (when (require 'spaceline-config nil)
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
     (spaceline-emacs-theme))
 
-  (when (require 'evil-cleverparens nil 'noerror)
+  (when (require 'evil-cleverparens nil)
     (add-hook 'smartparens-enabled-hook 'evil-cleverparens-mode))
 
-  (when (and (require 'vimish-fold nil 'noerror)
-             (require 'evil-vimish-fold nil 'noerror))
+  (when (and (require 'vimish-fold nil)
+             (require 'evil-vimish-fold nil))
     (setq vimish-fold-header-width 70)
     (evil-vimish-fold-mode +1))
 
   (let ((leader-key-map (make-sparse-keymap)))
-    (when (require 'evil-commentary nil 'noerror)
+    (when (require 'evil-commentary nil)
       (evil-commentary-mode))
-    (when (require 'avy nil 'noerror)
+    (when (require 'avy nil)
       (setq avy-keys'(?a ?r ?s ?t ?n ?e ?i ?o)
             avy-background t
             avy-all-windows t)
       (define-key leader-key-map (kbd "w") 'avy-goto-word-1)
       (define-key leader-key-map (kbd "k") 'avy-goto-line))
-    (when (require 'evil-surround nil 'noerror)
+    (when (require 'evil-surround nil)
       (global-evil-surround-mode 1))
-    (when (require 'evil-visualstar nil 'noerror)
+    (when (require 'evil-visualstar nil)
       (global-evil-visualstar-mode 1))
-    (when (require 'evil-goggles nil 'noerror)
+    (when (require 'evil-goggles nil)
       (setq evil-goggles-pulse t)
       (setq evil-goggles-duration 0.1)
       (evil-goggles-mode 1)
@@ -530,7 +530,7 @@
 (run-with-idle-timer
  10 nil
  (lambda ()
-   (when (require 'company nil 'noerror)
+   (when (require 'company nil)
      (diminish 'company-mode)
      (global-company-mode +1)
 
@@ -567,7 +567,7 @@
 ;;;; Miscellaneous interaction
 ;;;;; Export window contents to neat HTML
 ;; Tried autoloading but that didn't work and I don't have time to troubleshoot
-(when (require 'htmlize nil 'noerror)
+(when (require 'htmlize nil)
   (setq htmlize-output-type 'inline-css)
 
   ;; Automatically upload HTML of region-or-buffer to remote
@@ -597,7 +597,7 @@
       (kill-new access-url))))
 
 ;;;;; Analyse command usage frequency to optimise config
-(when (require 'keyfreq nil 'noerror)
+(when (require 'keyfreq nil)
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 
@@ -612,7 +612,7 @@
 (define-key global-map (kbd "C-S-j") #'delete-indentation)
 
 ;;;; Autorevert
-(when (require 'autorevert nil 'noerror)
+(when (require 'autorevert nil)
   (global-auto-revert-mode 1))
 
 ;;;; Undo-tree
@@ -628,7 +628,7 @@
   (setq-default undo-tree-visualizer-diff t))
 
 ;;;; Merge binds
-(when (require 'smerge-mode nil 'noerror)
+(when (require 'smerge-mode nil)
   (defun sm-try-smerge ()
     "Start smerge-mode automatically when a git conflict is detected."
     (save-excursion
@@ -638,7 +638,7 @@
   (add-hook 'find-file-hook 'sm-try-smerge t))
 
 ;;;; Ediff mode for interactive comparison of text
-(when (require 'ediff nil 'noerror)
+(when (require 'ediff nil)
   (setq ediff-split-window-function 'split-window-horizontally
         ediff-window-setup-function 'ediff-setup-windows-plain)
   (defun ediff-outline-show-all ()
@@ -657,7 +657,7 @@
 (define-key global-map (kbd "C-r") 'vr/isearch-backward)
 (eval-after-load "visual-regexp"
   '(progn
-     (require 'visual-regexp-steroids nil 'noerror)
+     (require 'visual-regexp-steroids nil)
      (setq-default sr/default-regexp-modifiers '(:I t :M nil :S nil :U nil))))
 
 ;;;; Expand-region
@@ -666,7 +666,7 @@
 
 ;;;; Yas-snippet
 (setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"))
-(when (require 'yasnippet nil 'noerror)
+(when (require 'yasnippet nil)
   (setq yas-indent-line 'fixed)
   ;; This may be causing a lot of lag so let's turn it off instead.
   ;; I rarely use it anyway!
@@ -679,7 +679,8 @@
   '(setq-default synosaurus-choose-method 'popup))
 
 ;;;; LaTeX preview pane
-(require 'tex-site nil :noerror)
+;; TODO verify what's required for this that I'm missing
+;;(require 'tex-site nil)
 
 (setq-default font-latex-deactivated-keyword-classes
               '("textual" "type-command" "type-declaration"))
@@ -708,7 +709,7 @@
 (run-with-idle-timer
  5 nil
  (lambda ()
-   (when (require 'smartparens nil 'noerror)
+   (when (require 'smartparens nil)
      (diminish 'smartparens-mode)
      (require 'smartparens-config)
      (smartparens-global-strict-mode)
@@ -722,7 +723,7 @@
 ;;;; Indentation/whitespace stuff
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-(when (require 'aggressive-indent nil 'noerror)
+(when (require 'aggressive-indent nil)
   (diminish 'aggressive-indent-mode)
   (electric-indent-mode -1)
 
@@ -734,8 +735,8 @@
           (incf count)
           (cancel-timer timer)))
       (when (> count 0)
-        (message "Cancelled %s aggressive-indent timers" count)))
-    (run-with-timer 60 nil 'cancel-aggressive-indent-timers))
+        (message "Cancelled %s aggressive-indent timers" count))))
+  (run-with-timer 60 nil 'cancel-aggressive-indent-timers)
 
   (global-aggressive-indent-mode +1))
 
@@ -770,7 +771,7 @@
   (when (executable-find "uctags")
     (setq projectile-tags-command "uctags -Re -f \"%s\" %s"))
   (projectile-mode +1)
-  (when (require 'counsel-projectile nil 'noerror)
+  (when (require 'counsel-projectile nil)
     (counsel-projectile-mode +1))
 
   (defun load-two-wrongs ()
@@ -802,7 +803,7 @@
                    web-mode-css-indent-offset 2)
 
      ;; If we like web-mode, we'll probably like impatient-mode too!
-     (require 'impatient-mode nil 'noerror)))
+     (require 'impatient-mode nil)))
 
 ;;;; Ada mode
 (autoload 'ada-mode "ada-mode")
@@ -863,7 +864,7 @@
   (require 'haskell-interactive-mode)
   (require 'haskell-process)
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (when (require 'shm nil :noerror)
+  (when (require 'shm nil)
     (push 'haskell-mode aggressive-indent-excluded-modes)
     (add-hook 'haskell-mode-hook
               (lambda ()
@@ -902,8 +903,8 @@
 
 (defun configure-omnisharp ()
   "Set up omnisharp for C# and F# the way I'm used to."
-  (when (require 'omnisharp nil 'noerror)
-    (when (require 'company nil 'noerror)
+  (when (require 'omnisharp nil)
+    (when (require 'company nil)
       (add-to-list 'company-backends #'company-omnisharp))
 
     (setq omnisharp-expected-server-version "1.32.8")
@@ -973,9 +974,9 @@
   (add-hook 'python-mode-hook 'python-mode-configure))
 
 ;;;; REST client mode
-(require 'restclient nil 'noerror)
+(require 'restclient nil)
 ;;; Time reporting, clocking etc
-(when (require 'timeclock nil 'noerror)
+(when (require 'timeclock nil)
   (setq timeclock-file "~/org/log.timeclock")
   (setq timeclock-workday 28800)
   (define-key ctl-x-map "ti" 'timeclock-in)
@@ -1087,11 +1088,11 @@
 (define-key global-map (kbd "<f4>") 'kqr-org-prefix)
 
 (with-eval-after-load "org"
-  (require 'org-notmuch nil 'noerror)
-  (when (require 'org-drill nil 'noerror)
+  (require 'org-notmuch nil)
+  (when (require 'org-drill nil)
     (setq org-drill-left-cloze-delimiter "{{"
           org-drill-right-cloze-delimiter "}}"))
-  (when (require 'calendar nil 'noerror)
+  (when (require 'calendar nil)
     (setq-default calendar-date-style 'iso))
 
   (defun org-mode-enable ()
@@ -1115,7 +1116,7 @@
           (default . ancestors)))
 
   ;; TODO: Set faces for org-level-1 (1.618) and org-level-2 (1.618Q?)
-  (when (require 'org-bullets nil 'noerror)
+  (when (require 'org-bullets nil)
     (setq org-bullets-bullet-list '("⊛")))
 
   (org-set-emph-re 'org-emphasis-regexp-components
@@ -1235,7 +1236,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                                   (skip-entries-with-active-children))))))
+                              (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
@@ -1255,7 +1256,7 @@
         org-export-with-sub-superscripts nil
         org-export-with-footnotes t)
 
-  (when (require 'ox-latex nil 'noerror)
+  (when (require 'ox-latex nil)
     (push (append '(("tufte-handout"
                      "\\documentclass[a4paper,11pt]{tufte-handout}"
                      ("\\section{%s}" . "\\section*{%s}")
@@ -1310,9 +1311,9 @@
         notmuch-poll-script nil)
 
   (cl-labels ((ebrela (gh hu us st tg)
-                   (concat us (cons ?\100 nil)
-                           hu (list ?\x2e)
-                           tg)))
+                      (concat us (cons ?\100 nil)
+                              hu (list ?\x2e)
+                              tg)))
     (let ((a (ebrela "word" "xkqr" "a" "fz" "org"))
           (k (ebrela "spam" "rdw" "k" "protection" "se"))
           (s (ebrela "i" "kth" "stjernl" "hope" "se")))
@@ -1373,7 +1374,7 @@
   (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
 
   ;;;;;; Sendmail integration
-  (when (require 'sendmail nil 'noerror)
+  (when (require 'sendmail nil)
     (setq mail-envelope-from 'header
           sendmail-program "/usr/bin/msmtp")))
 
@@ -1391,13 +1392,13 @@
 (modern-minik-set-icons)
 
 ;;;; Highlight the current stack of parentheses we are inside
-(when (require 'highlight-parentheses nil 'noerror)
+(when (require 'highlight-parentheses nil)
   (setq hl-paren-colors '("#ff7328" "#f99759" "#f2a06d" "#eaa472"))
   (setq hl-paren-background-colors 'nil)
   (global-highlight-parentheses-mode +1))
 
 ;; But we also don't want a bunch of junk in the modeline...
-(when (require 'diminish nil :noerror)
+(when (require 'diminish nil)
   (setq eldoc-minor-mode-string "")
   (defun clean-modeline ()
     (mapc #'diminish
