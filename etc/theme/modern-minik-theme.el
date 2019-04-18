@@ -406,14 +406,7 @@
    `(org-drill-mature-count-color ,theme-strong-diminuitive)
    '(org-drill-use-visible-cloze-face-p t)
 
-   '(powerline-default-separator 'wave)
-   '(powerline-reset))
-
-  (when (require 'spaceline-config nil 'noerror)
-    (custom-theme-set-variables
-     'modern-minik
-     '(spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
-    (spaceline-emacs-theme)))
+   '(powerline-default-separator 'wave)))
 
 (defvar modern-minik-mode-icon-alist
   "Alist mapping mode symbol to two strings – one unicode and one ascii.")
@@ -444,7 +437,14 @@ Chooses based on `display-graphic-p'."
     (unless (member mode '(flycheck-mode))
       (diminish mode (modern-minik-mode-icon mode)))))
 
+(defun modern-minik-configure-spaceline ()
+  (when (require 'spaceline-config nil)
+    ;;(spaceline-reset)
+    (spaceline-emacs-theme)))
+
+(defun modern-minik-eval-init ()
+  (modern-minik-set-icons)
+  (modern-minik-configure-spaceline))
 
 (provide-theme 'modern-minik)
-
 ;;; modern-minik-theme.el ends here

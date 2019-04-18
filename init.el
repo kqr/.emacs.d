@@ -482,15 +482,14 @@
 
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
-                                (outline-previous-visible-heading 1))))
+                                     (outline-previous-visible-heading 1))))
 
   (setq evil-want-fine-undo t
         evil-move-beyond-eol t
         evil-move-cursor-back nil)
 
   (when (require 'spaceline-config nil)
-    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-    (spaceline-emacs-theme))
+    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
 
   (when (require 'evil-cleverparens nil)
     (add-hook 'smartparens-enabled-hook 'evil-cleverparens-mode))
@@ -1389,7 +1388,7 @@
 ;; We like our theme
 (setq frame-background-mode 'dark)
 (load-theme 'modern-minik t)
-(modern-minik-set-icons)
+(modern-minik-eval-init)
 
 ;;;; Highlight the current stack of parentheses we are inside
 (when (require 'highlight-parentheses nil)
