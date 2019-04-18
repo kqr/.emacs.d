@@ -374,7 +374,7 @@ hidden."
   :lighter olivetti-lighter
   (if olivetti-mode
       (progn
-        (dolist (hook '(post-command-hook
+        (dolist (hook '(;;post-command-hook
                         window-configuration-change-hook
                         window-size-change-functions))
           (add-hook hook 'olivetti-set-environment t t))
