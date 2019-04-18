@@ -725,6 +725,18 @@
 (when (require 'aggressive-indent nil 'noerror)
   (diminish 'aggressive-indent-mode)
   (electric-indent-mode -1)
+
+  (defun cancel-aggressive-indent-timers ()
+    (interactive)
+    (let ((count 0))
+      (dolist (timer timer-idle-list)
+        (when (eq 'aggressive-indent--indent-if-changed (aref timer 5))
+          (incf count)
+          (cancel-timer timer)))
+      (when (> count 0)
+        (message "Cancelled %s aggressive-indent timers" count)))
+    (run-with-timer 60 nil 'cancel-aggressive-indent-timers))
+
   (global-aggressive-indent-mode +1))
 
 (autoload 'whitespace "whitespace-mode")
@@ -808,10 +820,16 @@
 ;;;; SLIME and Lisp stuff
 (autoload 'slime "slime")
 (autoload 'slime-connected-p "slime")
-(add-hook 'lisp-mode-hook
-          (lambda () (or (slime-connected-p)
-                    (save-excursion (slime)))))
+
 (with-eval-after-load "slime"
+  (defun start-slime ()
+    "If slime is not running, start it if possible."
+    (unless (slime-connected-p)
+      (condition-case-unless-debug nil
+          (save-excursion (slime))
+        (error (message "Slime failed to start. This may be expected.")))))
+  (add-hook 'lisp-mode-hook 'start-slime)
+
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
   (defun popup-slime-documentation (symbol-name)
@@ -922,7 +940,7 @@
 
 (with-eval-after-load "fsharp-mode"
   (defun fsharp-mode-enable ()
-    (aggressive-indent-mode -1)
+    (push 'fsharp-mode aggressive-indent-excluded-modes)
 
     (when (configure-omnisharp)
       (add-hook 'fsharp-mode-hook 'omnisharp-enable)))
@@ -950,7 +968,7 @@
 ;;;; Python mode
 (with-eval-after-load "python"
   (defun python-mode-configure ()
-    (aggressive-indent-mode -1))
+    (push 'python-mode aggressive-indent-excluded-modes))
   (setq python-shell-interpreter "python3")
   (add-hook 'python-mode-hook 'python-mode-configure))
 

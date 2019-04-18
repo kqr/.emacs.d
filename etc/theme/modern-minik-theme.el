@@ -186,6 +186,10 @@
       (ivy-minibuffer-match-face-4           ((t :inherit lazy-highlight)))
       (ivy-cursor                            ((t :inherit cursor)))
       (ivy-match-required-face               ((t :inherit isearch-fail)))
+      (swiper-match-face-1                   ((t :inherit lazy-highlight)))
+      (swiper-match-face-2                   ((t :inherit lazy-highlight)))
+      (swiper-match-face-3                   ((t :inherit lazy-highlight)))
+      (swiper-match-face-4                   ((t :inherit lazy-highlight)))
 
       (undo-tree-visualizer-default-face     ((t :inherit font-lock-comment-face)))
       (undo-tree-visualizer-current-face     ((t :inherit warning)))
