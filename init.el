@@ -442,8 +442,8 @@
      (define-key global-map (kbd "M-x") #'counsel-M-x))))
 
 ;;;;; Org-like outlining of ANY document, not only Org files
-(autoload 'outshine-minor-mode "outshine")
-(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+(autoload 'outshine-mode "outshine")
+(add-hook 'outline-minor-mode-hook #'outshine-mode)
 (add-hook 'prog-mode-hook #'outline-minor-mode)
 (eval-after-load "outshine"
   '(progn
@@ -1309,7 +1309,7 @@
         notmuch-archive-tags '("-inbox" "-unread")
         notmuch-poll-script nil)
 
-  (labels ((ebrela (gh hu us st tg)
+  (cl-labels ((ebrela (gh hu us st tg)
                    (concat us (cons ?\100 nil)
                            hu (list ?\x2e)
                            tg)))
