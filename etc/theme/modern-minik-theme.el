@@ -69,8 +69,7 @@
             default)
 
            ;; Set this without the background, so we can inherit from them
-           (((t :foreground ,theme-default-color
-                :height ,theme-base-height))
+           (((t :foreground ,theme-default-color))
             theme-base-face)
 
            ;; These are odd ones, otherwise default+bold is rarely used
@@ -235,30 +234,43 @@
                                                  :slant italic
                                                  :height 1.0)))
       (org-document-info-keyword             ((t :inherit (font-lock-comment-face fixed-pitch)
-                                                 :height 1.0)))
+                                                 :height 0.75)))
+      (org-meta-line                         ((t :inherit (font-lock-comment-face fixed-pitch)
+                                                 :height 0.75)))
 
-      (org-block-begin-line                  ((t :inherit (font-lock-comment-face fixed-pitch))))
-      (org-block-end-line                    ((t :inherit (font-lock-comment-face fixed-pitch))))
-      (org-table                             ((t :inherit fixed-pitch)))
-      (org-code                              ((t :inherit fixed-pitch)))
-      (org-block                             ((t :inherit fixed-pitch)))
-      (org-block-background                  ((t :inherit fixed-pitch)))
+      (org-block-begin-line                  ((t :inherit (font-lock-comment-face fixed-pitch)
+                                                 :height 0.75)))
+      (org-block-end-line                    ((t :inherit (font-lock-comment-face fixed-pitch)
+                                                 :height 0.75)))
+      (org-table                             ((t :inherit fixed-pitch
+                                                 :height 0.75)))
+      (org-code                              ((t :inherit fixed-pitch
+                                                 :height 0.75)))
+      (org-block                             ((t :inherit fixed-pitch
+                                                 :height 0.75)))
+      (org-block-background                  ((t :inherit fixed-pitch
+                                                 :height 0.75)))
       (org-link                              ((t :inherit link)))
       (org-footnote                          ((t :inherit font-lock-comment-face)))
       (org-special-keyword                   ((t :inherit font-lock-comment-face)))
 
-      (org-checkbox                          ((t :inherit fixed-pitch)))
+      (org-checkbox                          ((t :inherit fixed-pitch
+                                                 :height 0.75)))
 
       (org-ellipsis                          ((t :inherit font-lock-keyword-face)))
-      (org-tag                               ((t :inherit (font-lock-comment-face fixed-pitch))))
-      (org-todo                              ((t :inherit (font-lock-keyword-face fixed-pitch))))
-      (org-done                              ((t :inherit (font-lock-comment-face fixed-pitch))))
+      (org-tag                               ((t :inherit (font-lock-comment-face fixed-pitch)
+                                                 :height 0.75)))
+      (org-todo                              ((t :inherit (font-lock-keyword-face fixed-pitch)
+                                                 :height 0.75)))
+      (org-done                              ((t :inherit (font-lock-comment-face fixed-pitch)
+                                                 :height 0.75)))
       (org-agenda-done                       ((t :inherit font-lock-comment-face)))
       (org-upcoming-deadline                 ((t :inherit font-lock-keyword-face)))
       (org-scheduled                         ((t :inherit font-lock-comment-face)))
       (org-scheduled-today                   ((t :inherit theme-base-face)))
       (org-scheduled-previously              ((t :inherit warning)))
-      (org-priority                          ((t :inherit (font-lock-type-face fixed-pitch))))
+      (org-priority                          ((t :inherit (font-lock-type-face fixed-pitch)
+                                                 :height 0.75)))
       (org-agenda-structure                  ((t :inherit font-lock-type-face)))
       (org-agenda-date                       ((t :inherit theme-base-face)))
       (org-agenda-date-today                 ((t :inherit theme-base-face)))
