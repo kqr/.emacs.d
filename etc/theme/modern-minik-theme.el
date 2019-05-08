@@ -296,6 +296,9 @@
       (shm-current-face                      ((t :inherit show-paren-match)))
       (shm-quarantine-face                   ((t :inherit theme-base-face)))
 
+      (nxml-element-local-name               ((t :inherit default)))
+      (nxml-attribute-local-name             ((t :inherit default)))
+
       (outshine-level-1                      ((t :inherit font-lock-comment-face)))
       (outshine-level-2                      ((t :inherit font-lock-comment-face)))
       (outshine-level-3                      ((t :inherit font-lock-comment-face)))
