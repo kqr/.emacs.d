@@ -212,8 +212,7 @@
       (undo-tree-visualizer-unmodified-face  ((t :inherit (font-lock-string-face fixed-pitch))))
 
       (org-level-1                           ((t :inherit default
-                                                 :height 1.25
-                                                 :weight bold)))
+                                                 :height 1.25)))
       (org-level-2                           ((t :inherit default
                                                  :height 1.0
                                                  :weight bold)))
