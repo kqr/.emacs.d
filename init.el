@@ -185,9 +185,11 @@
 (when (display-graphic-p)
   (set-frame-font (font-spec :name "Hack" :size 12) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
-                                  ((t :family "Hack" :height 1.0))))  ;; was Luxi Mono
+                                  ((t :family "Hack"
+                                      :height 1.0))))  ;; was Luxi Mono
   (custom-theme-set-faces 'user '(variable-pitch
-                                  ((t :family "Linux Libertine O" :height 1.2))))
+                                  ((t :family "Linux Libertine O"
+                                      :height 1.3))))
   (add-to-list 'initial-frame-alist '(line-spacing . 1))
   (add-to-list 'default-frame-alist '(line-spacing . 1)))
 
