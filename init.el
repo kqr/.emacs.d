@@ -360,6 +360,8 @@
 
 ;;; Interaction
 (when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (setq mac-right-option-modifier 'none))
 
 (unless (eq system-type 'darwin)
