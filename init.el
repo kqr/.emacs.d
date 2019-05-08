@@ -191,6 +191,9 @@
   (add-to-list 'initial-frame-alist '(line-spacing . 1))
   (add-to-list 'default-frame-alist '(line-spacing . 1)))
 
+;; Set variable width font in text buffers
+(add-hook 'text-mode-hook 'variable-pitch-mode)
+
 ;; Replace the default line-extends-beyond-window symbol
 (set-display-table-slot standard-display-table 0 ?›)
 
@@ -1111,6 +1114,7 @@
         org-hide-emphasis-markers nil
         org-fontify-quote-and-verse-blocks t
         org-ellipsis " ↴ "
+        org-adapt-indentation t
         org-show-context-detail
         '((agenda . ancestors)
           (bookmark-jump . lineage)
@@ -1118,8 +1122,9 @@
           (default . ancestors)))
 
   ;; TODO: Set faces for org-level-1 (1.618) and org-level-2 (1.618Q?)
-  (when (require 'org-bullets nil)
-    (setq org-bullets-bullet-list '("⊛")))
+  (when (require 'org-bullets)
+    (setq org-bullets-bullet-list '("●" "■" "◆"))
+    (add-hook 'org-mode-hook 'org-bullets-mode))
 
   (org-set-emph-re 'org-emphasis-regexp-components
                    org-emphasis-regexp-components)
@@ -1238,7 +1243,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
