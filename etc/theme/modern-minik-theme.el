@@ -233,44 +233,35 @@
       (org-document-info                     ((t :inherit default
                                                  :slant italic
                                                  :height 1.0)))
-      (org-document-info-keyword             ((t :inherit (font-lock-comment-face fixed-pitch)
-                                                 :height 0.75)))
       (org-meta-line                         ((t :inherit (font-lock-comment-face fixed-pitch)
                                                  :height 0.75)))
+      (org-document-info-keyword             ((t :inherit org-meta-line)))
 
-      (org-block-begin-line                  ((t :inherit (font-lock-comment-face fixed-pitch)
-                                                 :height 0.75)))
-      (org-block-end-line                    ((t :inherit (font-lock-comment-face fixed-pitch)
-                                                 :height 0.75)))
-      (org-table                             ((t :inherit fixed-pitch
-                                                 :height 0.75)))
-      (org-code                              ((t :inherit fixed-pitch
-                                                 :height 0.75)))
       (org-block                             ((t :inherit fixed-pitch
                                                  :height 0.75)))
-      (org-block-background                  ((t :inherit fixed-pitch
-                                                 :height 0.75)))
+      (org-block-begin-line                  ((t :inherit org-meta-line)))
+      (org-block-end-line                    ((t :inherit org-meta-line)))
+      (org-table                             ((t :inherit org-block)))
+      (org-code                              ((t :inherit org-block)))
+      (org-block-background                  ((t :inherit org-block)))
+      (org-quote                             ((t :inherit defaul
+                                                 :slant italic)))
       (org-link                              ((t :inherit link)))
       (org-footnote                          ((t :inherit font-lock-comment-face)))
       (org-special-keyword                   ((t :inherit font-lock-comment-face)))
 
-      (org-checkbox                          ((t :inherit fixed-pitch
-                                                 :height 0.75)))
+      (org-checkbox                          ((t :inherit org-block)))
 
       (org-ellipsis                          ((t :inherit font-lock-keyword-face)))
-      (org-tag                               ((t :inherit (font-lock-comment-face fixed-pitch)
-                                                 :height 0.75)))
-      (org-todo                              ((t :inherit (font-lock-keyword-face fixed-pitch)
-                                                 :height 0.75)))
-      (org-done                              ((t :inherit (font-lock-comment-face fixed-pitch)
-                                                 :height 0.75)))
+      (org-tag                               ((t :inherit (font-lock-comment-face org-block))))
+      (org-todo                              ((t :inherit (font-lock-keyword-face org-block))))
+      (org-done                              ((t :inherit (font-lock-comment-face org-block))))
       (org-agenda-done                       ((t :inherit font-lock-comment-face)))
       (org-upcoming-deadline                 ((t :inherit font-lock-keyword-face)))
       (org-scheduled                         ((t :inherit font-lock-comment-face)))
       (org-scheduled-today                   ((t :inherit theme-base-face)))
       (org-scheduled-previously              ((t :inherit warning)))
-      (org-priority                          ((t :inherit (font-lock-type-face fixed-pitch)
-                                                 :height 0.75)))
+      (org-priority                          ((t :inherit (font-lock-type-face org-block))))
       (org-agenda-structure                  ((t :inherit font-lock-type-face)))
       (org-agenda-date                       ((t :inherit theme-base-face)))
       (org-agenda-date-today                 ((t :inherit theme-base-face)))
@@ -425,9 +416,15 @@
       (font-latex-sectioning-5-face          ((t :inherit theme-base-face)))
       (font-latex-sectioning-6-face          ((t :inherit theme-base-face)))
 
-      (ansible::task-label-face              ((t :inherit theme-base-face)))
+      (markdown-pre-face                     ((t :inherit org-code)))
+      (markdown-header-face-1                ((t :inherit org-level-1)))
+      (markdown-header-face-2                ((t :inherit org-level-2)))
+      (markdown-header-face-3                ((t :inherit org-level-3)))
+      (markdown-header-face-4                ((t :inherit org-level-4)))
+      (markdown-header-face-5                ((t :inherit org-level-5)))
+      (markdown-header-face-6                ((t :inherit org-level-6)))
 
-      )))
+      (ansible::task-label-face              ((t :inherit theme-base-face))))))
 
   ;;(message "%S" theme-faces)
 
