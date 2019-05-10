@@ -645,6 +645,8 @@
 
   (editorconfig-mode 1)
 
+  (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode)
+
   (add-hook 'editorconfig-hack-properties-functions
             'use-default-fill-column-in-text-mode)
   (add-hook 'editorconfig-after-apply-functions
@@ -743,7 +745,9 @@
      (define-key smartparens-mode-map (kbd "M-r") 'sp-join-sexp))))
 
 ;;;; Indentation/whitespace stuff
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+(autoload 'ws-butler-mode "ws-butler")
+(add-hook 'prog-mode-hook 'ws-butler-mode)
+(add-hook 'text-mode-hook 'ws-butler-mode)
 
 (when (require 'aggressive-indent nil)
   (diminish 'aggressive-indent-mode)
