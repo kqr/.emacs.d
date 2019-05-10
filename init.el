@@ -450,9 +450,13 @@
      (define-key global-map (kbd "M-x") #'counsel-M-x))))
 
 ;;;;; Org-like outlining of ANY document, not only Org files
-(autoload 'outshine-minor-mode "outshine")
-(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
-(add-hook 'prog-mode-hook #'outline-minor-mode)
+;;
+;; Let's try not doing this for a while – it might actually be
+;; outshine-self-insert that swallows keypresses – which is highly annoying.
+;;
+;;(autoload 'outshine-minor-mode "outshine")
+;;(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+;;(add-hook 'prog-mode-hook #'outline-minor-mode)
 (eval-after-load "outshine"
   '(progn
      (define-key outline-minor-mode-map (kbd "M-n")
