@@ -634,6 +634,21 @@
   (global-undo-tree-mode +1)
   (setq-default undo-tree-visualizer-diff t))
 
+;;;; Editorconfig support
+(when (require 'editorconfig)
+  (defun use-default-fill-column-in-text-mode (props)
+    (when (derived-mode-p 'text-mode)
+      (puthash 'max_line_length "80" props)))
+
+  (defun set-olivetti-width-after-editorconfig (props)
+    (olivetti-set-width fill-column))
+
+  (editorconfig-mode 1)
+
+  (add-hook 'editorconfig-hack-properties-functions
+            'use-default-fill-column-in-text-mode)
+  (add-hook 'editorconfig-after-apply-functions
+            'set-olivetti-width-after-editorconfig))
 ;;;; Merge binds
 (when (require 'smerge-mode nil)
   (defun sm-try-smerge ()
