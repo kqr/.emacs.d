@@ -3,47 +3,48 @@
   (or (when (eq system-type 'darwin) osx)
       default))
 
-(setq inhibit-startup-screen t
-      initial-scratch-message ""
+(setq-default
+ inhibit-startup-screen t
+ initial-scratch-message ""
 
-      major-mode 'fundamental-mode
-      make-backup-files nil
-      large-file-warning-threshold 100000000
+ major-mode 'fundamental-mode
+ make-backup-files nil
+ large-file-warning-threshold 100000000
 
-      ;; Reduces lag, I think
-      auto-window-vscroll nil
-      scroll-conservatively 101
-      line-move-visual nil
+ ;; Reduces lag, I think
+ auto-window-vscroll nil
+ scroll-conservatively 101
+ line-move-visual nil
 
-      ;; No need to fake typesetting.
-      sentence-end-double-space nil
+ ;; No need to fake typesetting.
+ sentence-end-double-space nil
 
-      ;; Hide cursor in inactive windows
-      cursor-in-non-selected-windows nil
+ ;; Hide cursor in inactive windows
+ cursor-in-non-selected-windows nil
 
-      ;; Set a column limit at 80 characters
-      fill-column 80
-      ;; Automatically hard wrap content instead
-      auto-fill-function 'do-auto-fill
-      ;; Create new lines when moving past end of buffer
-      next-line-add-newlines t
+ ;; Set a column limit at 80 characters
+ fill-column 80
+ ;; Automatically hard wrap content instead
+ auto-fill-function 'do-auto-fill
+ ;; Create new lines when moving past end of buffer
+ next-line-add-newlines t
 
-      ;; Copy stuff to the X11 primary selection
-      select-enable-primary t
-      ;; Typing stuff with active region replaces region
-      delete-selection-mode 1
+ ;; Copy stuff to the X11 primary selection
+ select-enable-primary t
+ ;; Typing stuff with active region replaces region
+ delete-selection-mode 1
 
-      ;; Focus on newly opened help windows
-      help-window-select t
+ ;; Focus on newly opened help windows
+ help-window-select t
 
-      browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program (platform-specific "firefox" "open_firefox")
+ browse-url-browser-function 'browse-url-generic
+ browse-url-generic-program (platform-specific "firefox" "open_firefox")
 
-      ;; Let text extend beyond the window width
-      truncate-lines t
+ ;; Let text extend beyond the window width
+ truncate-lines t
 
-      ;; Prevent Emacs from mixing tabs and spaces.
-      indent-tabs-mode nil)
+ ;; Prevent Emacs from mixing tabs and spaces.
+ indent-tabs-mode nil)
 
 ;; Replace the default line-extends-beyond-window symbol
 (set-display-table-slot standard-display-table 0 ?›)
