@@ -21,6 +21,8 @@
      (sp-use-smartparens-bindings)
      (sp-local-pair 'ada-mode "'" nil :actions nil)
      (sp-local-pair 'fsharp-mode "'" nil :actions nil)
+     (sp-local-pair 'fsharp-mode "<" ">")
+     (sp-local-pair 'csharp-mode "<" ">")
      (define-key smartparens-mode-map (kbd "C-<right>") 'sp-slurp-hybrid-sexp)
      (define-key smartparens-mode-map (kbd "M-s") 'sp-split-sexp)
      (define-key smartparens-mode-map (kbd "M-r") 'sp-join-sexp))))
