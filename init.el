@@ -12,6 +12,7 @@
 ;;     and: https://stackoverflow.com/questions/23944477/
 ;;
 ;; - Find a way to list the defines in current buffer? imenu?
+;; - Check out https://github.com/DarthFennec/highlight-indent-guides
 ;;
 ;;; Code:
 (setq gc-cons-threshold 800000)
