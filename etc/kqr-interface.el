@@ -23,15 +23,15 @@
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (setq mac-right-option-modifier 'none))
 
+;; TODO: Figure out what this is supposed to be for non-darwin platforms
+(when (eq system-type 'darwin)
+  (define-key global-map (kbd "s-<left>") 'ns-prev-frame)
+  (define-key global-map (kbd "s-<right>") 'ns-next-frame))
+
 ;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode)
   ;; Trying without frames-only mode for a while
   (frames-only-mode +1)
-
-  ;; TODO: Figure out what this is supposed to be for non-darwin platforms
-  (when (eq system-type 'darwin)
-    (define-key global-map (kbd "s-<left>") 'ns-prev-frame)
-    (define-key global-map (kbd "s-<right>") 'ns-next-frame))
 
   ;; A new frame for each LaTeX refresh gets annoying
   (push
