@@ -33,11 +33,16 @@
   ;; Trying without frames-only mode for a while
   (frames-only-mode +1)
 
+  ;; Magit maintains a neat stack of buffers and can therefore readily
+  ;; replace the current buffer
+  (add-to-list 'display-buffer-alist
+               '("magit[a-z-]*: .*"
+                 (display-buffer-same-window . nil)))
+
   ;; A new frame for each LaTeX refresh gets annoying
-  (push
-   '(".*Org PDF LaTeX Output.*" .
-     (display-buffer-no-window . ((allow-no-window . t))))
-   display-buffer-alist))
+  (add-to-list 'display-buffer-alist
+               '(".*Org PDF LaTeX Output.*" .
+                 (display-buffer-no-window . ((allow-no-window . t))))))
 
 ;; When making new frame, switch it to scratch buffer
 (defun switch-to-scratch-buffer (frame)
