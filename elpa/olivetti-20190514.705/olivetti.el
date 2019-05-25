@@ -1,15 +1,14 @@
 ;;; olivetti.el --- Minor mode for a nice writing environment -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2014-2017 Paul Rankin
+;; Copyright (c) 2014-2019  Free Software Foundation, Inc.
 
 ;; Author: Paul Rankin <hello@paulwrankin.com>
 ;; Keywords: wp, text
-;; Package-Version: 20180531.737
-;; Version: 1.6.1
-;; Package-Requires: ((emacs "24.4"))
-;; URL: https://github.com/rnkn/olivetti
+;; Package-Version: 20190514.705
+;; Version: 1.7.0
+;; Package-Requires: ((emacs "24.5"))
 
-;; This file is not part of GNU Emacs.
+;; This file is part of GNU Emacs.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -36,70 +35,49 @@
 ;; - Text body width can be the number of characters (an integer) or a
 ;;   fraction of the window width (a float between 0.0 and 1.0).
 ;; - Interactively change body width with:
-;;   `olivetti-shrink` C-c [ [ [ ...
-;;   `olivetti-expand` C-c ] ] ] ...
-;;   `olivetti-set-width` C-c \
-;; - If `olivetti-body-width` is an integer, the text body width will scale
+;;   `olivetti-shrink' C-c [ [ [ ...
+;;   `olivetti-expand' C-c ] ] ] ...
+;;   `olivetti-set-width' C-c \
+;; - If `olivetti-body-width' is an integer, the text body width will scale
 ;;   with use of `text-scale-mode`, whereas if a fraction (float) then the
 ;;   text body width will remain at that fraction.
-;; - Optionally remember the state of `visual-line-mode` on entry and
+;; - Optionally remember the state of `visual-line-mode' on entry and
 ;;   recall its state on exit.
-;; - Optionally hide the mode-line for distraction-free writing.
 
 ;; Olivetti keeps everything it does buffer-local, so you can write prose in one
-;; buffer and code in another, side-by-side in the same frame. Or, by hiding the
-;; mode-line and using a single window in a fullscreen frame, Olivetti provides a
-;; nice distraction-free environment. For those looking for a hardcore
-;; distraction-free writing mode with a much larger scope, I recommend
-;; [writeroom-mode].
-
-;; [writeroom-mode]: https://github.com/joostkremers/writeroom-mode "Writeroom Mode"
+;; buffer and code in another, side-by-side in the same frame. For those looking
+;; for a hardcore distraction-free writing mode with a much larger scope, I
+;; recommend writeroom-mode: <https://github.com/joostkremers/writeroom-mode>.
 
 ;; Requirements
 ;; ------------
 
-;; - Emacs 24.4
+;; - Emacs 24.5
 
 ;; Installation
 ;; ------------
 
-;; Olivetti is available through [MELPA] and [MELPA-stable]. I
-;; encourage installing the stable version.
+;; Olivetti is now part of GNU ELPA and can be installed with M-x package-install
+;; RET olivetti RET.
 
-;; Alternately, download the [latest release] and put it in your
-;; `load-path`.
+;; Bugs
+;; ----
 
-;; [melpa]: https://melpa.org/ "MELPA"
-;; [melpa-stable]: https://stable.melpa.org/ "MELPA Stable"
-;; [latest release]: https://github.com/rnkn/olivetti/releases/latest "Olivetti latest release"
+;; - Emacs 27.x has a compatibility change in window.c that will cause errors in
+;;   redisplay by passing a window instead of a frame as argument.
 
-;; Known Bugs
-;; ----------
-
-;; - `linum-mode` in Emacs versions earlier than 26.1 has a bug that overwrites
-;;   margin settings, making it incompatible with modes that work with margins.
-;;   More information here: <https://debbugs.gnu.org/20674>.
-
-;; Please report bugs on GitHub [Issues] page.
-
-;; [issues]: https://github.com/rnkn/olivetti/issues "Olivetti issues"
-
-;; History
-;; -------
-
-;; See [Releases].
-
-;; [releases]: https://github.com/rnkn/olivetti/releases "Olivetti releases"
+;; To report bugs, please use `M-x report-emacs-bug RET` or send an email to
+;; <bug-gnu-emacs@gnu.org>
 
 ;; Hints
 ;; -----
 
-;; To always use a different width for a specific file, set a [File Variable]
-;; specifying `olivetti-body-width`:
+;; To always use a different width for a specific file, set a File Variable
+;; specifying `olivetti-body-width':
 
-;;     M-x add-file-local-variable RET olivetti-body-width RET 66 RET
+;; M-x add-file-local-variable RET olivetti-body-width RET 66 RET
 
-;; [file variable]: https://www.gnu.org/software/emacs/manual/html_node/emacs/File-Variables.html "File Variables"
+;; See (info "(emacs) File Variables").
 
 
 ;;; Code:
@@ -137,30 +115,20 @@ best effect.
 
 This option does not affect file contents."
   :type '(choice (integer 70) (float 0.5))
-  :safe 'numberp
-  :group 'olivetti)
+  :safe 'numberp)
 (make-variable-buffer-local 'olivetti-body-width)
 
 (defcustom olivetti-minimum-body-width
   40
   "Minimum width in columns that text body width may be set."
   :type 'integer
-  :safe 'integerp
-  :group 'olivetti)
-
-(defcustom olivetti-hide-mode-line
-  nil
-  "Hide the mode line."
-  :type 'boolean
-  :safe 'booleanp
-  :group 'olivetti)
+  :safe 'integerp)
 
 (defcustom olivetti-lighter
   " Olv"
   "Mode-line indicator for `olivetti-mode'."
   :type '(choice (const :tag "No lighter" "") string)
-  :safe 'stringp
-  :group 'olivetti)
+  :safe 'stringp)
 
 (defcustom olivetti-recall-visual-line-mode-entry-state
   t
@@ -170,25 +138,39 @@ When non-nil, if `visual-line-mode' is inactive upon activating
 `olivetti-mode', then `visual-line-mode' will be deactivated upon
 exiting. The reverse is not true."
   :type 'boolean
-  :safe 'booleanp
-  :group 'olivetti)
+  :safe 'booleanp)
 
 
 ;;; Set Environment
 
-(defun olivetti-set-environment (&optional frame)
-  "Set text body width to `olivetti-body-width' with relative margins.
+(defun olivetti-set-all-margins ()
+  "Balance window margins in all windows displaying current buffer.
 
-Cycle through all windows displaying current buffer and first
-find the `olivetti-safe-width' to which to set
+Cycle through all windows in all frames displaying the current
+buffer, and call `olivetti-set-margins'."
+  (dolist (window (get-buffer-window-list nil nil t))
+    (olivetti-set-margins window)))
+
+(defun olivetti-set-margins (&optional frame-or-window)
+  "Balance window margins displaying current buffer.
+
+If FRAME-OR-WINDOW is a frame, cycle through windows displaying
+current buffer in that frame, otherwise only work on the selected
+window.
+
+First find the `olivetti-safe-width' to which to set
 `olivetti-body-width', then find the appropriate margin size
 relative to each window. Finally set the window margins, taking
 care that the maximum size is 0."
-  (dolist (window (get-buffer-window-list nil nil t))
-    (olivetti-reset-window window)
-    (let ((width (olivetti-safe-width olivetti-body-width window))
-          (window-width (window-total-width window))
-          (fringes (window-fringes window))
+  (if (framep frame-or-window)
+      (dolist (window (get-buffer-window-list nil nil frame-or-window))
+        (olivetti-set-margins window))
+    ;; FRAME-OR-WINDOW passed below *must* be a window
+    (olivetti-reset-window frame-or-window)
+    (let ((width (olivetti-safe-width olivetti-body-width frame-or-window))
+          (frame (window-frame frame-or-window))
+          (window-width (window-total-width frame-or-window))
+          (fringes (window-fringes frame-or-window))
           left-fringe right-fringe margin-total left-margin right-margin)
       (cond ((integerp width)
              (setq width (olivetti-scale-width width)))
@@ -199,9 +181,8 @@ care that the maximum size is 0."
       (setq margin-total (max (/ (- window-width width) 2) 0)
             left-margin (max (round (- margin-total left-fringe)) 0)
             right-margin (max (round (- margin-total right-fringe)) 0))
-      (set-window-parameter window 'split-window 'olivetti-split-window)
-      (set-window-margins window left-margin right-margin))
-    (when olivetti-hide-mode-line (olivetti-set-mode-line))))
+      (set-window-parameter frame-or-window 'split-window 'olivetti-split-window)
+      (set-window-margins frame-or-window left-margin right-margin))))
 
 (defun olivetti-reset-all-windows ()
   "Remove Olivetti's parameters and margins from all windows.
@@ -228,47 +209,6 @@ Cycle through all windows displaying current buffer and call
   (split-window-sensibly window))
 
 
-;;; Set Mode-Line
-
-(defun olivetti-set-mode-line (&optional arg)
-  "Set the mode line formating appropriately.
-
-If ARG is 'toggle, toggle the value of `olivetti-hide-mode-line',
-then rerun.
-
-If ARG is 'exit, kill `mode-line-format' then rerun.
-
-If ARG is nil and `olivetti-hide-mode-line' is non-nil, hide the
-mode line.
-
-To explicitly set the mode line in Lisp code, do something like
-the following:
-
-    (let ((olivetti-hide-mode-line t))
-      (olivetti-set-mode-line))
-"
-  (cond ((eq arg 'toggle)
-         (setq olivetti-hide-mode-line
-               (not olivetti-hide-mode-line))
-         (olivetti-set-mode-line))
-        ((or (eq arg 'exit)
-             (not olivetti-hide-mode-line))
-         (kill-local-variable 'mode-line-format))
-        (olivetti-hide-mode-line
-         (setq-local mode-line-format nil))))
-
-(defun olivetti-toggle-hide-mode-line ()
-  "Toggle the visibility of the mode-line.
-
-Toggles the value of `olivetti-hide-mode-line' and runs
-`olivetti-set-mode-line'.
-
-n.b. This command is probably not what you want in Lisp code. See
-instead `olivetti-set-mode-line'."
-  (interactive)
-  (olivetti-set-mode-line 'toggle))
-
-
 ;;; Calculate Width
 
 (defun olivetti-scale-width (n)
@@ -276,11 +216,14 @@ instead `olivetti-set-mode-line'."
 
 For compatibility with `text-scale-mode', if
 `face-remapping-alist' includes a :height property on the default
-face, scale N by that factor, otherwise scale by 1."
-  (* n (or (plist-get (cadr (assq 'default
-                                  face-remapping-alist))
-                      :height)
-           1)))
+face, scale N by that factor if it is a fraction, by (height/100)
+if it is an integer, and otherwise scale by 1."
+  (let
+      ((height (plist-get (cadr (assq 'default face-remapping-alist)) :height)))
+    (cond
+     ((integerp height) (* n (/ height 100.0)))
+     ((floatp height) (* n height))
+     (t n))))
 
 (defun olivetti-safe-width (width window)
   "Parse WIDTH to a safe value for `olivetti-body-width' for WINDOW.
@@ -300,7 +243,9 @@ May return a float with many digits of precision."
           ((floatp width)
            (max (/ min-width window-width) (min width 1.0)))
           ((user-error "`olivetti-body-width' must be an integer or a float")
-           (eval (car (get 'olivetti-body-width 'standard-value)))))))
+           ;; FIXME: This code is unreachable since we signal an error before
+           ;; getting here!?
+           (eval (car (get 'olivetti-body-width 'standard-value)) t)))))
 
 
 ;;; Width Interaction
@@ -315,7 +260,7 @@ fraction of the window width."
              (read-number "Set text body width (integer or float): "
                           olivetti-body-width))))
   (setq olivetti-body-width n)
-  (olivetti-set-environment)
+  (olivetti-set-margins)
   (message "Text body width set to %s" olivetti-body-width))
 
 (defun olivetti-expand (&optional arg)
@@ -329,7 +274,7 @@ If prefixed with ARG, incrementally decrease."
                   ((floatp olivetti-body-width)
                    (+ olivetti-body-width (* 0.01 p))))))
     (setq olivetti-body-width (olivetti-safe-width n (selected-window))))
-  (olivetti-set-environment)
+  (olivetti-set-margins)
   (message "Text body width set to %s" olivetti-body-width)
   (set-transient-map
    (let ((map (make-sparse-keymap)))
@@ -347,12 +292,6 @@ If prefixed with ARG, incrementally increase."
 
 ;;; Mode Definition
 
-;;;###autoload
-(defun turn-on-olivetti-mode ()
-  "Turn on `olivetti-mode' unconditionally."
-  (interactive)
-  (olivetti-mode 1))
-
 (defvar olivetti-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c [") #'olivetti-shrink)
@@ -361,36 +300,35 @@ If prefixed with ARG, incrementally increase."
     map)
   "Mode map for `olivetti-mode'.")
 
+(define-obsolete-function-alias 'turn-on-olivetti-mode
+  #'olivetti-mode "1.7.0")
+
 ;;;###autoload
 (define-minor-mode olivetti-mode
   "Olivetti provides a nice writing environment.
 
 Window margins are set to relative widths to accomodate a text
-body width set with `olivetti-body-width'.
-
-When `olivetti-hide-mode-line' is non-nil, the mode line is also
-hidden."
+body width set with `olivetti-body-width'."
   :init-value nil
   :lighter olivetti-lighter
   (if olivetti-mode
       (progn
-        (dolist (hook '(;;post-command-hook
-                        window-configuration-change-hook
-                        window-size-change-functions))
-          (add-hook hook 'olivetti-set-environment t t))
+        (add-hook 'window-size-change-functions
+                  #'olivetti-set-margins t t)
+        (add-hook 'window-configuration-change-hook
+                  'olivetti-set-all-margins t t)
         (add-hook 'change-major-mode-hook
-                  'olivetti-reset-all-windows nil t)
+                  #'olivetti-reset-all-windows nil t)
         (setq-local split-window-preferred-function
-                    'olivetti-split-window-sensibly)
+                    #'olivetti-split-window-sensibly)
         (setq olivetti--visual-line-mode visual-line-mode)
         (unless olivetti--visual-line-mode (visual-line-mode 1))
-        (olivetti-set-environment))
-    (dolist (hook '(post-command-hook
-                    window-configuration-change-hook
-                    window-size-change-functions))
-      (remove-hook hook 'olivetti-set-environment t))
+        (olivetti-set-all-margins))
+    (remove-hook 'window-configuration-change-hook
+                 #'olivetti-set-all-margins t)
+    (remove-hook 'window-size-change-functions
+                 #'olivetti-set-margins t)
     (olivetti-reset-all-windows)
-    (olivetti-set-mode-line 'exit)
     (when (and olivetti-recall-visual-line-mode-entry-state
                (not olivetti--visual-line-mode))
       (visual-line-mode 0))

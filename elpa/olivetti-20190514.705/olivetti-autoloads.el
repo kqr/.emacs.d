@@ -9,19 +9,11 @@
 ;;;### (autoloads nil "olivetti" "olivetti.el" (0 0 0 0))
 ;;; Generated autoloads from olivetti.el
 
-(autoload 'turn-on-olivetti-mode "olivetti" "\
-Turn on `olivetti-mode' unconditionally.
-
-\(fn)" t nil)
-
 (autoload 'olivetti-mode "olivetti" "\
 Olivetti provides a nice writing environment.
 
 Window margins are set to relative widths to accomodate a text
 body width set with `olivetti-body-width'.
-
-When `olivetti-hide-mode-line' is non-nil, the mode line is also
-hidden.
 
 \(fn &optional ARG)" t nil)
 
