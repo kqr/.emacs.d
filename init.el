@@ -182,6 +182,7 @@
 (load "kqr-parens.el")
 (load "kqr-whitespace.el")
 (load "kqr-indentation.el")
+(load "kqr-revisions.el")
 
 
 ;;;; Project management

@@ -1,6 +1,6 @@
 ;; Autorevert
-(when (require 'autorevert nil)
-  (global-auto-revert-mode 1))
+(when (require 'autorevert)
+  (global-auto-revert-mode +1))
 
 
 ;; Undo-tree
