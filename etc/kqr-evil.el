@@ -49,11 +49,6 @@
       (global-evil-surround-mode 1))
     (when (require 'evil-visualstar nil)
       (global-evil-visualstar-mode 1))
-    (when (require 'evil-goggles nil)
-      (setq evil-goggles-pulse t)
-      (setq evil-goggles-duration 0.1)
-      (evil-goggles-mode 1)
-      (evil-goggles-use-diff-faces))
 
     (define-key evil-normal-state-map (kbd "") nil)
     (define-key evil-normal-state-map (kbd "SPC") leader-key-map))
