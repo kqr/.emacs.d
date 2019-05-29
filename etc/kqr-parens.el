@@ -1,5 +1,7 @@
-(when (require 'paren nil)
-  (show-paren-mode +1)
+(when (require 'paren)
+  ;; Running without show-paren-mode now for a while, seeing if it's sensible
+  ;; to rely only on highlight-parentheses
+  (show-paren-mode -1)
   (setq-default show-paren-delay 0
                 show-paren-when-point-inside-paren t
                 show-paren-style 'expression)
