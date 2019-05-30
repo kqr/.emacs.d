@@ -173,7 +173,8 @@
           ("~/org/tickler.org" :maxlevel . 1)
           ("~/org/someday.org" :maxlevel . 3)
           ("~/org/notes.org" :maxlevel . 2)
-          ("~/org/loop54.org" :maxlevel . 2))
+          ("~/org/loop54.org" :maxlevel . 2)
+          ("~/org/kth.org" :maxlevel . 2))
         org-refile-allow-creating-parent-nodes 'confirm
         org-refile-use-outline-path t
         org-outline-path-complete-in-steps nil
@@ -185,7 +186,8 @@
   (setq org-agenda-files
         '("~/org/inbox.org"
           "~/org/projects.org"
-          "~/org/tickler.org")
+          "~/org/tickler.org"
+          "~/org/kth.org")
         org-agenda-dim-blocked-tasks 'invisible
         org-agenda-span 'day
         org-agenda-start-on-weekday nil
