@@ -4,8 +4,8 @@
 
 ;; Author: Paul Rankin <hello@paulwrankin.com>
 ;; Keywords: wp, text
-;; Package-Version: 20190514.705
-;; Version: 1.7.0
+;; Package-Version: 20190519.1316
+;; Version: 1.7.1
 ;; Package-Requires: ((emacs "24.5"))
 
 ;; This file is part of GNU Emacs.
@@ -63,11 +63,8 @@
 ;; Bugs
 ;; ----
 
-;; - Emacs 27.x has a compatibility change in window.c that will cause errors in
-;;   redisplay by passing a window instead of a frame as argument.
-
 ;; To report bugs, please use `M-x report-emacs-bug RET` or send an email to
-;; <bug-gnu-emacs@gnu.org>
+;; <bug-gnu-emacs@gnu.org>. Please include "olivetti" in the subject.
 
 ;; Hints
 ;; -----
@@ -260,7 +257,7 @@ fraction of the window width."
              (read-number "Set text body width (integer or float): "
                           olivetti-body-width))))
   (setq olivetti-body-width n)
-  (olivetti-set-margins)
+  (olivetti-set-all-margins)
   (message "Text body width set to %s" olivetti-body-width))
 
 (defun olivetti-expand (&optional arg)
@@ -274,7 +271,7 @@ If prefixed with ARG, incrementally decrease."
                   ((floatp olivetti-body-width)
                    (+ olivetti-body-width (* 0.01 p))))))
     (setq olivetti-body-width (olivetti-safe-width n (selected-window))))
-  (olivetti-set-margins)
+  (olivetti-set-all-margins)
   (message "Text body width set to %s" olivetti-body-width)
   (set-transient-map
    (let ((map (make-sparse-keymap)))
@@ -313,10 +310,17 @@ body width set with `olivetti-body-width'."
   :lighter olivetti-lighter
   (if olivetti-mode
       (progn
-        (add-hook 'window-size-change-functions
-                  #'olivetti-set-margins t t)
-        (add-hook 'window-configuration-change-hook
-                  'olivetti-set-all-margins t t)
+        (cond ((<= emacs-major-version 24)
+               (add-hook 'window-configuration-change-hook
+                         #'olivetti-set-all-margins t t))
+              ((<= emacs-major-version 26)
+               (add-hook 'window-configuration-change-hook
+                         #'olivetti-set-all-margins t t)
+               (add-hook 'window-size-change-functions
+                         #'olivetti-set-margins t t))
+              ((<= 27 emacs-major-version)
+               (add-hook 'window-size-change-functions
+                         #'olivetti-set-margins t t)))
         (add-hook 'change-major-mode-hook
                   #'olivetti-reset-all-windows nil t)
         (setq-local split-window-preferred-function
