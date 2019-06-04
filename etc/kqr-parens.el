@@ -8,10 +8,12 @@
   ;; This is in order for region to take priority over show-paren highlighting
   (setq-default show-paren-priority -200))
 
-(when (require 'highlight-parentheses nil)
+(when (require 'highlight-parentheses)
   (setq hl-paren-colors '("#ff7328" "#f99759" "#f2a06d" "#eaa472"))
   (setq hl-paren-background-colors 'nil)
-  (global-highlight-parentheses-mode +1))
+
+  ;; Disabling this temporarily to see if it helps with the input latency issues
+  (global-highlight-parentheses-mode -1))
 
 (run-with-idle-timer
  5 nil
