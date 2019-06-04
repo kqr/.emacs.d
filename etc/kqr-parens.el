@@ -19,6 +19,7 @@
  5 nil
  (lambda ()
    (when (require 'smartparens nil)
+     (remove-hook 'post-self-insert-hook 'blink-paren-post-self-insert-function)
      (diminish 'smartparens-mode)
      (require 'smartparens-config)
      (smartparens-global-strict-mode)
