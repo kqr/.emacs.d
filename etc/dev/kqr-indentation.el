@@ -13,4 +13,10 @@
         (message "Cancelled %s aggressive-indent timers" count))))
   (run-with-timer 60 nil 'cancel-aggressive-indent-timers)
 
+  (add-to-list
+   'aggressive-indent-dont-indent-if
+   '(and (or (derived-mode-p 'c++-mode) (derived-mode-p 'csharp-mode))
+         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+                             (thing-at-point 'line)))))
+
   (global-aggressive-indent-mode +1))

@@ -9,5 +9,9 @@
     (diminish 'simpler-centered-cursor-mode)
     (add-hook 'org-mode-hook #'switch-to-simple-scc))
 
+  (define-advice ccm-position-cursor
+      (:around (next) cancel-recentering-on-input)
+    (while-no-input (redisplay) (funcall next)))
+
   (diminish 'centered-cursor-mode)
   (global-centered-cursor-mode +1))
