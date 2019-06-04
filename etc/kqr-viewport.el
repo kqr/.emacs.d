@@ -14,4 +14,7 @@
     (while-no-input (redisplay) (funcall next)))
 
   (diminish 'centered-cursor-mode)
-  (global-centered-cursor-mode +1))
+
+  ;; VERY sadly running without centered-cursor-mode now for a while, because it
+  ;; might be the one eating my keypresses :(((((
+  (global-centered-cursor-mode -1))
