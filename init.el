@@ -55,6 +55,7 @@
 (when (require 'exec-path-from-shell nil)
   (exec-path-from-shell-initialize))
 
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/notmuch")
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc"))
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lib"))
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc/app"))
