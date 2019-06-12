@@ -160,15 +160,17 @@
 ;; Provide a list of recently opened files
 ;; bind to C-x C-r because I don't use find-file-read-only too much (though I
 ;; probably should...)
-(when (require 'recentf nil)
+(when (require 'recentf)
+  (recentf-mode +1)
+  (run-at-time nil (* 5 60) 'recentf-save-list)
   (define-key global-map (kbd "C-x C-r") #'counsel-recentf))
 
 ;; Smart M-x and fuzzy matching everywhere
 (run-with-idle-timer
- 6 nil
+ 2 nil
  (lambda ()
-   (require 'smex nil)
-   (when (require 'ivy nil)
+   (require 'smex)
+   (when (require 'ivy)
      (diminish 'ivy-mode)
      (setq-default ivy-initial-inputs-alist nil)
      (ivy-mode +1)
@@ -242,7 +244,9 @@
     (counsel-projectile-mode +1))
 
   (defun load-two-wrongs ()
-    (load (concat (projectile-project-root) "two-wrongs.el")))
+    (let ((two-wrongs-file (concat (projectile-project-root) "two-wrongs.el")))
+      (when (file-exists-p two-wrongs-file)
+          (load two-wrongs-file))))
 
   (add-hook 'projectile-find-file-hook #'load-two-wrongs))
 
