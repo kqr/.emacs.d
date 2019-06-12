@@ -7,7 +7,7 @@
 ;;         Dmitry Gutov <dgutov@yandex.ru>
 ;; URL:  https://github.com/mooz/js2-mode/
 ;;       http://code.google.com/p/js2-mode/
-;; Version: 20180301
+;; Version: 20190219
 ;; Keywords: languages, javascript
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 
@@ -60,11 +60,13 @@
 
 ;;   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
-;; Support for JSX is available via the derived mode `js2-jsx-mode'.  If you
-;; also want JSX support, use that mode instead:
+;; Use Emacs 27 and want to write JSX?  Then use `js2-minor-mode' as described
+;; above.  Use Emacs 26 or earlier?  Then use `js2-jsx-mode':
 
 ;;   (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 ;;   (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
+
+;; Note that linting of JSX code may fail in both modes.
 
 ;; To customize how it works:
 ;;   M-x customize-group RET js2-mode RET
@@ -1248,6 +1250,9 @@ First match-group is the leading whitespace.")
 
 (defvar js2-mode-verbose-parse-p js2-mode-dev-mode-p
   "Non-nil to emit status messages during parsing.")
+
+(defvar js2-mode-change-syntax-p t
+  "Non-nil to set the syntax-table text property on certain literals.")
 
 (defvar js2-mode-functions-hidden nil "Private variable.")
 (defvar js2-mode-comments-hidden nil "Private variable.")
@@ -4551,8 +4556,11 @@ If N has no parent pointer, returns N."
 
 (defsubst js2-node-short-name (n)
   "Return the short name of node N as a string, e.g. `js2-if-node'."
-  (substring (symbol-name (aref n 0))
-             (length "cl-struct-")))
+  (let ((name (symbol-name (aref n 0))))
+    (if (string-prefix-p "cl-struct-" name)
+        (substring (symbol-name (aref n 0))
+                   (length "cl-struct-"))
+      name)))
 
 (defun js2-node-child-list (node)
   "Return the child list for NODE, a Lisp list of nodes.
@@ -6342,8 +6350,9 @@ its relevant fields and puts it into `js2-ti-tokens'."
         flags
         (continue t)
         (token (js2-new-token 0)))
-    (js2-record-text-property start-pos (1+ start-pos)
-                              'syntax-table (string-to-syntax "\"/"))
+    (when js2-mode-change-syntax-p
+      (js2-record-text-property start-pos (1+ start-pos)
+                                'syntax-table (string-to-syntax "\"/")))
     (setq js2-ts-string-buffer nil)
     (if (eq start-tt js2-ASSIGN_DIV)
         ;; mis-scanned /=
@@ -6370,8 +6379,9 @@ its relevant fields and puts it into `js2-ti-tokens'."
             (setq in-class nil)))
           (js2-add-to-string c))))
     (unless err
-      (js2-record-text-property (1- js2-ts-cursor) js2-ts-cursor
-                                'syntax-table (string-to-syntax "\"/"))
+      (when js2-mode-change-syntax-p
+        (js2-record-text-property (1- js2-ts-cursor) js2-ts-cursor
+                                  'syntax-table (string-to-syntax "\"/")))
       (while continue
         (cond
          ((js2-match-char ?g)
@@ -7165,7 +7175,8 @@ key of a literal object."
       ;; ignore later
       (when (and (not declared)
                  (js2-object-prop-node-p parent)
-                 (eq node (js2-object-prop-node-left parent)))
+                 (eq node (js2-object-prop-node-left parent))
+                 (not (eq node (js2-object-prop-node-right parent))))
         (setq object-key t)))
     ;; Maybe this is a for loop and the variable is one of its iterators?
     (unless assigned
@@ -7185,10 +7196,41 @@ key of a literal object."
                                 finally return syms))))))
     (list declared assigned object-key)))
 
+(defun js2--is-param (var-node params)
+  "Recursively determine whether VAR-NODE is contained in PARAMS."
+  (cond ((js2-object-prop-node-p params)
+         (eq var-node (js2-object-prop-node-left params)))
+        ((js2-name-node-p params)
+         (eq var-node params))
+        (t
+         (let ((isparam (if (listp params)
+                            (memq var-node params)
+                          (cl-loop with found = nil
+                                   for p in (js2-node-child-list params)
+                                   while (null found)
+                                   do (setq found (eq var-node p))))))
+           (unless isparam
+             (let ((kids (if (listp params)
+                             params
+                           (js2-node-child-list params))))
+               (cl-loop for p in kids
+                        while (null isparam)
+                        do (setq isparam (js2--is-param var-node p)))))
+           isparam))))
+
+(defun js2--is-function-param (parent var-node)
+  "Determine whether VAR-NODE is a function parameter."
+  (while (and parent (not (js2-function-node-p parent)))
+    (if (or (js2-var-init-node-p parent)
+            (js2-assign-node-p parent))
+        (setq parent nil)
+    (setq parent (js2-node-parent parent))))
+  (when parent
+    (js2--is-param var-node (js2-function-node-params parent))))
+
 (defun js2--classify-variable (parent node vars)
-  "Classify the single variable NODE, a js2-name-node."
-  (let ((function-param (and (js2-function-node-p parent)
-                             (memq node (js2-function-node-params parent)))))
+  "Classify the single variable NODE, a js2-name-node, updating the VARS collection."
+  (let ((function-param (js2--is-function-param parent node)))
     (if (js2-prop-get-node-p parent)
         ;; If we are within a prop-get, e.g. the "bar" in "foo.bar",
         ;; just mark "foo" as used
@@ -7249,6 +7291,9 @@ key of a literal object."
                ((js2-namespace-import-node-p parent)
                 (setq assigned t
                       used nil))
+               ((js2-class-node-p parent)
+                (setq declared t
+                      assigned t))
                (assign-node
                 (setq assigned (memq node
                                      (js2--collect-target-symbols
@@ -10586,7 +10631,9 @@ array-literals, array comprehensions and regular expressions."
     (setq node (if js2-compiler-xml-available
                    (js2-parse-property-name nil name 0)
                  (js2-create-name-node 'check-activation nil name)))
-    (if js2-highlight-external-variables
+    (if (and js2-highlight-external-variables
+             ;; FIXME: What's TRT for `js2-xml-ref-node'?
+             (js2-name-node-p node))
         (js2-record-name-node node))
     node))
 
@@ -11532,6 +11579,7 @@ highlighting features of `js2-mode'."
   (setq js2-mode-buffer-dirty-p t
         js2-mode-parsing nil)
   (set (make-local-variable 'js2-highlight-level) 0) ; no syntax highlighting
+  (set (make-local-variable 'js2-mode-change-syntax-p) nil)
   (add-hook 'after-change-functions #'js2-minor-mode-edit nil t)
   (add-hook 'change-major-mode-hook #'js2-minor-mode-exit nil t)
   (when js2-include-jslint-globals
@@ -11716,11 +11764,12 @@ Selecting an error will jump it to the corresponding source-buffer error.
     ;; Schedule parsing for after when the mode hooks run.
     (js2-mode-reset-timer)))
 
-;; We may eventually want js2-jsx-mode to derive from js-jsx-mode, but that'd be
-;; a bit more complicated and it doesn't net us much yet.
 ;;;###autoload
 (define-derived-mode js2-jsx-mode js2-mode "JSX-IDE"
-  "Major mode for editing JSX code.
+  "Major mode for editing JSX code in Emacs 26 and earlier.
+
+To edit JSX code in Emacs 27, use `js-mode' as your major mode
+with `js2-minor-mode' enabled.
 
 To customize the indentation for this mode, set the SGML offset
 variables (`sgml-basic-offset' et al) locally, like so:
@@ -11728,6 +11777,15 @@ variables (`sgml-basic-offset' et al) locally, like so:
   (defun set-jsx-indentation ()
     (setq-local sgml-basic-offset js2-basic-offset))
   (add-hook \\='js2-jsx-mode-hook #\\='set-jsx-indentation)"
+  (unless (version< emacs-version "27.0")
+    ;; Emacs 27 causes a regression in this mode since JSX indentation
+    ;; begins to rely on js-mode’s `syntax-propertize-function', which
+    ;; JS2 is not currently using.
+    ;; https://github.com/mooz/js2-mode/issues/529 should address
+    ;; this.  https://github.com/mooz/js2-mode/issues/530 also has a
+    ;; piece related to the design of `js2-jsx-mode'.  Until these
+    ;; issues are addressed, ward Emacs 27 users away from this mode.
+    (display-warning 'js2-mode "For JSX support, use js-mode with js2-minor-mode"))
   (set (make-local-variable 'indent-line-function) #'js2-jsx-indent-line))
 
 (defun js2-mode-exit ()
@@ -11815,8 +11873,9 @@ buffer will only rebuild its `js2-mode-ast' if the buffer is dirty."
                            (with-silent-modifications
                              ;; if parsing is interrupted, comments and regex
                              ;; literals stay ignored by `parse-partial-sexp'
-                             (remove-text-properties (point-min) (point-max)
-                                                     '(syntax-table))
+                             (when js2-mode-change-syntax-p
+                               (remove-text-properties (point-min) (point-max)
+                                                       '(syntax-table)))
                              (js2-mode-apply-deferred-properties)
                              (js2-mode-remove-suppressed-warnings)
                              (js2-mode-show-warnings)
@@ -12577,8 +12636,11 @@ destroying the region selection."
         (goto-char (cl-cadadr e))))))
 
 (defun js2-mode-create-imenu-index ()
-  "Return an alist for `imenu--index-alist'."
-  ;; This is built up in `js2-parse-record-imenu' during parsing.
+  "Returns an alist for `imenu--index-alist'. Returns nil on first
+scan if buffer size > `imenu-auto-rescan-maxout'."
+  (when (and (not js2-mode-ast)
+             (<= (buffer-size) imenu-auto-rescan-maxout))
+      (js2-reparse))
   (when js2-mode-ast
     ;; if we have an ast but no recorder, they're requesting a rescan
     (unless js2-imenu-recorder
@@ -12738,8 +12800,10 @@ it marks the next defun after the ones already marked."
       (error "Node is not a supported jump node"))
     (push (or (and names (pop names))
               (unless (and (js2-object-prop-node-p parent)
-                           (eq node (js2-object-prop-node-left parent)))
-                node)) names)
+                           (eq node (js2-object-prop-node-left parent))
+                           (not (js2-node-get-prop parent 'SHORTHAND)))
+                node)
+              (error "Node is not a supported jump node")) names)
     (setq node-init (js2-search-scope node names))
 
     ;; todo: display list of results in buffer

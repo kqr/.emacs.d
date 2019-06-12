@@ -426,7 +426,7 @@
 	     ((:url . "http://elpa.gnu.org/packages/ediprolog.html")
 	      (:keywords "languages" "processes"))])
  (eev .
-      [(20190425)
+      [(20190517)
        ((emacs
 	 (24 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -795,8 +795,8 @@
 	    ((:url . "http://elpa.gnu.org/packages/load-dir.html")
 	     (:keywords "lisp" "files" "convenience"))])
  (load-relative .
-		[(1 3)
-		 nil "relative file load (within a multi-file Emacs package)" single
+		[(1 3 1)
+		 nil "Relative file load (within a multi-file Emacs package)" single
 		 ((:url . "http://github.com/rocky/emacs-load-relative")
 		  (:keywords "internal"))])
  (loc-changes .
@@ -1051,7 +1051,7 @@
 	 ((:url . "http://elpa.gnu.org/packages/poker.html")
 	  (:keywords "games"))])
  (posframe .
-	   [(0 4 3)
+	   [(0 5 0)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" single
@@ -1106,11 +1106,11 @@
  (realgud .
 	  [(1 5 0)
 	   ((load-relative
-	     (1 2))
+	     (1 3 1))
 	    (loc-changes
 	     (1 2))
 	    (test-simple
-	     (1 2 0))
+	     (1 3 0))
 	    (emacs
 	     (25)))
 	   "A modular front-end for interacting with external debuggers" tar
@@ -1119,16 +1119,13 @@
  (realgud-ipdb .
 	       [(1 0 0)
 		((realgud
-		  (1 4 5))
+		  (1 5 0))
 		 (load-relative
-		  (1 2))
-		 (cl-lib
-		  (0 5))
+		  (1 3 1))
 		 (emacs
-		  (24)))
-		"Realgud front-end to ipdb" single
-		((:url . "http://github.com/rocky/realgud-ipdb")
-		 (:keywords))])
+		  (25)))
+		"Realgud front-end to ipdb" tar
+		((:url . "http://github.com/rocky/realgud-ipdb"))])
  (realgud-jdb .
 	      [(1 0 0)
 	       ((realgud
@@ -1142,16 +1139,15 @@
 	       "Realgud front-end to Java's jdb debugger\"" tar
 	       ((:url . "http://github.com/realgud/realgud-jdb"))])
  (realgud-lldb .
-	       [(1 0 1)
+	       [(1 0 2)
 		((load-relative
-		  (1 2))
+		  (1 3 1))
 		 (realgud
 		  (1 5 0))
 		 (emacs
 		  (25)))
-		"Realgud front-end to lldb" single
-		((:url . "http://github.com/realgud/realgud-lldb")
-		 (:keywords))])
+		"Realgud front-end to lldb" tar
+		((:url . "http://github.com/realgud/realgud-lldb"))])
  (realgud-node-debug .
 		     [(1 0 0)
 		      ((realgud
@@ -1499,7 +1495,7 @@
 	     ((:keywords "news" "hypermedia" "blog" "feed" "rss" "atom")
 	      (:url . "https://gitlab.com/Ambrevar/emacs-webfeeder"))])
  (websocket .
-	    [(1 8)
+	    [(1 9)
 	     ((cl-lib
 	       (0 5)))
 	     "Emacs WebSocket client and server" tar
