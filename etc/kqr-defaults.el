@@ -13,8 +13,16 @@
 
  ;; Reduces lag, I think
  auto-window-vscroll nil
- scroll-conservatively 101
  line-move-visual nil
+
+ ;; Don't complain about not being able to scroll below end of file
+ scroll-error-top-bottom t
+
+ ;; Try to keep cursor centered to the extent possible with vanilla Emacs
+ scroll-preserve-screen-position t
+ scroll-conservatively 0
+ maximum-scroll-margin 0.5
+ scroll-margin 99999
 
  ;; No need to fake typesetting.
  sentence-end-double-space nil
