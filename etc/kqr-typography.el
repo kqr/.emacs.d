@@ -33,10 +33,3 @@
     (toggle-read-only))
   (add-hook 'compilation-filter-hook 'ansi-coloured-buffer))
 
-
-;; Highlight FIXME TODO etc. in comments
-(autoload 'fic-mode "fic-mode")
-(add-hook 'prog-mode-hook 'fic-mode)
-(eval-after-load "fic-mode"
-  '(setq fic-highlighted-words
-         (split-string "FIXME TODO BUG XXX")))

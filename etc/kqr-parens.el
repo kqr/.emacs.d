@@ -1,19 +1,9 @@
-(when (require 'paren)
-  ;; Running without show-paren-mode now for a while, seeing if it's sensible
-  ;; to rely only on highlight-parentheses
-  (show-paren-mode -1)
-  (setq-default show-paren-delay 0
-                show-paren-when-point-inside-paren t
-                show-paren-style 'expression)
-  ;; This is in order for region to take priority over show-paren highlighting
-  (setq-default show-paren-priority -200))
-
 (when (require 'highlight-parentheses)
   (setq hl-paren-colors '("#ff7328" "#f99759" "#f2a06d" "#eaa472"))
   (setq hl-paren-background-colors 'nil)
 
   ;; Disabling this temporarily to see if it helps with the input latency issues
-  (global-highlight-parentheses-mode -1))
+  (global-highlight-parentheses-mode +1))
 
 (run-with-idle-timer
  5 nil

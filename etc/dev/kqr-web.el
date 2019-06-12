@@ -1,7 +1,6 @@
 ;;;; REST client mode
 (require 'restclient nil)
 
-
 (autoload 'js2-mode "js2-mode" nil t)
 (push '("\\.js\\'" . js2-jsx-mode) auto-mode-alist)
 (push '("\\.jsx\\'" . js2-jsx-mode) auto-mode-alist)

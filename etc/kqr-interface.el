@@ -58,15 +58,3 @@
       window-divider-default-right-width 5)
 (window-divider-mode +1)
 
-
-;;;; Narrow buffers
-(when (require 'olivetti nil)
-  (add-hook 'text-mode-hook 'turn-on-olivetti-mode)
-  (add-hook 'prog-mode-hook 'turn-on-olivetti-mode)
-  (defun config-olivetti ()
-    (if (eq major-mode 'image-mode)
-        (olivetti-set-width 99999)
-      (olivetti-set-width fill-column))
-    (toggle-truncate-lines +1))
-  (add-hook 'after-change-major-mode-hook 'config-olivetti)
-  (add-hook 'olivetti-mode-hook 'config-olivetti))

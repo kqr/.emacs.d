@@ -14,6 +14,58 @@
 ;; - Find a way to list the defines in current buffer? imenu?
 ;; - Check out https://github.com/DarthFennec/highlight-indent-guides
 ;;
+;;; Mourned and never forgotten:
+;;
+;; There are some modes that do great things for my experience, but which have
+;; either turned out to be too slow/buggy for everyday use, or I have some
+;; suspicion it might be too slow or buggy for everyday use. Some of these are
+;; obviously very slow (e.g. indent guides), and others are just slow in
+;; specific cirumstances (e.g. aggressive indent).
+;;
+;; At some point, I wish to start re-introducing these slowly, tweaking them for
+;; performance as I go. My configuration for them should be removed in the same
+;; commit as I add them to this list, meaning finding my old config should be
+;; relatively easy when it's time.
+;;
+;; - centered-cursor-mode (scrolls windws to show as much above as below point)
+;; - olivetti-mode (narrows buffers to fill-column)
+;; - aggressive-indent-mode (indents continuously as you type)
+;; - fic-mode (clearly highlights TODO, FIXME, XXX, etc. in comments)
+;;
+;; Until very recently, it was unthinkable for me to remove some of these,
+;; because they were the very reason I used Emacs in the first place. What
+;; changed my mind was very sage advice from someone in #emacs, who said, "try
+;; running the Emacs default for a while, and see how you like it." It's hard to
+;; argue against /trying/.
+;;
+;; Besides, there are other good (and performant!) things about Emacs I can
+;; still make use of. I hate the idea of having to shape my usage after the
+;; limits of the system (part of me feels like the limitlessness of it all is
+;; one of the core reasons to use Emacs in the first place!), but then I realise
+;; I am only able to say that because Emacs gives me the luxury of having the
+;; choice.
+;;
+;; That said, some things I am not ready to get rid of:
+;;
+;; - undo-tree (how in the everliving heck do people survive without this??)
+;; - evil-mode (must be replaced with god-mode if removed)
+;; - evil-surround-mode (nice and I suspect performant)
+;; - evil-cleverparens-mode (known suspect for slowness, but way too important)
+;;
+;; It will take a lot for me to do anything about the above.
+;;
+;; There are also some modes that I have suspected to be an issue, but that
+;; don't seem to be (issues persist even after running without them for a
+;; while.) These are still candidate for removal if issues persist even with the
+;; above:
+;;
+;; - ws-butler-mode
+;; - flycheck
+;; - yasnippet
+;; - highlight-parentheses-mode
+;; - prettify-programming-symbols
+;; - outshine-mode
+;;
 ;;; Code:
 (setq gc-cons-threshold 800000)
 
@@ -87,8 +139,6 @@
 (load "kqr-interface.el")
 (load "kqr-typography.el")
 (load "kqr-print.el")
-;; Centered cursor and scrolling
-(load "kqr-viewport.el")
 
 ;; Word count in modeline
 (require 'wc-mode)
@@ -127,11 +177,7 @@
      (define-key global-map (kbd "M-x") #'counsel-M-x))))
 
 ;; Org-like outlining of ANY document, not only Org files
-;;
-;; Let's try not doing this for a while – it might actually be
-;; outshine-self-insert that swallows keypresses – which is highly annoying.
-;;
-;;(load "kqr-outshine.el")
+(load "kqr-outshine.el")
 
 ;; Evil mode
 (load "kqr-evil.el")
@@ -182,7 +228,6 @@
 (load "dev-defaults.el")
 (load "kqr-parens.el")
 (load "kqr-whitespace.el")
-(load "kqr-indentation.el")
 (load "kqr-revisions.el")
 
 
