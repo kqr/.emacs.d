@@ -290,6 +290,8 @@
       (js2-function-call                     ((t :inherit theme-base-face)))
       (js2-external-variable                 ((t :inherit flycheck-warning)))
       (js2-warning                           ((t :inherit flycheck-warning)))
+      (js2-jsdoc-tag                         ((t :inherit font-lock-keyword-face)))
+      (js2-jsdoc-type                        ((t :inherit font-lock-type-face)))
 
       (fsharp-ui-operator-face               ((t :inherit theme-base-face)))
 
