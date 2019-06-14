@@ -424,7 +424,8 @@
       (font-latex-sectioning-5-face          ((t :inherit theme-base-face)))
       (font-latex-sectioning-6-face          ((t :inherit theme-base-face)))
 
-      (markdown-pre-face                     ((t :inherit org-code)))
+      (markdown-pre-face                     ((t :inherit org-block)))
+      (markdown-code-face                    ((t :inherit org-code)))
       (markdown-header-face-1                ((t :inherit org-level-1)))
       (markdown-header-face-2                ((t :inherit org-level-2)))
       (markdown-header-face-3                ((t :inherit org-level-3)))
