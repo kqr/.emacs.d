@@ -184,6 +184,9 @@
 ;; Evil mode
 (load "kqr-evil.el")
 
+;; Aggressive auto indentation, let's try it again!
+(load "kqr-indentation.el")
+
 ;; Completion with company mode (hopefully practically intrusion-free)
 ;;(load "kqr-company.el")
 
