@@ -87,8 +87,7 @@
     (setq-default calendar-date-style 'iso))
 
   (defun org-mode-enable ()
-    (setq fill-column 80)
-    (olivetti-set-width fill-column))
+    (setq fill-column 80))
   (add-hook 'org-mode-hook 'org-mode-enable)
 
   ;; Regular Org operation
@@ -231,7 +230,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
