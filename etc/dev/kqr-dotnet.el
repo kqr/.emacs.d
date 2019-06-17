@@ -44,5 +44,6 @@
     (push 'fsharp-mode aggressive-indent-excluded-modes)
 
     (when (configure-omnisharp)
-      (add-hook 'fsharp-mode-hook 'omnisharp-enable)))
+      ;; (add-hook 'fsharp-mode-hook ;;'omnisharp-enable)
+      ))
   (add-hook 'fsharp-mode-hook 'fsharp-mode-enable))

@@ -21,12 +21,15 @@
 
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
-  (setq mac-right-option-modifier 'none))
 
-;; TODO: Figure out what this is supposed to be for non-darwin platforms
-(when (eq system-type 'darwin)
-  (define-key global-map (kbd "s-<left>") 'ns-prev-frame)
-  (define-key global-map (kbd "s-<right>") 'ns-next-frame))
+  (setq mac-option-modifier 'meta)
+  (setq mac-command-modifier 'hyper)
+  (setq mac-right-command-modifier 'meta)
+  (setq mac-right-option-modifier 'none)
+  (setq mac-right-alternate-modifier 'none))
+
+(define-key global-map [(hyper w)] 'delete-frame)
+(define-key global-map [(hyper n)] 'make-frame)
 
 ;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode)
