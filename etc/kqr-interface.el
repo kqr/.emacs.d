@@ -1,5 +1,12 @@
-;; Remove a bunch of distracting, unnecessary, silly graphic components We want
-;; to do this very early to avoid annoying flickering of menu bars and such.
+;;; kqr-interface.el --- Various interface fixes for Emacs.
+;;; Commentary:
+;;
+;; The main purpose of this is to remove many of the distracting graphic
+;; components I don't use anyway. Therefore, it might make sense to load this
+;; file early to avoid the flickering of said components before this file is
+;; loaded.
+;;
+;;; Code:
 (when (display-graphic-p)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
@@ -16,9 +23,8 @@
 (add-to-list 'initial-frame-alist '(right-fringe . 20))
 (add-to-list 'default-frame-alist '(right-fringe . 20))
 
-(if (not (eq system-type 'darwin))
-    (define-key global-map (kbd "s-n") 'make-frame)
-
+;;; Set up some mac-specific interface things
+(when (eq system-type 'darwin)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
 
@@ -28,8 +34,18 @@
   (setq mac-right-option-modifier 'none)
   (setq mac-right-alternate-modifier 'none))
 
+;;;; Set up platform-independent shortcuts
 (define-key global-map [(hyper w)] 'delete-frame)
 (define-key global-map [(hyper n)] 'make-frame)
+
+;;;; Set up platform-specific shortcuts
+(when (eq system-type 'darwin)
+  ;; Set up CUA bindings on OS X. I use these mostly when not in Evil mode, in
+  ;; order not to have to context switch between the Vi-style and Emacs-style
+  ;; copy/paste bindings, which almost seem to be picked to cause confusion...
+  (define-key global-map [(hyper x)] 'kill-region)
+  (define-key global-map [(hyper c)] 'copy-region-as-kill)
+  (define-key global-map [(hyper v)] 'yank))
 
 ;;;; Prefer opening frames instead of windows in Emacs
 (when (require 'frames-only-mode)
@@ -61,3 +77,6 @@
       window-divider-default-right-width 5)
 (window-divider-mode +1)
 
+;;;; Provide this file (to shut up the linter...)
+(provide 'kqr-interface)
+;;; kqr-interface.el ends here
