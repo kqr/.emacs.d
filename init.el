@@ -270,6 +270,7 @@
 (load "kqr-fileman.el")
 (load "kqr-git.el")
 (load "kqr-org.el")
+(load "kqr-epresent.el")
 
 ;;; Email client
 (load "kqr-notmuch.el")
