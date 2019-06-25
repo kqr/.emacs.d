@@ -14,7 +14,7 @@ Present an Org-mode buffer.
 
 \(fn)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "epresent" '("epresent-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "epresent" '(#("epresent-" 0 9 (face font-lock-function-name-face fontified nil)))))
 
 ;;;***
 
