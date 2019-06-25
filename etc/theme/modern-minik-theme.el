@@ -493,7 +493,14 @@ Chooses based on `display-graphic-p'."
     ;;(spaceline-reset)
     (spaceline-emacs-theme)))
 
+(defun modern-minik-configure-org ()
+  (when (require 'org nil)
+    (setq org-fontify-whole-heading-line t
+          org-fontify-done-headline t
+          org-fontify-quote-and-verse-blocks t)))
+
 (defun modern-minik-eval-init ()
+  (modern-minik-configure-org)
   (modern-minik-set-icons)
   (modern-minik-configure-spaceline))
 
