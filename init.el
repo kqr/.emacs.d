@@ -133,6 +133,10 @@
 ;; Config troubleshooting
 (autoload 'bug-hunter-init-file "bug-hunter" nil t)
 
+(defvar f11-map (make-sparse-keymap)
+  "Operations related to the interface, e.g. fullscreening,zooming, etc.")
+(define-key global-map (kbd "<f11>") f11-map)
+
 ;; Better defaults for variables
 (load "kqr-defaults.el")
 ;; UI

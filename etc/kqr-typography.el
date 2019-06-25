@@ -17,6 +17,8 @@
 (when (require 'face-remap nil)
   ;; Make available smaller changes in text size
   (setq-default text-scale-mode-step 1.05)
+  (define-key f11-map (kbd "f") 'toggle-frame-fullscreen)
+  (define-key f11-map (kbd "z") 'text-scale-adjust)
 
   ;; Set fixed-width fonts where needed
   (setq-default buffer-face-mode-face '(:inherit fixed-pitch))
@@ -32,4 +34,3 @@
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only))
   (add-hook 'compilation-filter-hook 'ansi-coloured-buffer))
-
