@@ -43,6 +43,11 @@
                  (t (narrow-to-defun)))))
         (t (error "Please select a region to narrow to"))))
 
+(defun start-drill-session ()
+  (interactive)
+  (find-file "~/org/flashcards.org")
+  (org-drill))
+
 (defun capture-general-inbox (args)
   "Run inbox capture with ARGS."
   (interactive "P")
@@ -74,6 +79,7 @@
 (define-key 'kqr-org-prefix (kbd "i") #'capture-general-inbox)
 (define-key 'kqr-org-prefix (kbd "m") #'capture-mail-inbox)
 (define-key 'kqr-org-prefix (kbd "f") #'capture-flashcard)
+(define-key 'kqr-org-prefix (kbd "d") #'start-drill-session)
 
 ;; This must happen last, when we have defined all keys in the prefix map
 (define-key global-map (kbd "<f4>") 'kqr-org-prefix)
