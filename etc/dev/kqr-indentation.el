@@ -11,7 +11,7 @@
           (cancel-timer timer)))
       (when (> count 0)
         (message "Cancelled %s aggressive-indent timers" count))))
-  (run-with-timer 60 nil 'cancel-aggressive-indent-timers)
+  (run-with-timer 60 60 'cancel-aggressive-indent-timers)
 
   (add-to-list
    'aggressive-indent-dont-indent-if
