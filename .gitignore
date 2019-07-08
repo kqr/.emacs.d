@@ -1,3 +1,6 @@
 /etc/init-local.el
 /tmp
 /var
+/.cache
+/.trello
+/transient
