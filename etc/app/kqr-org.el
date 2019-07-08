@@ -236,7 +236,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                                   (skip-entries-with-active-children))))))
+                              (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
@@ -285,3 +285,37 @@
               " \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{#1}}}\n"
               " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
               "\\fi\n")))))
+
+
+(when (require 'org-trello)
+  ;; Some hacks to make org-trello work with boards with large boards.
+  ;; The implementation is not very pretty, and it's hacky of me to re-define
+  ;; the functions rather than advise them, but meh.
+
+  (defun orgtrello-api-get-full-cards-from-page (board-id &optional before-id)
+    "Create a paginated retrieval of 25 cards before BEFORE-ID from BOARD-ID."
+    (orgtrello-api-make-query
+     "GET"
+     (format "/boards/%s/cards" board-id)
+     `(("actions" .  "commentCard")
+       ("checklists" . "all")
+       ("limit" . "250")
+       ("before" . ,(or before-id ""))
+       ("filter" . "open")
+       ("fields" .
+        "closed,desc,due,idBoard,idList,idMembers,labels,name,pos"))))
+
+  (defun orgtrello-controller--retrieve-full-cards (data &optional before-id)
+    "Retrieve the full cards from DATA, optionally paginated from before-ID.
+DATA is a list of (archive-cards board-id &rest buffer-name point-start).
+Return the cons of the full cards and the initial list."
+    (-let* (((archive-cards board-id &rest) data)
+            (cards
+             (-> board-id
+                (orgtrello-api-get-full-cards-from-page before-id)
+                (orgtrello-query-http-trello 'sync)))
+            (more-cards
+             (when cards
+               (let ((before-id (car (sort (mapcar 'orgtrello-data-entity-id cards) 'string<))))
+                 (car (orgtrello-controller--retrieve-full-cards-paged data before-id))))))
+      (cons (append more-cards cards) data))))
