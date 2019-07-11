@@ -42,6 +42,7 @@
 (with-eval-after-load "fsharp-mode"
   (defun fsharp-mode-enable ()
     (push 'fsharp-mode aggressive-indent-excluded-modes)
+    (setq fsharp-conservative-indentation-after-bracket t)
 
     (when (configure-omnisharp)
       ;; (add-hook 'fsharp-mode-hook ;;'omnisharp-enable)

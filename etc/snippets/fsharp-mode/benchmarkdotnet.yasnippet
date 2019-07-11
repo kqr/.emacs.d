@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: benchmarkdotnet
+# key: benchmarkdotnet
+# --
+open BenchmarkDotNet.Attributes
+open BenchmarkDotNet.Running
+
+[<CoreJob>]
+type Program() =
+    let values = [1; 5; 10; 55; 100; 555; 1000]
+
+    [<Benchmark>]
+    member this.WithListSum() =
+        values |> List.sum
+
+    [<Benchmark>]
+    member this.WithForLoop() =
+        let mutable s = 0
+        for value in values do
+            s <- s + value
+        s
+
+[<EntryPoint>]
+let main argv =
+    BenchmarkRunner.Run<Program>() |> ignore
+    0
