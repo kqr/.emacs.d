@@ -496,7 +496,7 @@ Chooses based on `display-graphic-p'."
 (defun modern-minik-configure-org ()
   (when (require 'org nil)
     (setq org-fontify-whole-heading-line t
-          org-fontify-done-headline t
+          org-fontify-done-headline nil
           org-fontify-quote-and-verse-blocks t)))
 
 (defun modern-minik-eval-init ()
