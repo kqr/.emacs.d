@@ -286,8 +286,10 @@
               " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
               "\\fi\n")))))
 
-
-(when (require 'org-trello)
+;; for some reason, this started misbehaving after Caspian jumped up on my
+;; keyboard, so I have made it temporarly non-mandatory and at some point
+;; I'll have to troubleshoot what went wrong.
+(when (and nil (require 'org-trello))
   ;; Some hacks to make org-trello work with boards with large boards.
   ;; The implementation is not very pretty, and it's hacky of me to re-define
   ;; the functions rather than advise them, but meh.

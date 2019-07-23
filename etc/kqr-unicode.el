@@ -88,6 +88,17 @@
           ("x" . "ξ")))
   (define-key global-map (kbd "C-x g") iso-transl-greek-map)
 
+  (define-key global-map (kbd "C-x m") nil)
+  (defvar iso-transl-math-map (make-sparse-keymap))
+  (mapc (lambda (mapping)
+          (define-key iso-transl-math-map (kbd (car mapping)) (cdr mapping)))
+        '(("2" . "²")
+          ("3" . "³")
+          ("q" . "√")
+          ("d" . "∂")
+          ("i" . "∫")))
+  (define-key global-map (kbd "C-x m") iso-transl-math-map)
+
   (mapc (lambda (mapping)
           (define-key iso-transl-ctl-x-8-map (kbd (car mapping)) (cdr mapping)))
         '((" " . "\ufeff")
