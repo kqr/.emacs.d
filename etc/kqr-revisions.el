@@ -31,9 +31,21 @@
 (when (require 'ediff nil)
   (setq ediff-split-window-function 'split-window-horizontally
         ediff-window-setup-function 'ediff-setup-windows-plain)
+
   (defun ediff-outline-show-all ()
     (when (or (eq major-mode 'org-mode)
               (eq major-mode 'outline-mode)
               outline-minor-mode)
       (outline-show-all)))
-  (add-hook 'ediff-prepare-buffer-hook #'ediff-outline-show-all))
+  (add-hook 'ediff-prepare-buffer-hook #'ediff-outline-show-all)
+
+  (defun ediff-copy-both-to-C ()
+    (interactive)
+    (ediff-copy-diff
+     ediff-current-difference nil 'C nil
+     (concat
+      (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+      (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+  (add-hook
+   'ediff-keymap-setup-hook
+   (lambda () (define-key ediff-mode-map "J" 'ediff-copy-both-to-C))))
