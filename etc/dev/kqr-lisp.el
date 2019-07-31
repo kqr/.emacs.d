@@ -11,8 +11,8 @@
         (error (message "Slime failed to start. This may be expected.")))))
   (add-hook 'lisp-mode-hook 'start-slime)
 
-  (setq inferior-lisp-program "/usr/bin/sbcl")
-  (setq slime-contribs '(slime-fancy))
+  (setq inferior-lisp-program "/usr/local/bin/sbcl")
+  (setq slime-contribs '(slime-fancy slime-asdf))
   (defun popup-slime-documentation (symbol-name)
     "Popup function- or symbol-documentation for SYMBOL-NAME."
     (interactive (list (slime-read-symbol-name "Documentation for symbol: ")))

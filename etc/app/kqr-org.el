@@ -86,9 +86,21 @@
 
 (with-eval-after-load "org"
   (require 'org-notmuch nil)
+
   (when (require 'org-drill nil)
     (setq org-drill-left-cloze-delimiter "{{"
-          org-drill-right-cloze-delimiter "}}"))
+          org-drill-right-cloze-delimiter "}}"
+
+          org-drill-leech-method 'skip
+          ;; Avoid large batches of items followed by nothing for a few days
+          ;; (This is apparently recommended with the default algorithm!)
+          org-drill-add-random-noise-to-intervals-p t
+          ;; Encourage frequent, shorter drills
+          org-drill-maximum-duration 10
+          org-drill-maximum-items-per-session 15
+          ;; Consider items recent until inter-repetition time is this big
+          org-drill-days-before-old 15))
+
   (when (require 'calendar nil)
     (setq-default calendar-date-style 'iso))
 
@@ -236,7 +248,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
+                                   (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
