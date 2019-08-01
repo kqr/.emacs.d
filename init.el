@@ -239,22 +239,19 @@
 (load "kqr-whitespace.el")
 (load "kqr-revisions.el")
 
-
-;;;; Project management
 (autoload 'projectile-command-map "projectile")
 (define-key global-map (kbd "<f8>") 'projectile-command-map)
 (with-eval-after-load "projectile"
   (when (executable-find "uctags")
     (setq projectile-tags-command "uctags -Re -f \"%s\" %s"))
   (projectile-mode +1)
-  (when (require 'counsel-projectile nil)
+  (when (require 'counsel-projectile)
     (counsel-projectile-mode +1))
 
   (defun load-two-wrongs ()
     (let ((two-wrongs-file (concat (projectile-project-root) "two-wrongs.el")))
       (when (file-exists-p two-wrongs-file)
-          (load two-wrongs-file))))
-
+        (load two-wrongs-file))))
   (add-hook 'projectile-find-file-hook #'load-two-wrongs))
 
 (load "kqr-cc.el")
@@ -268,7 +265,7 @@
 (load "kqr-dotnet.el")
 (load "kqr-python.el")
 
-;;; Time reporting, clocking etc
+(load "kqr-shell.el")
 (load "kqr-timeclock.el")
 (load "kqr-calculator.el")
 (load "kqr-fileman.el")

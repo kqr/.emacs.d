@@ -77,6 +77,24 @@
       window-divider-default-right-width 5)
 (window-divider-mode +1)
 
+(autoload 'counsel-M-x "counsel")
+(autoload 'counsel-find-file "counsel")
+(define-key global-map (kbd "M-x") #'counsel-M-x)
+(define-key global-map (kbd "C-x C-f") #'counsel-find-file)
+
+(with-eval-after-load "ivy"
+  (ivy-mode +1)
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "(%d/%d) "
+        ;; Allow input fragments in arbitrary order
+        ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+
+  (with-eval-after-load "evil"
+    (define-key evil-normal-state-map (kbd "/") 'counsel-grep-or-swiper)
+    (define-key evil-normal-state-map (kbd "C-p") 'counsel-yank-pop))
+  (with-eval-after-load "projectile"
+    (define-key projectile-command-map (kbd "f" 'counsel-projectile)))))
+
 ;;;; Provide this file (to shut up the linter...)
 (provide 'kqr-interface)
 ;;; kqr-interface.el ends here

@@ -187,13 +187,14 @@
         org-default-notes-file "~/org/inbox.org"
         org-refile-targets
         '(("~/org/projects.org" :maxlevel . 2)
+          ("~/org/flashcards.org" :maxlevel . 1)
           ("~/org/tickler.org" :maxlevel . 1)
           ("~/org/someday.org" :maxlevel . 3)
           ("~/org/notes.org" :maxlevel . 2)
           ("~/org/loop54.org" :maxlevel . 2)
           ("~/org/kth.org" :maxlevel . 2))
         org-refile-allow-creating-parent-nodes 'confirm
-        org-refile-use-outline-path t
+        org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-log-refile 'time
         org-reverse-note-order t
@@ -248,7 +249,7 @@
                   ((org-agenda-overriding-header "To do (not scheduled)")
                    (org-agenda-skip-function
                     (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                                   (skip-entries-with-active-children))))))
+                              (skip-entries-with-active-children))))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-todo-ignore-scheduled t))))
