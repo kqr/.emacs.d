@@ -1,5 +1,5 @@
 (run-with-idle-timer
- 10 nil
+ 6 nil
  (lambda ()
    (when (require 'company nil)
      (diminish 'company-mode)
@@ -23,6 +23,9 @@
      (setq company-idle-delay 0.1)
      (setq company-tooltip-align-annotations t)
 
+     (when (require 'company-posframe)
+       (company-posframe-mode +1))
+
      ;; We don't want completion to prevent us from actually navigating the code
      (define-key company-active-map (kbd "<return>") nil)
      (define-key company-active-map (kbd "C-p") nil)
@@ -32,4 +35,4 @@
      (define-key company-active-map (kbd "C-<up>") #'company-select-previous)
      (define-key company-active-map (kbd "C-<down>") #'company-select-next)
      (define-key company-active-map (kbd "TAB")
-       #'company-complete-common-or-selected))))
+       #'company-complete-common-or-cycle))))

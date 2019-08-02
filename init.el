@@ -192,7 +192,7 @@
 (load "kqr-indentation.el")
 
 ;; Completion with company mode (hopefully practically intrusion-free)
-;;(load "kqr-company.el")
+(load "kqr-completion.el")
 
 ;;;; Miscellaneous interaction
 ;; Export window contents to neat HTML
