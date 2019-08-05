@@ -26,9 +26,10 @@
         evil-move-cursor-back nil)
 
   (with-eval-after-load "ace-window"
-    (define-key evil-normal-state-map (kbd "M-o") 'ace-window)
-    (define-key evil-insert-state-map (kbd "M-o") 'ace-window)
-    (define-key evil-visual-state-map (kbd "M-o") 'ace-window))
+    (evil-define-key '(normal insert visual) evil-cleverparens-mode-map
+      (kbd "M-o") nil)
+    (evil-define-key '(normal insert visual) 'global
+      (kbd "M-o") 'ace-window))
 
   (when (require 'spaceline-config nil)
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))

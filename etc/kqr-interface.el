@@ -58,6 +58,8 @@
 
 (push 'switch-to-scratch-buffer after-make-frame-functions)
 
+;;;; Restore cursor position when reopening file
+(save-place-mode +1)
 
 ;;;; Window-divider
 (setq window-divider-default-bottom-width 5
@@ -80,7 +82,8 @@
     (define-key evil-normal-state-map (kbd "/") 'counsel-grep-or-swiper)
     (define-key evil-normal-state-map (kbd "C-p") 'counsel-yank-pop))
   (with-eval-after-load "projectile"
-    (define-key projectile-command-map (kbd "f" 'counsel-projectile)))))
+    (define-key projectile-command-map (kbd "f") 'counsel-projectile)
+    (define-key projectile-command-map (kbd "s G") 'counsel-git-grep)))
 
 ;;;; Provide this file (to shut up the linter...)
 (provide 'kqr-interface)
