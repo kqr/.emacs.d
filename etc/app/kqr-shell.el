@@ -40,4 +40,10 @@
       ;; Ctrl-D to send EOF in Eshell
       (evil-define-key '(normal insert) eshell-mode-map (kbd "C-d") 'delete-window)))
 
-  (add-hook 'eshell-mode-hook 'configure-eshell))
+  (add-hook 'eshell-mode-hook 'configure-eshell)
+
+  (with-eval-after-load "evil"
+    ;; This makes it very convenient to open an Eshell, but it disables the
+    ;; default shell command running bind. If desired, it can probably be
+    ;; bound to C-! or something.
+    (evil-define-key '(normal) 'global (kbd "!") 'eshell-open-current-directory)))
