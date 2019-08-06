@@ -26,9 +26,9 @@
     "Open Eshell navigated to the directory of the current buffer in Eshell."
     (interactive)
     (let* ((parent (get-current-directory))
-           (height (/ (window-total-height) 3))
+           (width (/ (window-total-width) 2))
            (name (car (last (split-string parent "/" t)))))
-      (split-window-vertically (- height))
+      (split-window-horizontally (- width))
       (other-window 1)
       (eshell "new")
       (rename-buffer (concat "*eshell: " name "*"))))
