@@ -21,8 +21,10 @@
   (defun buffer-find-file-at (point)
     "Attempt to open whatever filename is under point."
     (interactive "d")
-    (find-file-other-window (concat (buffer-current-directory)
-                                    (buffer-filename-at nil))))
+    (let ((file-path (concat (buffer-current-directory)
+                             (buffer-filename-at point))))
+      (when (file-exists-p file-path)
+        (find-file-other-window file-path))))
 
   (defun buffer-find-file-at-mouse-click (event)
     "Attempt to open whatever filename is clicked in the buffer."
@@ -63,10 +65,7 @@
 
     ;; Set up some custome binds
     (define-key eshell-mode-map (kbd "C-c f") 'buffer-find-file-at)
-    ;; I'm hesitant to enable this since I'm worried it will replace the default
-    ;; action. I could, perhaps, advice whatever the default action is, but eh.
-    ;; We'll see.
-    ;;(define-key eshell-mode-map (kbd "<mouse-1>") 'buffer-find-file-at-mouse-click)
+    (define-key eshell-mode-map (kbd "<mouse-1>") 'buffer-find-file-at-mouse-click)
 
     (with-eval-after-load "evil"
       (evil-define-key 'normal eshell-mode-map (kbd "0") 'eshell-bol)
