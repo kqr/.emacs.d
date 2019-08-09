@@ -205,6 +205,7 @@
         '("~/org/inbox.org"
           "~/org/projects.org"
           "~/org/tickler.org"
+          "~/org/loop54.org"
           "~/org/kth.org")
         org-agenda-dim-blocked-tasks 'invisible
         org-agenda-span 'day
@@ -242,18 +243,7 @@
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
             (todo "WAIT"
                   ((org-agenda-overriding-header "Waiting")
-                   (org-agenda-todo-ignore-scheduled t)))))
-          ("w" "Work"
-           ((agenda "" nil)
-            (tags "/TODO"
-                  ((org-agenda-overriding-header "To do (not scheduled)")
-                   (org-agenda-skip-function
-                    (lambda () (or (org-agenda-skip-entry-if 'scheduled)
-                              (skip-entries-with-active-children))))))
-            (todo "WAIT"
-                  ((org-agenda-overriding-header "Waiting")
-                   (org-agenda-todo-ignore-scheduled t))))
-           ((org-agenda-files '("~/org/loop54.org"))))))
+                   (org-agenda-todo-ignore-scheduled t)))))))
 
   ;; Using Org to publish documents
   (org-babel-do-load-languages 'org-babel-load-languages
