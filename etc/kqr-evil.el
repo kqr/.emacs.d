@@ -12,6 +12,7 @@
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
+  (evil-define-key 'motion evil-list-view-mode-map (kbd "q") 'quit-window)
 
   (define-advice evil-quit
       (:before-until (&rest args) evil-quit-kills-buffer-first)
