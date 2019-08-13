@@ -10,7 +10,7 @@
     (when (require 'company nil)
       (add-to-list 'company-backends #'company-omnisharp))
 
-    (setq omnisharp-expected-server-version "1.32.8")
+    (setq omnisharp-expected-server-version "1.34.1")
 
     (defun omnisharp-enable ()
       "Configure advanced settings related to C# development."
