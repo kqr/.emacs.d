@@ -47,6 +47,15 @@
   (define-key global-map [(hyper c)] 'copy-region-as-kill)
   (define-key global-map [(hyper v)] 'yank))
 
+;;;; Windowing stuff
+
+;; Never split vertically
+(setq split-height-threshold nil)
+;; But feel free to split horizontally, if there's room
+(setq split-width-threshold 92)
+;; Don't resize windows just because their content changes
+(setq even-window-sizes nil)
+
 (autoload 'ace-window "ace-window")
 (define-key global-map (kbd "M-o") 'ace-window)
 
