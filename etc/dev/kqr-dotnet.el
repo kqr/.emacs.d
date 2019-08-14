@@ -10,6 +10,7 @@
     (when (require 'company nil)
       (add-to-list 'company-backends #'company-omnisharp))
 
+    ;; Note that this requires the latest HEAD of omnisharp-emacs!
     (setq omnisharp-expected-server-version "1.34.1")
 
     (defun omnisharp-enable ()
