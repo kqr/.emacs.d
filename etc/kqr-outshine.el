@@ -1,5 +1,5 @@
 (autoload 'outshine-minor-mode "outshine")
-(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+(add-hook 'outline-minor-mode-hook #'outshine-mode)
 (add-hook 'prog-mode-hook #'outline-minor-mode)
 (eval-after-load "outshine"
   '(progn

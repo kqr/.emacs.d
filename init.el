@@ -223,13 +223,6 @@
 (autoload 'er/expand-region "expand-region")
 (define-key global-map (kbd "M-SPC") 'er/expand-region)
 
-
-;; Thesaurus/synonyms tooltip
-(define-key global-map (kbd "C-@") #'synosaurus-choose-and-replace)
-(autoload 'synosaurus "synosaurus-choose-and-replace")
-(eval-after-load "synosaurus"
-  '(setq-default synosaurus-choose-method 'popup))
-
 (load "kqr-snippets.el")
 (load "kqr-latex.el")
 

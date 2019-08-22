@@ -11,10 +11,3 @@
     (setq meghanada-maven-path "mvn")
     (define-key global-map (kbd "C-c C-v C-b") 'meghanada-compile-project)
     (define-key global-map (kbd "C-c C-v C-r") 'meghanada-exec-main)))
-
-;; Scala mode & sbt mode
-(autoload 'scala-mode "scala-mode")
-(push '("\\.scala\\'" . scala-mode) auto-mode-alist)
-(push '("\\.sbt\\'" . scala-mode) auto-mode-alist)
-(with-eval-after-load "scala-mode"
-  (setq sbt:prefer-nested-projects t))

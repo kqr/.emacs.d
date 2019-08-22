@@ -1,10 +1,12 @@
 ;;; bug-hunter-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory #$) (car load-path))))
+
 
-;;;### (autoloads nil "bug-hunter" "bug-hunter.el" (23173 33283 676001
-;;;;;;  14000))
+;;;### (autoloads nil "bug-hunter" "bug-hunter.el" (0 0 0 0))
 ;;; Generated autoloads from bug-hunter.el
 
 (autoload 'bug-hunter-file "bug-hunter" "\
@@ -22,11 +24,14 @@ ASSERTION.
 
 \(fn &optional ASSERTION)" t nil)
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "bug-hunter" '("bug-hunter-")))
+
 ;;;***
 
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; bug-hunter-autoloads.el ends here
