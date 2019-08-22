@@ -34,7 +34,7 @@
   (defun eshell-open-current-directory ()
     "Open Eshell navigated to the directory of the current buffer in Eshell."
     (interactive)
-    (let* ((parent (get-current-directory))
+    (let* ((parent (buffer-current-directory))
            (width (/ (window-total-width) 2))
            (name (car (last (split-string parent "/" t)))))
       (split-window-horizontally (- width))
