@@ -52,7 +52,7 @@
 ;; Never split vertically
 (setq split-height-threshold nil)
 ;; But feel free to split horizontally, if there's room
-(setq split-width-threshold 92)
+(setq split-width-threshold 160)
 ;; Don't resize windows just because their content changes
 (setq even-window-sizes nil)
 

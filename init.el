@@ -67,7 +67,8 @@
 ;; - outshine-mode
 ;;
 ;;; Code:
-(setq gc-cons-threshold 800000)
+;; set to 8 megabytes (and constantly swap.) default is 800,000 (i.e. 800 kb)
+(setq gc-cons-threshold 8000000)
 
 ;;; Init file configuration
 ;; I don't use customize-set-variable as much anymore, but it's probably a
