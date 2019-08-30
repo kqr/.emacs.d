@@ -233,20 +233,14 @@
 (load "kqr-whitespace.el")
 (load "kqr-revisions.el")
 
-(autoload 'projectile-command-map "projectile")
-(define-key global-map (kbd "<f8>") 'projectile-command-map)
-(with-eval-after-load "projectile"
-  (when (executable-find "uctags")
-    (setq projectile-tags-command "uctags -Re -f \"%s\" %s"))
-  (projectile-mode +1)
-  (when (require 'counsel-projectile)
-    (counsel-projectile-mode +1))
-
-  (defun load-two-wrongs ()
-    (let ((two-wrongs-file (concat (projectile-project-root) "two-wrongs.el")))
-      (when (file-exists-p two-wrongs-file)
-        (load two-wrongs-file))))
-  (add-hook 'projectile-find-file-hook #'load-two-wrongs))
+(run-with-idle-timer
+ 2 nil
+ (lambda ()
+   (when (require 'projectile)
+     (define-key global-map (kbd "<f8>") 'projectile-command-map)
+     (projectile-mode +1)
+     (when (require 'counsel-projectile)
+       (counsel-projectile-mode +1)))))
 
 (load "kqr-cc.el")
 (load "kqr-web.el")

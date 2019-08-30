@@ -10,21 +10,10 @@
         (file-name-directory (buffer-file-name))
       default-directory))
 
-  (defun buffer-filename-at (point)
-    "Return a very rough guess at what the filename under point is."
-    (save-excursion
-      (when point (goto-char point))
-      (let ((filename-end (progn (forward-symbol 1) (point)))
-            (filename-beginning (progn (forward-symbol -1) (point))))
-        (buffer-substring-no-properties filename-beginning filename-end))))
-
   (defun buffer-find-file-at (point)
     "Attempt to open whatever filename is under point."
     (interactive "d")
-    (let ((file-path (concat (buffer-current-directory)
-                             (buffer-filename-at point))))
-      (when (file-exists-p file-path)
-        (find-file-other-window file-path))))
+    (projectile-find-file-dwim-other-window))
 
   (defun buffer-find-file-at-mouse-click (event)
     "Attempt to open whatever filename is clicked in the buffer."

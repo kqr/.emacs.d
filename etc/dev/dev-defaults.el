@@ -14,3 +14,9 @@
 ;; Subword-mode allows word motions to TerminateInCamelCasedWords
 (add-hook 'prog-mode-hook 'subword-mode)
 
+;; Try out dumb-jump for finding definitions etc.
+(autoload 'dumb-jump-go "dumb-jumb")
+(define-key global-map (kbd "C-c .") 'dumb-jump-go)
+(with-eval-after-load "dumb-jump"
+  ;; Use a popup near point to select location
+  (setq dumb-jump-selector nil))
