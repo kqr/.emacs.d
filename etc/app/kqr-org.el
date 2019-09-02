@@ -197,7 +197,7 @@
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-log-refile 'time
-        org-reverse-note-order t
+        org-reverse-note-order nil
         org-archive-location "~/org/archive.org::* %s")
 
   ;; Agenda
