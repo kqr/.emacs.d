@@ -10,15 +10,22 @@
         (file-name-directory (buffer-file-name))
       default-directory))
 
-  (defun buffer-find-file-at (point)
+  (defun buffer-find-file-at-point-too-many-options ()
+    (let* ((project-files (projectile-current-project-files))
+           (files (projectile-select-files project-files)))
+      (< 5 (length files))))
+
+  (defun buffer-find-file-at-point ()
     "Attempt to open whatever filename is under point."
     (interactive "d")
-    (projectile-find-file-dwim-other-window))
+    (unless (buffer-find-file-at-point-too-many-options)
+      (projectile-find-file-dwim-other-window)))
 
   (defun buffer-find-file-at-mouse-click (event)
     "Attempt to open whatever filename is clicked in the buffer."
     (interactive "e")
-    (buffer-find-file-at (posn-point (event-end event))))
+    (goto-char (posn-point (event-end event)))
+    (buffer-find-file-at-point))
 
   (defun eshell-open-current-directory ()
     "Open Eshell navigated to the directory of the current buffer in Eshell."
