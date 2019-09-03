@@ -1,4 +1,4 @@
-(define-package "company-ansible" "20180701.1813" "A company back-end for ansible"
+(define-package "company-ansible" "20190301.2111" "A company back-end for ansible"
   '((emacs "24.4")
     (company "0.8.12"))
   :keywords
