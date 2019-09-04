@@ -151,6 +151,8 @@
 (add-hook 'after-save-hook #'wc-reset)
 (setq wc-modeline-format "Words:%W%w(%gw)")
 
+(load "kqr-misc.el")
+
 (load "kqr-tramp.el")
 (load "kqr-unicode.el")
 
