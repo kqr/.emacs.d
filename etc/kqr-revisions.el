@@ -30,7 +30,17 @@
 ;; Ediff mode for interactive comparison of text
 (when (require 'ediff nil)
   (setq ediff-split-window-function 'split-window-horizontally
-        ediff-window-setup-function 'ediff-setup-windows-plain)
+        ediff-window-setup-function 'ediff-setup-windows-plain
+        ;; Documentation says to add new options after the default ones, so
+        ;; that's what I'll do, even this seems to default to empty string.
+        ediff-diff-options (concat ediff-diff-options "-w"))
+
+  ;; Use git diff with the histogram algorithm if available
+  (let ((git (executable-find "git")))
+    (when git
+      (setq ediff-diff-program (concat git)
+            ediff-diff-options (concat "diff " ediff-diff-options " --histogram"))))
+
 
   (defun ediff-outline-show-all ()
     (when (or (eq major-mode 'org-mode)

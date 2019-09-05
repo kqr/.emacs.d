@@ -19,7 +19,7 @@
   (define-key global-map (kbd "C-c i") 'counsel-imenu))
 
 ;; Try out dumb-jump for finding definitions etc.
-(autoload 'dumb-jump-go "dumb-jumb")
+(autoload 'dumb-jump-go "dumb-jump")
 (define-key global-map (kbd "C-c .") 'dumb-jump-go)
 (with-eval-after-load "dumb-jump"
   ;; Use a popup near point to select location
