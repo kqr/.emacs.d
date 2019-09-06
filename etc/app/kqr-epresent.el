@@ -11,6 +11,11 @@
                       :height (face-attribute 'org-level-2 :height)
                       :weight 'unspecified)
 
+  ;; Undefine the default keys to enter epresent – I use them for other things!
+  ;; (If these directives do not suffice, I'll have to add them to the org hook.)
+  (define-key org-mode-map (kbd "<f5>") nil)
+  (define-key org-mode-map (kbd "<f12>") nil)
+
   (define-advice epresent--get-frame
       (:around (actual-get-frame &rest args) epresent-frame-set-buffer)
     (apply actual-get-frame args)
