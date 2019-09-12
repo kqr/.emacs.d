@@ -38,6 +38,23 @@
   (when (require 'evil-cleverparens nil)
     (add-hook 'smartparens-enabled-hook 'evil-cleverparens-mode))
 
+  ;; evil-cleverparens takes over the good ol' <> binds in a way that's probably
+  ;; good only I haven't learned to use it yet. However, the default <> binds
+  ;; are also useful, and since they are available by C-d and C-t in insert
+  ;; mode, why not enable them also in visual mode? I don't need to pop tags
+  ;; or scroll down in visual mode very often anyway! (famous last words...)
+  (evil-define-key '(insert visual) global-map
+    [?\C-d] 'evil-shift-left
+    [?\C-t] 'evil-shift-right)
+
+  (define-advice evil-shift-right
+      (:before (&rest args) set-evil-shift-width-to-c-basic-offset)
+    (setq evil-shift-width c-basic-offset))
+
+  (define-advice evil-shift-right
+      (:after (&rest args) leave-mark-active-after-evil-shift-right)
+    (setq deactivate-mark nil))
+
   (when (and (require 'vimish-fold nil)
              (require 'evil-vimish-fold nil))
     (setq vimish-fold-header-width 70)
