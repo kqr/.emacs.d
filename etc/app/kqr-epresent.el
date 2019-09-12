@@ -28,14 +28,3 @@
         (apply 'redraw-frame (cons nil args))
       (apply actual-redraw args))))
 
-;; Bad place for this but I can't be arsed to come up with a better one
-(defun remove-all-advice-for (symbol)
-  (interactive "a")
-  (let ((removed-advices 0))
-    (advice-mapc
-     (lambda (advice props)
-       (when advice
-         (incf removed-advices)
-         (advice-remove symbol advice)))
-     symbol)
-    (message "Removed %d pieces of advice" removed-advices)))
