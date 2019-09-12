@@ -38,6 +38,15 @@
       (eshell "new")
       (rename-buffer (concat "*eshell: " name "*"))))
 
+  (defun shell-command-on-buffer (arg)
+    "Run COMMAND on buffer contents. With prefix, replace buffer contents."
+    (interactive "P")
+    (shell-command-on-region
+     (point-min) (point-max)
+     (read-shell-command "Shell command on buffer: ")
+     arg
+     arg))
+
   ;; Things that only make sense in combination with evil
   (with-eval-after-load "evil"
     (defun eshell-evil-insert-line ()
@@ -49,7 +58,10 @@
     ;; This makes it very convenient to open an Eshell, but it disables the
     ;; default shell command running bind. If desired, it can probably be
     ;; bound to C-! or something.
-    (evil-define-key '(normal) 'global (kbd "!") 'eshell-open-current-directory))
+    (evil-define-key '(normal) 'global (kbd "!") 'eshell-open-current-directory)
+
+    ;; This overrides a different shell-command function which is much less useful.
+    (evil-define-key '(normal) 'global (kbd "M-!") 'shell-command-on-buffer))
 
   (defun configure-eshell ()
     ;; Configure normal Emacs scrolling in Eshell, instead of keeping cursor centered
