@@ -34,3 +34,9 @@
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only))
   (add-hook 'compilation-filter-hook 'ansi-coloured-buffer))
+
+
+;; Dim inactive buffers
+(when (require 'dimmer)
+  (dimmer-mode +1)
+  (setq dimmer-fraction 0.3))
