@@ -3,3 +3,7 @@
 (when (require 'yasnippet)
   (setq yas-indent-line 'fixed)
   (yas-global-mode +1))
+
+(when (require 'auto-yasnippet)
+  ;; Currently no other configuration
+  )
