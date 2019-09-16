@@ -94,6 +94,13 @@
     (define-key projectile-command-map (kbd "f") 'counsel-projectile)
     (define-key projectile-command-map (kbd "s G") 'counsel-git-grep)))
 
+;; Enable quick ways of dragging buffers around
+(when (require 'buffer-move)
+  (define-key global-map (kbd "<C-S-up>") 'buf-move-up)
+  (define-key global-map (kbd "<C-S-down>") 'buf-move-down)
+  (define-key global-map (kbd "<C-S-left>") 'buf-move-left)
+  (define-key global-map (kbd "<C-S-right>") 'buf-move-right))
+
 ;;;; Provide this file (to shut up the linter...)
 (provide 'kqr-interface)
 ;;; kqr-interface.el ends here
