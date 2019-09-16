@@ -101,6 +101,10 @@
   (define-key global-map (kbd "<C-S-left>") 'buf-move-left)
   (define-key global-map (kbd "<C-S-right>") 'buf-move-right))
 
+(when (require 'sr-speedbar)
+  ;; No particular configuration at the moment...
+  )
+
 ;;;; Provide this file (to shut up the linter...)
 (provide 'kqr-interface)
 ;;; kqr-interface.el ends here
