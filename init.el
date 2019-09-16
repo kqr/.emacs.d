@@ -17,9 +17,6 @@
 ;;     See: https://nullprogram.com/blog/2013/02/06/
 ;;     and: https://stackoverflow.com/questions/23944477/
 ;;
-;; - Find a way to list the defines in current buffer? imenu?
-;; - Check out https://github.com/DarthFennec/highlight-indent-guides
-;;
 ;;; Mourned and never forgotten:
 ;;
 ;; There are some modes that do great things for my experience, but which have
@@ -33,9 +30,7 @@
 ;; commit as I add them to this list, meaning finding my old config should be
 ;; relatively easy when it's time.
 ;;
-;; - centered-cursor-mode (scrolls windws to show as much above as below point)
 ;; - olivetti-mode (narrows buffers to fill-column)
-;; - aggressive-indent-mode (indents continuously as you type)
 ;; - fic-mode (clearly highlights TODO, FIXME, XXX, etc. in comments)
 ;;
 ;; Until very recently, it was unthinkable for me to remove some of these,
