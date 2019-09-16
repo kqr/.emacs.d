@@ -67,3 +67,7 @@
 
 ;; Make "join this line to the one above" a bit more convenient to perform
 (define-key global-map (kbd "C-S-j") #'delete-indentation)
+
+(when (require 'drag-stuff)
+  (drag-stuff-global-mode +1)
+  (drag-stuff-define-keys))
