@@ -169,6 +169,8 @@
 ;; probably should...)
 (when (require 'recentf)
   (recentf-mode +1)
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory)
   (run-at-time nil (* 5 60) 'recentf-save-list)
   (define-key global-map (kbd "C-x C-r") #'counsel-recentf))
 
