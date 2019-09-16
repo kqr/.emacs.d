@@ -1,3 +1,7 @@
+(autoload 'git-timemachine-toggle "git-timemachine")
+(with-eval-after-load "git-timemachine"
+  (add-hook 'git-timemachine-mode-hook 'evil-emacs-state))
+
 (autoload 'magit-status "magit")
 (define-key global-map (kbd "<f3>") 'magit-status)
 (with-eval-after-load "magit"
