@@ -6,6 +6,12 @@
 ;; Testing I18N: Räksmörgås
 ;;
 ;;; Todo:
+;; - Borg-ify dependencies
+;;   See: https://github.com/emacscollective/borg/issues/12
+;;   and: https://github.com/arichiardi/emacs.d/commit/1eceae80054a219361ab995693e9a8be7e65393c#diff-b67911656ef5d18c4ae36cb6741b7965
+;;
+;;   - Crucially, set up sunrise-commander as a submodule!
+;;
 ;; - Set up a more library-like structure of my various configs
 ;;   - E.g. a minor mode that wraps multiple related minor modes?
 ;;     See: https://nullprogram.com/blog/2013/02/06/
