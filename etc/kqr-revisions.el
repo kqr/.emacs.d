@@ -52,3 +52,7 @@
   (add-hook
    'ediff-keymap-setup-hook
    (lambda () (define-key ediff-mode-map "J" 'ediff-copy-both-to-C))))
+
+
+(when (require 'git-messenger)
+  (define-key global-map [?\C-x ?v ?p] 'git-messenger:popup-message))

@@ -81,6 +81,7 @@
 (load-file custom-file)
 
 ;; Set up the package system
+(setq load-prefer-newer t)
 (require 'package)
 (mapc (lambda (elt) (push elt package-archives))
       '(("elpa" . "https://elpa.gnu.org/packages/")
@@ -101,6 +102,10 @@
 (require 'no-littering)
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+
+;; This may help against accidentally running a mix of updated and out-of-date code
+(when (require 'auto-compile)
+  (auto-compile-on-load-mode +1))
 
 ;; A common problem e.g. on OS X is that Emacs runs in a slightly different
 ;; environment than what you're used to in the user shell. This should help at
