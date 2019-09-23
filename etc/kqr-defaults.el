@@ -70,4 +70,9 @@
 
 (when (require 'drag-stuff)
   (drag-stuff-global-mode +1)
-  (drag-stuff-define-keys))
+  (drag-stuff-define-keys)
+  ;; Org already provides convenient dragging of headlines, which is more
+  ;; important than this. However, I would still like drag-stuff-mode when point
+  ;; is not at a headline, but don't have time to implement that at the moment.
+  (with-eval-after-load "org"
+    (add-hook 'org-mode-hook (lambda () (drag-stuff-mode -1)))))
