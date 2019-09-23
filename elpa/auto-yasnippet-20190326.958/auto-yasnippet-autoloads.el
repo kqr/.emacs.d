@@ -52,6 +52,10 @@ To save a snippet permanently, create an empty file and call this.
 
 ;;;***
 
+;;;### (autoloads nil nil ("auto-yasnippet-pkg.el") (0 0 0 0))
+
+;;;***
+
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
