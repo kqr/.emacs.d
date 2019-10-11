@@ -21,6 +21,7 @@
 ;; Try out dumb-jump for finding definitions etc.
 (autoload 'dumb-jump-go "dumb-jump")
 (define-key global-map (kbd "C-c .") 'dumb-jump-go)
+(define-key csharp-mode-map (kbd "C-c .") nil)
 (with-eval-after-load "dumb-jump"
   ;; Use a popup near point to select location
   (setq dumb-jump-selector nil))
