@@ -23,6 +23,11 @@
 (add-to-list 'initial-frame-alist '(right-fringe . 20))
 (add-to-list 'default-frame-alist '(right-fringe . 20))
 
+;; Enable line numbers
+(if (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode +1)
+  (warn "EMACS VERSION < 26 used. If this is unexpected, look into it."))
+
 ;;; Set up some mac-specific interface things
 (when (eq system-type 'darwin)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))

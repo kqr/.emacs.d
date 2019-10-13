@@ -173,6 +173,7 @@
       (fringe                                ((t :inherit highlight)))
       (mode-line-inactive                    ((t :inherit font-lock-comment-face)))
       (secondary-selection                   ((t :inherit mode-line)))
+      (shadow                                ((t :inherit font-lock-comment-face)))
 
       (escape-glyph                          ((t :inherit org-code :height 0.7)))
 
