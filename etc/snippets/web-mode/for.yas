@@ -1,0 +1,6 @@
+# key: for
+# name: ES6 foreach
+# --
+for (var ${1:item} of ${2:items}) {
+    $0
+}

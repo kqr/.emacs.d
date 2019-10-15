@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: ES console.log
+# key: print
+# --
+console.log($0)

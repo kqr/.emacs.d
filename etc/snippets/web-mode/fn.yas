@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: ES6 anonymous function
+# key: fn
+# --
+${1:args} => $0
