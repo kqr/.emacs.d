@@ -1,6 +1,14 @@
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
+
+(defun refresh-programming-symbols ()
+  "Run this command when prettify-programming-symbols has been re-evaled."
+  (interactive)
+  (prettify-programming-symbols)
+  (global-prettify-symbols-mode -1)
+  (global-prettify-symbols-mode +1))
+
 (defun prettify-programming-symbols ()
   "Prettify programming symbols!"
   (interactive)
@@ -20,6 +28,12 @@
            ("<-" . ?⟵)
            ("|>" . ?▷)
            ("<|" . ?◁)
+           (">>=" . (?\s (Bl . Bl) ?> (Br . Bc) ?> (Br . Bc) ?=))
+           ("<*>" . (?< (Bc . Bl) ?· (Br . Bc) ?>))
+           ("*>" . (?· (Br . Bc) ?\s (Bc . Bl) ?>))
+           ("<*" . (?< (Br . Bc) ?\s (Bc . Bl) ?·))
+           ("<|>" . (?< (Bc . Bl) ?| (Br . Bc) ?>))
+           (":>" . (?: (Br . Bc) ?\s (Bc . Bl) ?>))
            ("||" . ?∨)
            ("&&" . ?∧)
            ("!" . ?¬)
