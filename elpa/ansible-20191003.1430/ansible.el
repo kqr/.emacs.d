@@ -17,7 +17,7 @@
 ;; along with this program; if not, write to the Free Software
 ;; Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-;; Version: 0.0.3
+;; Version: 0.3.0
 ;; Author: k1LoW (Kenichirou Oyama), <k1lowxb [at] gmail [dot] com> <k1low [at] 101000lab [dot] org>
 ;; URL: http://101000lab.org
 ;; Package-Requires: ((s "1.9.0") (f "0.16.2"))
@@ -332,7 +332,7 @@
   "Execute ansible-vault (MODE STR should be 'decrypt' or 'encrypt')."
   (let ((temp-file (make-temp-file "ansible-vault-ansible")))
     (write-region str nil temp-file 'append)
-    (let* ((command (format "ansible-vault %s --vault-password-file=%s %s"
+    (let* ((command (format "ansible-vault %s %s"
                             mode ansible-vault-password-file temp-file))
            (status (shell-command command))
            (output (ansible-get-string-from-file temp-file)))
