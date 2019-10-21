@@ -3,7 +3,7 @@
 ;;; Code:
 
 (when (display-graphic-p)
-  (set-frame-font (font-spec :name "Input Sans Light" :size 14) t t))
+  (set-frame-font (font-spec :name "Input Sans" :size 14) t t))
 
 (when (require 'notmuch nil 'noerror)
   (setq-default notmuch-command "notmuch.sh"))

@@ -1,8 +1,8 @@
 ;; Fixed width font
 (when (display-graphic-p)
-  (set-frame-font (font-spec :name "Input Sans Light" :size 14) t t)
+  (set-frame-font (font-spec :name "Input Sans" :size 14) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
-                                  ((t :family "Input Sans Light"
+                                  ((t :family "Input Sans"
                                       :height 1.0))))  ;; was Luxi Mono, then Hack
   (custom-theme-set-faces 'user '(variable-pitch
                                   ((t :family "Linux Libertine O"
