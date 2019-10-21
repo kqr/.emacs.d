@@ -28,7 +28,7 @@
     (global-display-line-numbers-mode +1)
   (warn "EMACS VERSION < 26 used. If this is unexpected, look into it."))
 
-;;; Set up some mac-specific interface things
+;;;; Set up some mac-specific interface things
 (when (eq system-type 'darwin)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))

@@ -1,9 +1,9 @@
 (if (not (member "Noto Mono" (font-family-list)))
     (warn "Noto Mono not among installed fonts. Symbols may behave weirdly.")
-  ;; Configure fallback font that contains most of Unicode
-  (set-fontset-font t nil "Noto Mono" nil 'append)
-  ;; The primary typeface generally does not have great symbol support.
-  (set-fontset-font t 'symbol "Noto Mono"))
+  ;; Noto Mono likely gets much more love in the non-Latin 1 ranges of Unicode.
+  (let ((fallback-font "Noto Mono"))
+    (set-fontset-font t nil fallback-font nil 'prepend)
+    (set-fontset-font t '(#x100 . #xfffff) fallback-font)))
 
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
