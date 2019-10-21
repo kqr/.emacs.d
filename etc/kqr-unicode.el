@@ -1,5 +1,7 @@
 (if (not (member "Noto Mono" (font-family-list)))
     (warn "Noto Mono not among installed fonts. Symbols may behave weirdly.")
+  ;; Maybe simply disabling this font will help?
+  (add-to-list 'face-ignored-fonts "Apple Symbols")
   ;; Noto Mono likely gets much more love in the non-Latin 1 ranges of Unicode.
   (let ((fallback-font "Noto Mono"))
     (set-fontset-font t nil fallback-font nil 'prepend)
