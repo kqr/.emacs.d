@@ -1,3 +1,10 @@
+(if (not (member "Noto Mono" (font-family-list)))
+    (warn "Noto Mono not among installed fonts. Symbols may behave weirdly.")
+  ;; Configure fallback font that contains most of Unicode
+  (set-fontset-font t nil "Noto Mono" nil 'append)
+  ;; The primary typeface generally does not have great symbol support.
+  (set-fontset-font t 'symbol "Noto Mono"))
+
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
