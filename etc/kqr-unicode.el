@@ -1,15 +1,3 @@
-(if (not (member "Noto Mono" (font-family-list)))
-    (warn "Noto Mono not among installed fonts. Symbols may behave weirdly.")
-  ;; Maybe simply disabling this font will help?
-  (add-to-list 'face-ignored-fonts "Apple Symbols")
-  ;; Noto Mono likely gets much more love in the non-Latin 1 ranges of Unicode.
-  (let ((fallback-font "Noto Mono"))
-    (set-fontset-font t nil fallback-font nil 'prepend)
-    ;; These symbols have been really reluctant to just default sensibly.
-    (let ((fools '(?» ?⤇ ?∀ ?▷ ?◁)))
-      (dolist (symbol fools)
-        (set-fontset-font t symbol fallback-font)))))
-
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
