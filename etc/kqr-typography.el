@@ -38,6 +38,5 @@
 
 ;; Dim inactive buffers
 (when (require 'dimmer)
-  ;; Temporarily disabled because it doesn't play nice with fallback fonts. :(
-  (dimmer-mode -1)
+  (dimmer-mode +1)
   (setq dimmer-fraction 0.3))

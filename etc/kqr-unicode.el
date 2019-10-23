@@ -1,3 +1,11 @@
+(let ((fallback-font "Noto Sans"))
+  (if (not (member fallbakc-font (font-family-list)))
+      (warn (concat fallback-font " not among installed fonts. Symbols may behave weirdly."))
+    ;; Noto likely gets much more love in the non-Latin 1 ranges of Unicode.
+    (set-fontset-font t nil fallback-font nil 'prepend)
+    (set-fontset-font t 'symbol fallback-font)
+    (set-fontset-font t 'mathematical fallback-font)))
+
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
 (setq prettify-symbols-unprettify-at-point 'right-edge)
