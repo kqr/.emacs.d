@@ -2,7 +2,7 @@
 (when (display-graphic-p)
   (set-frame-font (font-spec :name "Input Sans" :size 14) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
-                                  ((t :family "Input Sans"
+                                  ((t :family "Input Mono"
                                       :height 1.0))))  ;; was Luxi Mono, then Hack
   (custom-theme-set-faces 'user '(variable-pitch
                                   ((t :family "Linux Libertine O"
@@ -23,7 +23,10 @@
   ;; Set fixed-width fonts where needed
   (setq-default buffer-face-mode-face '(:inherit fixed-pitch))
   (add-hook 'calendar-mode-hook #'buffer-face-mode)
-  (add-hook 'notmuch-tree-mode-hook #'buffer-face-mode))
+  (add-hook 'notmuch-tree-mode-hook #'buffer-face-mode)
+  (add-hook 'dired-mode-hook #'buffer-face-mode)
+  (add-hook 'magit-status-mode-hook #'buffer-face-mode)
+  (add-hook 'magit-log-mode-hook #'buffer-face-mode))
 
 
 ;; Retain ANSI colour sequences in things like compilation buffers
