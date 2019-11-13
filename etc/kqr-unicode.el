@@ -1,5 +1,5 @@
 (let ((fallback-font "Noto Sans"))
-  (if (not (member fallbakc-font (font-family-list)))
+  (if (not (member fallback-font (font-family-list)))
       (warn (concat fallback-font " not among installed fonts. Symbols may behave weirdly."))
     ;; Noto likely gets much more love in the non-Latin 1 ranges of Unicode.
     (set-fontset-font t nil fallback-font nil 'prepend)

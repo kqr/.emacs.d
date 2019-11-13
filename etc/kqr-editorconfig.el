@@ -9,7 +9,6 @@
 
   (defun apply-indentation-to-all-modes (props)
     (let ((indent-size (string-to-number (gethash 'indent_size props "4"))))
-      (message "Setting indent size to %S" indent-size)
       (setq c-basic-offset indent-size
             js-indent-level indent-size
             js2-basic-offset indent-size
@@ -20,6 +19,6 @@
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode)
 
   (dolist (override '(use-reasonable-fill-column-in-text-mode
-                      apply-indentation-to-all-mode))
+                      apply-indentation-to-all-modes))
     (add-hook 'editorconfig-hack-properties-functions
               override)))
