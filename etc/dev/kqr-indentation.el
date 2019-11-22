@@ -20,7 +20,9 @@
                              (thing-at-point 'line)))))
 
   (mapc (lambda (mode) (add-to-list 'aggressive-indent-excluded-modes mode))
-        '(fsharp-mode haskell-mode python-mode))
+        ;; Not too surprisingly, the languages to include are the ones with
+        ;; significant whitespace.
+        '(fsharp-mode haskell-mode python-mode scala-mode))
 
   ;; Try tweaking this for performance. Default 0.05.
   (setq aggressive-indent-sit-for-time 0.1)
