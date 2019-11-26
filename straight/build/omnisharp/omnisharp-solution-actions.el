@@ -1,0 +1,1 @@
+/home/mr/.emacs.d/straight/repos/omnisharp-emacs/omnisharp-solution-actions.el

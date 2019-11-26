@@ -159,9 +159,6 @@
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/notmuch")
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc"))
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lib"))
-;; XXX: Remove these two
-(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc/app"))
-(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc/dev"))
 
 ;;; User information and misc. config
 (setq user-full-name "Christoffer Stjernlöf"
@@ -585,7 +582,6 @@
       (outline-previous-visible-heading 1))))
 
 ;; Evil mode
-;; XXX: Use-packageify this
 (load "kqr-evil.el")
 
 ;; Aggressive auto indentation, let's try it again!
@@ -916,18 +912,160 @@
   :config
   (counsel-projectile-mode +1))
 
-;; XXX: Use-packagify these
-;; (load "kqr-cc.el")
-;; (load "kqr-web.el")
-;; (load "kqr-ada.el")
-;; (load "kqr-r.el")
-;; (load "kqr-lisp.el")
-;; (load "kqr-java.el")
-;; (load "kqr-haskell.el")
-;; (load "kqr-config-mgmt.el")
-;; (load "kqr-dotnet.el")
-;; (load "kqr-python.el")
+(use-package ada-mode
+  :mode "\\.ad\\(b\\|s\\)\\'"
+  :config
+  (setq-default flycheck-gnat-args "-gnat12")
+  (setq ada-language-version 'ada2012)
+  (setq ada-skel-initial-string nil))
 
+(use-package cc-mode
+  :mode "\\.\\(c\\|h\\)\\'"
+  :config
+  (setq-default c-default-style "stroustrup"
+                c-basic-offset 4))
+
+(use-package restclient
+  :mode "\\.http\\'")
+
+(use-package js2-mode
+  :mode ("\\.jsx?\\'" . js2-jsx-mode)
+  :hook ((js2-mode . javascript-configuration)
+         (js2-mode . add-node-modules-path))
+  :init
+  (defun javascript-configuration ()
+    "Configure two spaces indent for JavaScript."
+    (setq js2-basic-offset 2)
+    (setq js-indent-level js2-basic-offset)
+    (setq c-basic-offset js-indent-level)))
+
+(use-package css-mode
+  :mode "\\.css\\'")
+
+(use-package web-mode
+  :mode "\\.html\\'"
+  :config
+  (setq-default web-mode-enable-auto-pairing nil
+                web-mode-enable-css-colorization nil
+                web-mode-css-indent-offset 2))
+
+(use-package php-mode
+  :mode "\\.php\\'"
+  :hook (php-mode . php-enable-psr2-coding-style))
+
+(use-package ess
+  :mode ("\\.r\\'" . ess-r-mode)
+  :config
+  (require 'ess-site))
+
+;; Emacs Lisp and CL stuff
+(progn
+  (defun configure-lisp-mode ()
+    (setq c-basic-offset 2))
+
+  (add-hook 'emacs-lisp-mode-hook 'configure-lisp-mode)
+  (add-hook 'lisp-mode-hook 'configure-lisp-mode)
+
+  (autoload 'slime "slime")
+  (autoload 'slime-connected-p "slime")
+
+  (defun start-slime ()
+    "If slime is not running, start it if possible."
+    (unless (slime-connected-p)
+      (condition-case-unless-debug nil
+          (save-excursion (slime))
+        (error (message "Slime failed to start. This may be expected.")))))
+
+  (add-hook 'lisp-mode-hook 'start-slime)
+
+  (with-eval-after-load "slime"
+    (setq inferior-lisp-program "/usr/local/bin/sbcl")
+    (setq slime-contribs '(slime-fancy slime-asdf))
+    (defun popup-slime-documentation (symbol-name)
+      "Popup function- or symbol-documentation for SYMBOL-NAME."
+      (interactive (list (slime-read-symbol-name "Documentation for symbol: ")))
+      (when (not symbol-name)
+        (error "No symbol given"))
+      (slime-eval-async `(swank:documentation-symbol ,symbol-name) 'popup-tip))))
+
+(use-package ansible
+  :hook ((yaml-mode . ansible)
+         (ansible . ansible-auto-decrypt-encrypt))
+  :config
+  ;; The easiest solution to customise this on various work laptops is to
+  ;; symlink the actual password file to this location – I'm unlikely to manage
+  ;; more than one set of Ansible-controlled hosts anyway.
+  (setq ansible-vault-password-file "~/.vault_pass"))
+
+(use-package cfengine
+  :mode ("\\.cf\\'" . cfengine3-mode)
+  :hook (cfengine3-mode . eldoc-mode))
+
+(use-package python
+  :hook (python-mode . python-mode-configure)
+  :init
+  (defun python-mode-configure ()
+    (push 'python-mode aggressive-indent-excluded-modes))
+  :config
+  (setq python-shell-interpreter "python3"))
+
+(use-package omnisharp
+  :config
+  (defun configure-omnisharp ()
+    "Set up omnisharp for C# and F# the way I'm used to."
+    (when (require 'company nil)
+      (add-to-list 'company-backends #'company-omnisharp))
+
+    ;; Note that this requires the latest HEAD of omnisharp-emacs!
+    (setq omnisharp-expected-server-version "1.34.1")
+
+    (defun omnisharp-enable ()
+      "Configure advanced settings related to C# development."
+      (omnisharp-mode)
+      (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
+      (local-set-key (kbd "C-c r r") 'omnisharp-rename)
+      (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
+      (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
+      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
+      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))
+    t))
+
+(use-package nxml
+  :mode "\\..sproj\\'")
+
+(use-package csharp-mode
+  :after (omnisharp)
+  :mode "\\.cs\\'"
+  :hook (csharp-mode . csharp-mode-enable)
+  :init
+  (defun csharp-mode-enable ()
+    "Configure settings relating to C# development."
+    (setq c-syntactic-indentation t)
+    (c-set-style "ellemtel")
+    (setq c-basic-offset 4)
+    (c-set-offset 'arglist-close 0)
+    (c-set-offset 'brace-list-open '-)
+
+    (setq tab-width 4)
+    (electric-indent-local-mode -1)
+    (c-set-offset 'inline-open 0)
+    (when (configure-omnisharp)
+      (add-hook 'csharp-mode-hook 'omnisharp-enable))))
+
+(use-package fsharp-mode
+  :after (omnisharp)
+  :mode "\\.fs\\'"
+  :hook (fsharp-mode . fsharp-mode-enable)
+  :init
+  (defun fsharp-mode-enable ()
+    (push 'fsharp-mode aggressive-indent-excluded-modes)
+    (setq fsharp-conservative-indentation-after-bracket t)
+
+    (when (configure-omnisharp)
+      ;; (add-hook 'fsharp-mode-hook ;;'omnisharp-enable)
+      )))
+
+;;; Application type major modes.
 (load "kqr-eshell.el")
 
 (use-package timeclock

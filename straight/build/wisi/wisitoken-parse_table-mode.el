@@ -1,0 +1,1 @@
+/home/mr/.emacs.d/straight/repos/wisi/wisitoken-parse_table-mode.el

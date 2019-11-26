@@ -1,0 +1,1 @@
+/home/mr/.emacs.d/straight/repos/ada-mode/gpr-wisi.el
