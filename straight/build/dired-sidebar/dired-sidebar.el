@@ -1,0 +1,1 @@
+/home/mr/.emacs.d/straight/repos/dired-sidebar/dired-sidebar.el

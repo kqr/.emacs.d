@@ -1,4 +1,6 @@
-(when (require 'evil nil)
+;; XXX: Use-packageify this.
+(use-package evil
+  :config
   (when (require 'tab-as-escape nil)
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
@@ -26,18 +28,6 @@
         evil-move-beyond-eol t
         evil-move-cursor-back nil)
 
-  (with-eval-after-load "ace-window"
-    (evil-define-key '(normal insert visual) evil-cleverparens-mode-map
-      (kbd "M-o") nil)
-    (evil-define-key '(normal insert visual) 'global
-      (kbd "M-o") 'ace-window))
-
-  (when (require 'spaceline-config nil)
-    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
-
-  (when (require 'evil-cleverparens nil)
-    (add-hook 'smartparens-enabled-hook 'evil-cleverparens-mode))
-
   ;; evil-cleverparens takes over the good ol' <> binds in a way that's probably
   ;; good only I haven't learned to use it yet. However, the default <> binds
   ;; are also useful, and since they are available by C-d and C-t in insert
@@ -55,28 +45,43 @@
       (:after (&rest args) leave-mark-active-after-evil-shift-right)
     (setq deactivate-mark nil))
 
-  (when (and (require 'vimish-fold nil)
-             (require 'evil-vimish-fold nil))
-    (setq vimish-fold-header-width 70)
-    (evil-vimish-fold-mode +1))
-
-  (let ((leader-key-map (make-sparse-keymap)))
-    (when (require 'evil-commentary nil)
-      (evil-commentary-mode))
-    (when (require 'avy nil)
-      (setq avy-keys'(?a ?r ?s ?t ?n ?e ?i ?o)
-            avy-background t
-            avy-all-windows t)
-      (define-key leader-key-map (kbd "w") 'avy-goto-word-1)
-      (define-key leader-key-map (kbd "k") 'avy-goto-line))
-    (when (require 'evil-surround nil)
-      (global-evil-surround-mode 1))
-    (when (require 'evil-visualstar nil)
-      (global-evil-visualstar-mode 1))
-
-    (define-key evil-normal-state-map (kbd "") nil)
-    (define-key evil-normal-state-map (kbd "SPC") leader-key-map))
-
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (evil-mode 1))
+
+(use-package spaceline
+  :after (evil)
+  :config
+  (require 'spaceline-config)
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
+
+(use-package evil-cleverparens
+  :after (evil)
+  :hook (smartparens-enabled . evil-cleverparens-mode))
+
+(use-package vimish-fold
+  :config
+  (setq vimish-fold-header-width 70))
+
+(use-package evil-vimish-fold
+  :after (evil vimish-fold)
+  :config
+  (evil-vimish-fold-mode +1))
+
+;; XXX: Fix these
+;; (let ((leader-key-map (make-sparse-keymap)))
+;;   (when (require 'evil-commentary nil)
+;;     (evil-commentary-mode))
+;;   (when (require 'avy nil)
+;;     (setq avy-keys'(?a ?r ?s ?t ?n ?e ?i ?o)
+;;           avy-background t
+;;           avy-all-windows t)
+;;     (define-key leader-key-map (kbd "w") 'avy-goto-word-1)
+;;     (define-key leader-key-map (kbd "k") 'avy-goto-line))
+;;   (when (require 'evil-surround nil)
+;;     (global-evil-surround-mode 1))
+;;   (when (require 'evil-visualstar nil)
+;;     (global-evil-visualstar-mode 1))
+
+;;   (define-key evil-normal-state-map (kbd "") nil)
+;;   (define-key evil-normal-state-map (kbd "SPC") leader-key-map))

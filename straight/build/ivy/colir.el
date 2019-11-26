@@ -1,0 +1,1 @@
+/home/mr/.emacs.d/straight/repos/swiper/colir.el
