@@ -3462,7 +3462,7 @@ Move point after the link."
 			    (org-element-property :contents-end link)))))
 	(org-element-put-property new-link :path new-path)
 	(delete-region (org-element-property :begin link)
-		       (org-element-property :end link))
+		       (1- (org-element-property :end link)))
 	(insert (org-element-link-interpreter new-link contents))))))
 
 (defun org-export--prepare-file-contents
