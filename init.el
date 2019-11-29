@@ -713,10 +713,11 @@
 
   (defun apply-indentation-to-all-modes (props)
     (let ((indent-size (string-to-number (gethash 'indent_size props "4"))))
-      (setq c-basic-offset indent-size
-            js-indent-level indent-size
-            js2-basic-offset indent-size
-            sgml-basic-offset indent-size)))
+      (setq-default
+       c-basic-offset indent-size
+       js-indent-level indent-size
+       js2-basic-offset indent-size
+       sgml-basic-offset indent-size)))
 
   (editorconfig-mode +1)
 
