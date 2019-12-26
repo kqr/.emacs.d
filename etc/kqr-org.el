@@ -45,6 +45,23 @@
                  (t (narrow-to-defun)))))
         (t (error "Please select a region to narrow to"))))
 
+(defun orgzly-link-entry-to-org-headline ()
+  "Convert a link entry from Orgzly to a proper org headline."
+  (interactive)
+  (unless (outline-on-heading-p) (outline-previous-heading))
+  (next-line)
+  (let ((begin (point)))
+    (outline-next-heading)
+    (kill-region begin (point)))
+  (outline-previous-heading)
+  ;; XXX: Ugly hack to go to org entry title start.
+  (forward-char 2)
+  (kill-line)
+  ;; Pop from kill-ring to avoid tainting it.
+  (let ((link-title (pop kill-ring))
+        (link-text (s-trim (pop kill-ring))))
+    (org-insert-link nil link-text link-title)))
+
 (defun start-drill-session ()
   (interactive)
   (find-file "~/org/flashcards.org")
