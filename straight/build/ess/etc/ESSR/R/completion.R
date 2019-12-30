@@ -1,1 +1,0 @@
-/home/mr/.emacs.d/straight/repos/ESS/etc/ESSR/R/completion.R

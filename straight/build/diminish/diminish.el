@@ -1,1 +1,0 @@
-/home/mr/.emacs.d/straight/repos/diminish.el/diminish.el

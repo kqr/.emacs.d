@@ -1,1 +1,0 @@
-/home/mr/.emacs.d/straight/repos/web-mode/web-mode.el

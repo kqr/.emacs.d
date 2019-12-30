@@ -1,1 +1,0 @@
-/home/mr/.emacs.d/straight/repos/highlight-parentheses.el/highlight-parentheses.el

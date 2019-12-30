@@ -1,1 +1,0 @@
-/home/mr/.emacs.d/straight/repos/emacs-git-messenger/git-messenger.el

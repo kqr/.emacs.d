@@ -1,1 +1,0 @@
-/home/mr/.emacs.d/straight/repos/sunrise-commander/sunrise-x-old-checkpoints.el
