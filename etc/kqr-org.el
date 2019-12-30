@@ -107,10 +107,7 @@
   :straight org-plus-contrib)
 
 (use-package org-drill
-  :after (org-plus-contrib))
-
-(use-package org-bullets
-  :after (org-plus-contrib))
+  :after (org))
 
 (with-eval-after-load "org-notmuch"
   ;; XXX: This doesn't work for some reason.
