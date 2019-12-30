@@ -557,6 +557,7 @@
         ivy-count-format "(%d/%d) "
         ;; Allow input fragments in arbitrary order
         ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+  (setf (alist-get 'counsel-M-x ivy-initial-inputs-alist) "")
   (ivy-mode +1))
 
 (use-package counsel
