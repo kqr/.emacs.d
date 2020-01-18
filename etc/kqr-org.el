@@ -10,6 +10,8 @@
 		" \t\r\n"
 		"."
 		8))
+;; Necessary to make org-emphasis-regexp-components take effect.
+(org-reload)
 
 
 (autoload 'org-mode "org")
