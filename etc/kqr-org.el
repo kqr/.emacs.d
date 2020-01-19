@@ -113,6 +113,7 @@
 (straight-use-package
  '(org-plus-contrib
    :repo "https://code.orgmode.org/bzg/org-mode.git"
+   :fork (:repo "https://github.com/kqr/org-mode.git")
    :local-repo "org"
    :files (:defaults "contrib/lisp/*.el")
    :includes (org)))
