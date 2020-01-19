@@ -1,5 +1,7 @@
 ;; XXX: Use-packageify this
 
+;; Load things also from contrib
+
 ;; I /think/ these need to be set before Org is required
 (setq-default org-export-backends '(org html publish s5 latex rss))
 ;; Allow longer sections of italics, and italicise mid-word with
@@ -105,8 +107,15 @@
 ;; This must happen last, when we have defined all keys in the prefix map
 (define-key global-map (kbd "<f4>") 'kqr-org-prefix)
 
-(use-package org
-  :straight org-plus-contrib)
+;; Very confused by all of the following.
+;;(use-package org
+;;  :straight org-plus-contrib)
+(straight-use-package
+ '(org-plus-contrib
+   :repo "https://code.orgmode.org/bzg/org-mode.git"
+   :local-repo "org"
+   :files (:defaults "contrib/lisp/*.el")
+   :includes (org)))
 
 (use-package org-drill
   :after (org))
