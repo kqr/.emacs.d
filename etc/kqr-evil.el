@@ -68,10 +68,12 @@
   :config
   (evil-vimish-fold-mode +1))
 
+(use-package evil-commentary
+  :config
+  (evil-commentary-mode +1))
+
 ;; XXX: Fix these
 ;; (let ((leader-key-map (make-sparse-keymap)))
-;;   (when (require 'evil-commentary nil)
-;;     (evil-commentary-mode))
 ;;   (when (require 'avy nil)
 ;;     (setq avy-keys'(?a ?r ?s ?t ?n ?e ?i ?o)
 ;;           avy-background t
