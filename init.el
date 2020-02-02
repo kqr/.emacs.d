@@ -144,8 +144,9 @@
 ;; A common problem e.g. on OS X is that Emacs runs in a slightly different
 ;; environment than what you're used to in the user shell. This should help at
 ;; least a little with that issue.
+;;
+;; Maybe it happens also with other platforms, so try running it everywhere.
 (use-package exec-path-from-shell
-  :if macos-p
   :config
   (exec-path-from-shell-initialize))
 
