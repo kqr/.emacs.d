@@ -72,6 +72,10 @@
   :config
   (evil-commentary-mode +1))
 
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode +1))
+
 ;; XXX: Fix these
 ;; (let ((leader-key-map (make-sparse-keymap)))
 ;;   (when (require 'avy nil)
@@ -80,8 +84,6 @@
 ;;           avy-all-windows t)
 ;;     (define-key leader-key-map (kbd "w") 'avy-goto-word-1)
 ;;     (define-key leader-key-map (kbd "k") 'avy-goto-line))
-;;   (when (require 'evil-surround nil)
-;;     (global-evil-surround-mode 1))
 ;;   (when (require 'evil-visualstar nil)
 ;;     (global-evil-visualstar-mode 1))
 
