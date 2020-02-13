@@ -322,6 +322,12 @@
             " \\renewcommand{\\textsc}[1]{\\smallcapsspacing{\\textsmallcaps{#1}}}\n"
             "\\fi\n"))))
 
+;; This is hopefully only required until I sort out the new straight.el setup.
+;; These files (and potentially more) are not automatically loaded, which
+;; causes some operations (like archiving) to fail for unknown definitions.
+(load "/home/mr/.emacs.d/straight/repos/org/lisp/org.el")
+(load "/home/mr/.emacs.d/straight/repos/org/lisp/org-macs.el")
+
 ;; for some reason, this started misbehaving after Caspian jumped up on my
 ;; keyboard, so I have made it temporarly non-mandatory and at some point
 ;; I'll have to troubleshoot what went wrong.
