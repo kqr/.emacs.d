@@ -58,6 +58,8 @@
        (theme-secondary-accent (if light? "dodgerblue3" "#6493e8"))
        (theme-strong-diminuitive (if light? "forest green" "#7abc71"))
        (theme-weak-diminuitive "peachpuff4")
+       (theme-comment-background "#06352d")
+       (theme-string-background "#303506")
 
        (theme-faces
         (from-faces-map
@@ -97,21 +99,21 @@
             flycheck-error)
 
            (((t :foreground ,theme-primary-accent))
-            font-lock-builtin-face)
+            warning)
 
            (((t :underline (:color ,theme-primary-accent :style wave)))
             flycheck-warning)
 
            (((t :foreground ,theme-primary-accent
                 :weight bold))
-            font-lock-keyword-face)
+            minibuffer-prompt)
 
            (((t :foreground ,theme-primary-accent
                 :inverse-video t))
             match)
 
            (((t :foreground ,theme-secondary-accent))
-            font-lock-type-face)
+            org-priority)
 
            (((t :box (:line-width 1 :color ,theme-background-color :style pressed-button)))
             org-code)
@@ -127,10 +129,13 @@
                 :inverse-video t))
             lazy-highlight)
 
-           (((t :foreground ,theme-strong-diminuitive))
+           (((t :foreground ,theme-default-color :background ,theme-string-background))
             font-lock-string-face)
 
            (((t :foreground ,theme-weak-diminuitive))
+            mode-line-inactive)
+
+           (((t :foreground ,theme-strong-diminuitive :background ,theme-comment-background))
             font-lock-comment-face)
 
            (((t :background ,theme-weak-diminuitive
@@ -171,18 +176,14 @@
       (window-divider-first-pixel            ((t :foreground "#333333")))
       (window-divider-last-pixel             ((t :foreground "#333333")))
       (fringe                                ((t :inherit highlight)))
-      (mode-line-inactive                    ((t :inherit font-lock-comment-face)))
+      (mode-line-inactive                    ((t :inherit mode-line-inactive)))
       (secondary-selection                   ((t :inherit mode-line)))
-      (shadow                                ((t :inherit font-lock-comment-face)))
+      (shadow                                ((t :inherit mode-line-inactive)))
 
       (escape-glyph                          ((t :inherit org-code :height 0.7)))
 
       (widget-field                          ((t :inherit mode-line)))
       (button                                ((t :inherit link)))
-
-      (minibuffer-prompt                     ((t :inherit font-lock-keyword-face)))
-
-      (warning                               ((t :inherit font-lock-builtin-face)))
 
       (powerline-active1                     ((t :inherit mode-line :background "gray11")))
       (powerline-active2                     ((t :inherit mode-line :background "gray20")))
@@ -206,7 +207,7 @@
       (swiper-match-face-3                   ((t :inherit lazy-highlight)))
       (swiper-match-face-4                   ((t :inherit lazy-highlight)))
 
-      (undo-tree-visualizer-default-face     ((t :inherit (font-lock-comment-face fixed-pitch))))
+      (undo-tree-visualizer-default-face     ((t :inherit (mode-line-inactive fixed-pitch))))
       (undo-tree-visualizer-current-face     ((t :inherit (warning fixed-pitch))))
       (undo-tree-visualizer-unmodified-face  ((t :inherit (font-lock-string-face fixed-pitch))))
 
@@ -233,7 +234,7 @@
       (org-document-info                     ((t :inherit default
                                                  :slant italic
                                                  :height 1.0)))
-      (org-meta-line                         ((t :inherit (font-lock-comment-face fixed-pitch)
+      (org-meta-line                         ((t :inherit (mode-line-inactive fixed-pitch)
                                                  :height 0.75)))
       (org-document-info-keyword             ((t :inherit org-meta-line)))
 
@@ -247,22 +248,23 @@
       (org-quote                             ((t :inherit defaul
                                                  :slant italic)))
       (org-link                              ((t :inherit link)))
-      (org-footnote                          ((t :inherit font-lock-comment-face)))
-      (org-special-keyword                   ((t :inherit font-lock-comment-face)))
+      (org-footnote                          ((t :inherit mode-line-inactive)))
+      (org-special-keyword                   ((t :inherit mode-line-inactive)))
+      (org-drawer                           ((t :inherit mode-line-inactive)))
 
       (org-checkbox                          ((t :inherit org-block)))
 
-      (org-ellipsis                          ((t :inherit font-lock-keyword-face)))
-      (org-tag                               ((t :inherit (font-lock-comment-face org-block))))
+      (org-ellipsis                          ((t :inherit minibuffer-prompt)))
+      (org-tag                               ((t :inherit (mode-line-inactive org-block))))
       (org-todo                              ((t :inherit (font-lock-keyword-face org-block))))
-      (org-done                              ((t :inherit (font-lock-comment-face org-block))))
-      (org-agenda-done                       ((t :inherit font-lock-comment-face)))
+      (org-done                              ((t :inherit (mode-line-inactive org-block))))
+      (org-agenda-done                       ((t :inherit mode-line-inactive)))
       (org-upcoming-deadline                 ((t :inherit font-lock-keyword-face)))
-      (org-scheduled                         ((t :inherit font-lock-comment-face)))
+      (org-scheduled                         ((t :inherit mode-line-inactive)))
       (org-scheduled-today                   ((t :inherit theme-base-face)))
       (org-scheduled-previously              ((t :inherit warning)))
-      (org-priority                          ((t :inherit (font-lock-type-face org-block))))
-      (org-agenda-structure                  ((t :inherit font-lock-type-face)))
+      (org-priority                          ((t :inherit (org-priority org-block))))
+      (org-agenda-structure                  ((t :inherit org-priority)))
       (org-agenda-date                       ((t :inherit theme-base-face)))
       (org-agenda-date-today                 ((t :inherit theme-base-face)))
       (org-agenda-date-weekend               ((t :inherit theme-base-face)))
@@ -270,17 +272,20 @@
 
       (org-drill-hidden-cloze-face           ((t :inherit widget-field)))
       (org-drill-visible-cloze-face          ((t :inherit font-lock-string-face)))
-      (org-drill-visible-cloze-hint-face     ((t :inherit font-lock-comment-face)))
+      (org-drill-visible-cloze-hint-face     ((t :inherit mode-line-inactive)))
 
+      (font-lock-builtin-face                ((t :inherit theme-base-face)))
+      (font-lock-keyword-face                ((t :inherit theme-base-face)))
       (font-lock-constant-face               ((t :inherit theme-base-face)))
+      (font-lock-type-face                   ((t :inherit theme-base-face)))
       (font-lock-variable-name-face          ((t :inherit theme-base-face)))
       (font-lock-doc-face                    ((t :inherit font-lock-comment-face)))
-      (font-lock-function-name-face          ((t :inherit theme-base-face :slant italic)))
+      (font-lock-function-name-face          ((t :inherit theme-base-face)))
       (font-lock-warning-face                ((t :inherit flycheck-warning)))
-      (jdee-font-lock-public-face            ((t :inherit font-lock-keyword-face)))
-      (jdee-font-lock-private-face           ((t :inherit font-lock-keyword-face)))
-      (jdee-font-lock-protected-face         ((t :inherit font-lock-keyword-face)))
-      (jdee-font-lock-modifier-face          ((t :inherit font-lock-keyword-face)))
+      (jdee-font-lock-public-face            ((t :inherit theme-base-face)))
+      (jdee-font-lock-private-face           ((t :inherit theme-base-face)))
+      (jdee-font-lock-protected-face         ((t :inherit theme-base-face)))
+      (jdee-font-lock-modifier-face          ((t :inherit theme-base-face)))
       (jdee-font-lock-package-face           ((t :inherit theme-base-face)))
       (jdee-font-lock-number-face            ((t :inherit theme-base-face)))
       (jdee-font-lock-constant-face          ((t :inherit theme-base-face)))
@@ -290,8 +295,8 @@
       (js2-function-call                     ((t :inherit theme-base-face)))
       (js2-external-variable                 ((t :inherit flycheck-warning)))
       (js2-warning                           ((t :inherit flycheck-warning)))
-      (js2-jsdoc-tag                         ((t :inherit font-lock-keyword-face)))
-      (js2-jsdoc-type                        ((t :inherit font-lock-type-face)))
+      (js2-jsdoc-tag                         ((t :inherit theme-base-face)))
+      (js2-jsdoc-type                        ((t :inherit theme-base-face)))
 
       (fsharp-ui-operator-face               ((t :inherit theme-base-face)))
 
@@ -304,16 +309,16 @@
       (nxml-element-local-name               ((t :inherit default)))
       (nxml-attribute-local-name             ((t :inherit default)))
 
-      (outshine-level-1                      ((t :inherit font-lock-comment-face)))
-      (outshine-level-2                      ((t :inherit font-lock-comment-face)))
-      (outshine-level-3                      ((t :inherit font-lock-comment-face)))
-      (outshine-level-4                      ((t :inherit font-lock-comment-face)))
+      (outshine-level-1                      ((t :inherit mode-line-inactive)))
+      (outshine-level-2                      ((t :inherit mode-line-inactive)))
+      (outshine-level-3                      ((t :inherit mode-line-inactive)))
+      (outshine-level-4                      ((t :inherit mode-line-inactive)))
 
       (whitespace-hspace                     ((t :inherit theme-base-face)))
       (whitespace-newline                    ((t :inherit theme-base-face)))
       (whitespace-tab                        ((t :inherit theme-base-face)))
       (whitespace-space                      ((t :inherit theme-base-face)))
-      (whitespace-trailing                   ((t :inherit font-lock-keyword-face)))
+      (whitespace-trailing                   ((t :inherit minibuffer-prompt)))
       (column-enforce-face                   ((t :inherit error)))
 
       (ediff-current-diff-A                  ((t :background "#0b375f")))
@@ -343,45 +348,45 @@
       (magit-diff-added                      ((t :inherit ediff-current-diff-B)))
       (magit-diff-added-highlight            ((t :inherit ediff-current-diff-B)))
       (magit-diff-base                       ((t :inherit ediff-current-diff-C)))
-      (magit-diff-context                    ((t :inherit font-lock-comment-face)))
+      (magit-diff-context                    ((t :inherit mode-line-inactive)))
       (magit-diff-context-highlight          ((t :inherit theme-base-face)))
       (diff-refine-removed                   ((t :inherit ediff-fine-diff-A)))
       (diff-refine-added                     ((t :inherit ediff-fine-diff-B)))
       (diff-refine-changed                   ((t :inherit ediff-fine-diff-C)))
 
       (fic-face                              ((t :inherit error)))
-      (fic-author-face                       ((t :inherit font-lock-keyword-face)))
+      (fic-author-face                       ((t :inherit minibuffer-prompt)))
       (flycheck-fringe-info                  ((t :inherit font-lock-string-face)))
       (flycheck-fringe-warning               ((t :inherit warning)))
       (flycheck-fringe-error                 ((t :inherit error)))
 
       (message-header-subject                ((t :inherit theme-base-face)))
       (message-cited-text                    ((t :inherit font-lock-string-face)))
-      (message-header-cc                     ((t :inherit font-lock-comment-face)))
-      (message-header-name                   ((t :inherit font-lock-comment-face)))
-      (message-header-other                  ((t :inherit font-lock-comment-face)))
-      (message-header-xheader                ((t :inherit font-lock-comment-face)))
-      (message-separator                     ((t :inherit font-lock-comment-face)))
-      (message-header-to                     ((t :inherit font-lock-comment-face)))
-      (message-mml                           ((t :inherit font-lock-comment-face)))
+      (message-header-cc                     ((t :inherit mode-line-inactive)))
+      (message-header-name                   ((t :inherit mode-line-inactive)))
+      (message-header-other                  ((t :inherit mode-line-inactive)))
+      (message-header-xheader                ((t :inherit mode-line-inactive)))
+      (message-separator                     ((t :inherit mode-line-inactive)))
+      (message-header-to                     ((t :inherit mode-line-inactive)))
+      (message-mml                           ((t :inherit mode-line-inactive)))
 
       (notmuch-search-matching-authors       ((t :inherit warning)))
       (notmuch-search-non-matching-authors   ((t :inherit warning)))
-      (notmuch-tag-face                      ((t :inherit font-lock-type-face)))
-      (notmuch-message-summary-face          ((t :inherit font-lock-comment-face)))
-      (notmuch-search-count                  ((t :inherit font-lock-comment-face)))
-      (notmuch-search-date                   ((t :inherit font-lock-comment-face)))
+      (notmuch-tag-face                      ((t :inherit org-priority)))
+      (notmuch-message-summary-face          ((t :inherit mode-line-inactive)))
+      (notmuch-search-count                  ((t :inherit mode-line-inactive)))
+      (notmuch-search-date                   ((t :inherit mode-line-inactive)))
       (notmuch-wash-cited-text               ((t :inherit font-lock-string-face)))
-      (notmuch-tree-match-author-face        ((t :inherit font-lock-comment-face)))
-      (notmuch-tree-match-date-face          ((t :inherit font-lock-comment-face)))
-      (notmuch-tree-no-match-author-face     ((t :inherit font-lock-comment-face)))
-      (notmuch-tree-no-match-date-face       ((t :inherit font-lock-comment-face)))
-      (notmuch-tree-match-tag-face           ((t :inherit font-lock-type-face)))
-      (notmuch-tree-no-match-tag-face        ((t :inherit font-lock-type-face)))
+      (notmuch-tree-match-author-face        ((t :inherit mode-line-inactive)))
+      (notmuch-tree-match-date-face          ((t :inherit mode-line-inactive)))
+      (notmuch-tree-no-match-author-face     ((t :inherit mode-line-inactive)))
+      (notmuch-tree-no-match-date-face       ((t :inherit mode-line-inactive)))
+      (notmuch-tree-match-tag-face           ((t :inherit org-priority)))
+      (notmuch-tree-no-match-tag-face        ((t :inherit org-priority)))
 
       (company-tooltip                       ((t :inherit highlight)))
-      (company-preview                       ((t :inherit font-lock-comment-face)))
-      (company-preview-common                ((t :inherit font-lock-comment-face))) ;; was default
+      (company-preview                       ((t :inherit mode-line-inactive)))
+      (company-preview-common                ((t :inherit mode-line-inactive))) ;; was default
       (company-scrollbar-bg                  ((t :inherit highlight)))
       (company-scrollbar-fg                  ((t :inherit match)))
       (company-tooltip-common                ((t :inherit lazy-highlight)))
@@ -389,12 +394,12 @@
       (company-tooltip-search                ((t :inherit match)))
       (company-tooltip-search-selection      ((t :inherit match)))
       (company-tooltip-selection             ((t :inherit match)))
-      (company-tooltip-annotation            ((t :inherit font-lock-comment-face)))
-      (company-tooltip-annotation-selection  ((t :inherit font-lock-comment-face)))
+      (company-tooltip-annotation            ((t :inherit mode-line-inactive)))
+      (company-tooltip-annotation-selection  ((t :inherit mode-line-inactive)))
 
-      (dired-header                          ((t :inherit font-lock-keyword-face)))
+      (dired-header                          ((t :inherit minibuffer-prompt)))
       (dired-flagged                         ((t :inherit error)))
-      (dired-ignore                          ((t :inherit font-lock-comment-face)))
+      (dired-ignore                          ((t :inherit mode-line-inactive)))
       (dired-mark                            ((t :inherit font-lock-string-face)))
       (dired-marked                          ((t :inherit lazy-highlight)))
       (dired-perm-write                      ((t :inherit theme-base-face)))
@@ -422,13 +427,13 @@
       (sr-packaged-face                      ((t :inherit theme-base-face)))
       (sr-xml-face                           ((t :inherit theme-base-face)))
 
-      (git-commit-summary                    ((t :inherit font-lock-keyword-face)))
-      (git-commit-comment-heading            ((t :inherit font-lock-comment-face)))
+      (git-commit-summary                    ((t :inherit minibuffer-prompt)))
+      (git-commit-comment-heading            ((t :inherit mode-line-inactive)))
 
       (compilation-message-face              ((t :inherit theme-base-face)))
-      (compilation-error                     ((t :inherit font-lock-keyword-face)))
-      (compilation-line-number               ((t :inherit font-lock-builtin-face)))
-      (compilation-mode-line-run             ((t :inherit font-lock-comment-face)))
+      (compilation-error                     ((t :inherit minibuffer-prompt)))
+      (compilation-line-number               ((t :inherit warning)))
+      (compilation-mode-line-run             ((t :inherit mode-line-inactive)))
       (compilation-mode-line-exit            ((t :inherit font-lock-string-face)))
       (compilation-mode-line-fail            ((t :inherit error)))
 
