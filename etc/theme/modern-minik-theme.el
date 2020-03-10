@@ -466,13 +466,13 @@
    'modern-minik
    '(cursor-type 'bar)
 
-   `(org-priority-faces
-     '((65 . ,theme-error-color)
-       (66 . ,theme-primary-accent)
-       (67 . ,theme-secondary-accent)
-       (68 . ,theme-strong-diminuitive)
-       (69 . ,theme-weak-diminuitive)
-       (70 . ,theme-weak-diminuitive)))
+   ;; `(org-priority-faces
+   ;;   '((65 . ,theme-error-color)
+   ;;     (66 . ,theme-primary-accent)
+   ;;     (67 . ,theme-secondary-accent)
+   ;;     (68 . ,theme-strong-diminuitive)
+   ;;     (69 . ,theme-weak-diminuitive)
+   ;;     (70 . ,theme-weak-diminuitive)))
 
    `(org-drill-new-count-color ,theme-primary-accent)
    `(org-drill-done-count-color ,theme-weak-diminuitive)
