@@ -310,10 +310,10 @@
       (nxml-element-local-name               ((t :inherit default)))
       (nxml-attribute-local-name             ((t :inherit default)))
 
-      (outshine-level-1                      ((t :inherit font-lock-comment-face)))
-      (outshine-level-2                      ((t :inherit font-lock-comment-face)))
-      (outshine-level-3                      ((t :inherit font-lock-comment-face)))
-      (outshine-level-4                      ((t :inherit font-lock-comment-face)))
+      (outshine-level-1                      ((t :inherit mode-line-inactive)))
+      (outshine-level-2                      ((t :inherit mode-line-inactive)))
+      (outshine-level-3                      ((t :inherit mode-line-inactive)))
+      (outshine-level-4                      ((t :inherit mode-line-inactive)))
 
       (whitespace-hspace                     ((t :inherit theme-base-face)))
       (whitespace-newline                    ((t :inherit theme-base-face)))
