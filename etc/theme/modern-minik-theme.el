@@ -301,6 +301,7 @@
       (fsharp-ui-operator-face               ((t :inherit theme-base-face)))
 
       (sh-heredoc                            ((t :inherit font-lock-string-face)))
+      (sh-quoted-exec                        ((t :inherit theme-base-face)))
       (ess-backquoted-face                   ((t :inherit theme-base-face)))
 
       (shm-current-face                      ((t :inherit show-paren-match)))
