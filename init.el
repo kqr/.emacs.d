@@ -931,6 +931,9 @@
 (use-package restclient
   :mode "\\.http\\'")
 
+(use-package yaml-mode
+  :mode "\\.yml\\'")
+
 (use-package js2-mode
   :mode ("\\.jsx?\\'" . js2-jsx-mode)
   :hook ((js2-mode . javascript-configuration)
