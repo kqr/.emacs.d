@@ -457,7 +457,7 @@
       (markdown-header-face-5                ((t :inherit org-level-5)))
       (markdown-header-face-6                ((t :inherit org-level-6)))
 
-      (ansible::task-label-face              ((t :inherit theme-base-face))))))
+      (ansible-task-label-face              ((t :inherit font-lock-comment-face))))))
 
   ;;(message "%S" theme-faces)
 
