@@ -787,6 +787,10 @@
   (with-eval-after-load "org"
     (add-hook 'org-mode-hook (lambda () (drag-stuff-mode -1)))))
 
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("\\.md\\'" . markdown-mode)))
+
 ;;; Programming
 (use-package flycheck
   :hook ((prog-mode . global-flycheck-mode))
