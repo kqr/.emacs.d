@@ -75,12 +75,7 @@
 
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(tool-bar-lines . nil))
-(add-to-list 'default-frame-alist '(width . 145))
-(add-to-list 'default-frame-alist '(height . 50))
-(add-to-list 'initial-frame-alist '(left-fringe . 20))
-(add-to-list 'default-frame-alist '(left-fringe . 20))
-(add-to-list 'initial-frame-alist '(right-fringe . 20))
-(add-to-list 'default-frame-alist '(right-fringe . 20))
+(fringe-mode 20)  ; The fringes are used to carry information
 
 ;; Set up some mac-specific graphical junk.
 (when macos-p
@@ -161,7 +156,7 @@
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/etc"))
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lib"))
 
-;;; User information and misc. config
+;;; User information
 (setq user-full-name "Christoffer Stjernlöf"
       user-mail-address "a@xkqr.org")
 
@@ -197,13 +192,9 @@
  fill-column 80
  ;; Automatically hard wrap content instead
  auto-fill-function 'do-auto-fill
- ;; Create new lines when moving past end of buffer
- next-line-add-newlines t
 
  ;; Copy stuff to the X11 primary selection
  select-enable-primary t
- ;; Typing stuff with active region replaces region
- delete-selection-mode 1
 
  ;; Focus on newly opened help windows
  help-window-select t
@@ -223,14 +214,6 @@
 
 ;; C-z defaults to suspend-frame which behaves weirdly and is never necessary
 (define-key global-map (kbd "C-z") nil)
-
-;; This is neat to quickly go back to the previous buffer
-(define-key global-map (kbd "C-q") #'kill-this-buffer)
-;; But then we also need this...
-(define-key global-map (kbd "C-S-q") #'quoted-insert)
-
-;; Make "join this line to the one above" a bit more convenient to perform
-(define-key global-map (kbd "C-S-j") #'delete-indentation)
 
 (when macos-p
   (setq mac-option-modifier 'meta)
@@ -436,22 +419,7 @@
            ("double" . (?ℝ (Br . Bc) ?ℝ))  ;; RR
            ("char" . ?Σ)
            ("string" . (?Σ (tr . cl) ?*))  ;; Σ*
-
-           ;; Greek
-           ("alpha" . ?α)
-           ("beta" . ?β)
-           ("gamma" . ?γ)
-           ("Gamma" . ?Γ)
-           ("delta" . ?δ)
-           ("Delta" . ?Δ)
-           ("lambda" . ?λ)
-           ("sigma" . ?σ)
-           ("Sigma" . ?Σ)
-           ("pi" . ?π)
-           ("tau" . ?τ)
-           ("psi" . ?ψ)
-           ("Psi" . ?Ψ)
-           ("Phi" . ?Φ))))
+           )))
     (mapc (lambda (pair) (push pair prettify-symbols-alist))
           (append local-symbols global-symbols))))
 (add-hook 'prog-mode-hook 'prettify-programming-symbols)
