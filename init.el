@@ -176,12 +176,6 @@
  ;; Don't complain about not being able to scroll below end of file
  scroll-error-top-bottom t
 
- ;; Try to keep cursor centered to the extent possible with vanilla Emacs
- scroll-preserve-screen-position t
- scroll-conservatively 0
- maximum-scroll-margin 0.5
- scroll-margin 99999
-
  ;; No need to fake typesetting.
  sentence-end-double-space nil
 
@@ -208,6 +202,24 @@
 
  ;; Prevent Emacs from mixing tabs and spaces.
  indent-tabs-mode nil)
+
+;; Try to keep cursor centered to the extent possible with vanilla Emacs
+(setq-default
+ scroll-preserve-screen-position t
+ scroll-conservatively 0
+ maximum-scroll-margin 0.5
+ scroll-margin 99999)
+
+(defun set-scroll-margin-to-half-window-height (fn &rest args)
+  "Set 'scroll-margin' to half window height before calling FN with ARGS."
+  (let ((scroll-margin (/ 2 (window-height))))
+    (apply fn args)))
+
+;; Advise evil-scroll functions with more sensible scroll-margin since they
+;; use it to compute how much to scroll.
+(with-eval-after-load "evil"
+  (advice-add 'evil-scroll-down :around 'set-scroll-margin-to-half-window-height)
+  (advice-add 'evil-scroll-up :around 'set-scroll-margin-to-half-window-height))
 
 ;; Replace the default line-extends-beyond-window symbol
 (set-display-table-slot standard-display-table 0 ?›)
