@@ -169,6 +169,12 @@
  make-backup-files nil
  large-file-warning-threshold 100000000
 
+ ;; Count a buffer as unused if it is saved and not viewed in the last 3 hours.
+ ;; (This is safe(r) because I don't run clean-buffer-list on a schedule – I
+ ;; generally invoke it manually when I feel finished with something and am
+ ;; moving on to a completely new thing.)
+ clean-buffer-list-delay-general 0.125
+
  ;; Reduces lag, I think
  auto-window-vscroll nil
  line-move-visual nil
