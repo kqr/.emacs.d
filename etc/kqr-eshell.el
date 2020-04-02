@@ -34,9 +34,15 @@
     (let* ((parent (buffer-current-directory))
            (width (/ (window-total-width) 2))
            (name (car (last (split-string parent "/" t)))))
-      (split-window-horizontally (- width))
-      (other-window 1)
+      ;; A bit of a hack: open eshell buffer in current window...
       (eshell "new")
+      ;; ...jump back to previous location...
+      (other-buffer)
+      ;; ...then attempt to open a new window with the eshell buffer.
+      ;; This annoyingly opens the buffer on the wrong side, but I can't figure
+      ;; out what to do about that right now.
+      (display-buffer (other-buffer) '(display-buffer-use-some-window
+                                       (inhibit-same-window . t)))
       (rename-buffer (concat "*eshell: " name "*"))))
 
   (defun shell-command-on-buffer (arg)
