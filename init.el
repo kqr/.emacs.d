@@ -744,6 +744,18 @@
 (use-package auto-yasnippet
   :after (yasnippet))
 
+;; Spell checking. This is not at all refined yet. There are useful tips:
+;; - https://www.emacswiki.org/emacs/FlySpell
+;; - https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(setq flyspell-issue-message-flag nil)
+(ispell-change-dictionary "en_GB" 'global)  ;; any prefix argument makes it global
+(define-advice ispell (:before (&rest _) unfold-everything-before-ispell)
+  (when (fboundp 'outline-show-all)
+    (outline-show-all)))
+
+
 ;; Latex editing.
 (progn
   ;; TODO verify what's required for this that I'm missing
