@@ -303,7 +303,7 @@
                                   ((t :family "Hack"
                                       :height 1.0))))  ;; was Luxi Mono, then Hack
   (custom-theme-set-faces 'user '(variable-pitch
-                                  ((t :family "Linux Libertine O"
+                                  ((t :family "Linux Libertine"
                                       :height 1.3))))
   (add-to-list 'initial-frame-alist '(line-spacing . 1))
   (add-to-list 'default-frame-alist '(line-spacing . 1)))

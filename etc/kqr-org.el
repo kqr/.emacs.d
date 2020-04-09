@@ -1,4 +1,8 @@
 ;; XXX: Use-packageify this
+;; Not sure why, but org got broken on a new machine (pulled in some parts that
+;; were preinstalled and some parts from org-plus-contrib, but with different,
+;; incompatible versions) and the solution may have been straight-pull-all
+;; followed by straight-rebuild-all. May have been.
 
 ;; Load things also from contrib
 
