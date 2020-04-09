@@ -332,6 +332,11 @@
   (load (concat home "/.emacs.d/straight/repos/org/lisp/org.el"))
   (load (concat home "/.emacs.d/straight/repos/org/lisp/org-macs.el")))
 
+;; Remove org-drill advice around org-get-tags that causes infinite recursion.
+;; (Hopefully a temporary measure until the bug is fixed for realsies.)
+(when (= 0 (remove-all-advice-for 'org-get-tags))
+  (warn "No advice removed from org-get-tags. Maybe it's time to remove this workaround."))
+
 ;; for some reason, this started misbehaving after Caspian jumped up on my
 ;; keyboard, so I have made it temporarly non-mandatory and at some point
 ;; I'll have to troubleshoot what went wrong.

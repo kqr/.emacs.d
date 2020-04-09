@@ -32,6 +32,7 @@ or whatnot."
                           "    ")))))
 
 (defun remove-all-advice-for (symbol)
+  "Remove all advice for SYMBOL and return the number of advices removed."
   (interactive "a")
   (let ((removed-advices 0))
     (advice-mapc
@@ -40,6 +41,7 @@ or whatnot."
          (incf removed-advices)
          (advice-remove symbol advice)))
      symbol)
-    (message "Removed %d pieces of advice" removed-advices)))
+    (message "Removed %d pieces of advice" removed-advices)
+    removed-advices))
 
 ;;; kqr-misc.el ends here
