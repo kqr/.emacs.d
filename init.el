@@ -749,7 +749,8 @@
 ;; - https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(setq flyspell-issue-message-flag nil)
+(setq flyspell-issue-message-flag nil
+      ispell-silently-savep t)
 (ispell-change-dictionary "en_GB" 'global)  ;; any prefix argument makes it global
 (define-advice ispell (:before (&rest _) unfold-everything-before-ispell)
   (when (fboundp 'outline-show-all)
