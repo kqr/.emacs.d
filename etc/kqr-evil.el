@@ -4,29 +4,22 @@
   (when (require 'tab-as-escape nil)
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
-  ;; Don't override tab as outline mode subtree cycle
-  (define-key evil-motion-state-map (kbd "TAB") nil)
 
+  ;; Allow escape to exit out of most things.
   (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
+  ;; Too good to pass up on. Remove one key from all ex commands!
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
-  (evil-define-key 'motion evil-list-view-mode-map (kbd "q") 'quit-window)
 
-  (define-advice evil-quit
-      (:before-until (&rest args) evil-quit-kills-buffer-first)
-    (kill-buffer))
-
-  (advice-add 'outshine-narrow-to-subtree :before
-              (lambda (&rest args) (unless (outline-on-heading-p t)
-                                (outline-previous-visible-heading 1))))
-
-  (setq evil-want-fine-undo t
+  ;; Various useful defaults.
+  (setq evil-want-Y-yank-to-eol t
         evil-move-beyond-eol t
-        evil-move-cursor-back nil)
+        evil-move-cursor-back nil
+        evil-want-fine-undo nil)
 
   ;; evil-cleverparens takes over the good ol' <> binds in a way that's probably
   ;; good only I haven't learned to use it yet. However, the default <> binds
@@ -47,6 +40,16 @@
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
+
+  ;; Don't override tab for subtree cycling in outline-mode.
+  (define-key evil-motion-state-map (kbd "TAB") nil)
+
+  ;; Convenient quit shortcuts.
+  (evil-define-key 'motion evil-list-view-mode-map (kbd "q") 'quit-window)
+  (define-advice evil-quit
+      (:before-until (&rest args) evil-quit-kills-buffer-first)
+    (kill-buffer))
+
   (evil-mode 1))
 
 (use-package spaceline
