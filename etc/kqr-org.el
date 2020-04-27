@@ -267,7 +267,9 @@
          (org-end-of-line))))
 
 (setq org-agenda-custom-commands
-      '((" " "Agenda"
+      ;; Older versions of org supported " " as the access key, but it
+      ;; appears newer ones don't. Use "n" instead (home row, mnemonic: next.)
+      '(("n" "Agenda"
          ((tags "FILE={projects.org}+LEVEL=1-noproject"
                 ((org-agenda-overriding-header "Stuck projects")
                  (org-agenda-skip-function #'skip-living-projects)))
