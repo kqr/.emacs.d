@@ -2,25 +2,49 @@
 # name: benchmarkdotnet
 # key: benchmarkdotnet
 # --
+open System
 open BenchmarkDotNet.Attributes
+open BenchmarkDotNet.Columns
+open BenchmarkDotNet.Configs
+open BenchmarkDotNet.Jobs
 open BenchmarkDotNet.Running
+open Perfolizer.Mathematics.OutlierDetection
 
-[<CoreJob>]
-type Program() =
-    let values = [1; 5; 10; 55; 100; 555; 1000]
+type Config() as this =
+    inherit ManualConfig()
+    do
+        let baseJob = Job.Default
+        this.AddJob(baseJob.WithOutlierMode(OutlierMode.DontRemove)) |> ignore
+        this.AddColumn(StatisticColumn.P95, StatisticColumn.P100) |> ignore
+
+[<Config(typeof<Config>)>]
+type MyBenchmark() =
+    let g = new Random (1)
+
+    [<Params(0.01, 0.5, 0.99)>]
+    member val P = 0.0 with get, set
+
+    member this.Things = seq {
+        for i = 0 to 1000 do
+            let userId = if g.NextDouble() < this.P then null else sprintf "%d" i
+            yield new KeyValuePair<Thing,float>({ userId = userId; worth = i }, 1.0)
+    }
+
+    [<Benchmark(Baseline = true)>]
+    member this.A() =
+        this.Things
+        |> Seq.map (fun bi -> bi.Key)
+        |> Seq.filter (fun bi -> bi.userId <> null)
+        |> Seq.sumBy (fun bi -> bi.worth)
 
     [<Benchmark>]
-    member this.WithListSum() =
-        values |> List.sum
+    member this.B() =
+        this.Things
+        |> Seq.filter (fun bi -> bi.Key.userId <> null)
+        |> Seq.sumBy (fun bi -> bi.Key.worth)
 
-    [<Benchmark>]
-    member this.WithForLoop() =
-        let mutable s = 0
-        for value in values do
-            s <- s + value
-        s
 
 [<EntryPoint>]
-let main argv =
-    BenchmarkRunner.Run<Program>() |> ignore
+let main _ =
+    let summary = BenchmarkRunner.Run<MyBenchmark>()
     0
