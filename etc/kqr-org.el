@@ -242,6 +242,7 @@
         "~/org/projects.org"
         "~/org/tickler.org"
         "~/org/loop54.org"
+        "~/org/flashcards.org"
         "~/org/kth.org")
       org-agenda-dim-blocked-tasks 'invisible
       org-agenda-span 'day
