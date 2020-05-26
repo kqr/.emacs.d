@@ -529,7 +529,14 @@
   (recentf-mode +1)
   (add-to-list 'recentf-exclude no-littering-var-directory)
   (add-to-list 'recentf-exclude no-littering-etc-directory)
-  (run-at-time nil (* 5 60) 'recentf-save-list))
+  (run-at-time nil (* 5 60) 'recentf-save-list)
+
+  ;; recentf-save-list calls write-file which calls save-buffer which prints a
+  ;; message when called "interactively." Suppress this message.
+  (define-advice recentf-save-list
+      (:around (impl &rest args) recentf-save-silently)
+    (let ((save-silently t))
+      (apply impl args))))
 
 ;; Smart M-x and fuzzy matching everywhere
 (use-package smex
