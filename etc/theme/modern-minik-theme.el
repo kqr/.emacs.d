@@ -50,16 +50,15 @@
 (let* ((light? (equal 'light frame-background-mode))
        (theme-base-height (face-attribute 'fixed-pitch :height nil 'default))
        (theme-default-color (if light? "black" "#e6dfd3"))
-       (theme-background-color (if light? "#fbf1e4" "#141414"))
-       (theme-strong-highlight "antiquewhite3")
-       (theme-weak-highlight (if light? "antiquewhite2" "#222222"))
+       (theme-background-color (if light? "#ffffff" "#141414"))
+       (theme-weak-highlight (if light? "gray92" "#222222"))
        (theme-error-color "red")
        (theme-primary-accent (if light? "chocolate3" "#E8B964"))
        (theme-secondary-accent (if light? "dodgerblue3" "#6493e8"))
-       (theme-strong-diminuitive (if light? "forest green" "#7abc71"))
-       (theme-weak-diminuitive "peachpuff4")
-       (theme-comment-background "#06352d")
-       (theme-string-background "#303506")
+       (theme-strong-diminuitive (if light? "dark green" "#7abc71"))
+       (theme-weak-diminuitive (if light? "gray40" "peachpuff4"))
+       (theme-comment-background (if light? "darkseagreen1" "#06352d"))
+       (theme-string-background (if light? "lightyellow1" "#303506"))
 
        (theme-faces
         (from-faces-map
@@ -138,16 +137,16 @@
            (((t :foreground ,theme-strong-diminuitive :background ,theme-comment-background))
             font-lock-comment-face)
 
-           (((t :background ,theme-weak-diminuitive
-                :foreground ,theme-background-color))
+           (((t :background ,(if light? "gray80" theme-weak-diminuitive)
+                :foreground ,(if light? theme-weak-diminuitive theme-background-color)))
             spaceline-evil-insert)
 
            (((t :background ,theme-primary-accent
                 :foreground ,theme-background-color))
             spaceline-evil-normal)
 
-           (((t :background ,theme-strong-diminuitive
-                :foreground ,theme-background-color))
+           (((t :background ,(if light? theme-comment-background theme-strong-diminuitive)
+                :foreground ,(if light? theme-strong-diminuitive theme-background-color)))
             spaceline-evil-emacs)
 
            (((t :background ,theme-secondary-accent
@@ -160,7 +159,7 @@
    theme-faces
    (append
     theme-faces
-    '(
+    `(
       ;; For some reason, specifying the height on fixed-pitch makes it
       ;; correctly sized under variable-pitch-mode – whereas if I don't,
       ;; it gets huge. Doesn't seem to matter what I set the size to,
@@ -173,8 +172,10 @@
       (show-paren-mismatch                   ((t :inherit error)))
 
       (window-divider                        ((t :inherit mode-line :inverse-video t)))
-      (window-divider-first-pixel            ((t :foreground "#333333")))
-      (window-divider-last-pixel             ((t :foreground "#333333")))
+      (window-divider-first-pixel            ((t :foreground
+                                                 ,(if light? "gray80" "#333333"))))
+      (window-divider-last-pixel             ((t :foreground
+                                                 ,(if light? "gray80" "#333333"))))
       (fringe                                ((t :inherit highlight)))
       (mode-line-inactive                    ((t :inherit mode-line-inactive)))
       (secondary-selection                   ((t :inherit mode-line)))
@@ -185,8 +186,10 @@
       (widget-field                          ((t :inherit mode-line)))
       (button                                ((t :inherit link)))
 
-      (powerline-active1                     ((t :inherit mode-line :background "gray11")))
-      (powerline-active2                     ((t :inherit mode-line :background "gray20")))
+      (powerline-active1                     ((t :inherit mode-line :background
+                                                 ,(if light? "gray89" "gray11"))))
+      (powerline-active2                     ((t :inherit mode-line :background
+                                                 ,(if light? "gray80" "gray20"))))
       (powerline-inactive1                   ((t :inherit mode-line-inactive)))
       (powerline-inactive2                   ((t :inherit mode-line-inactive)))
 
@@ -322,11 +325,15 @@
       (whitespace-trailing                   ((t :inherit minibuffer-prompt)))
       (column-enforce-face                   ((t :inherit error)))
 
-      (ediff-current-diff-A                  ((t :background "#0b375f")))
-      (ediff-current-diff-B                  ((t :background "#3f361f")))
+      (ediff-current-diff-A                  ((t :background
+                                                 ,(if light? "#ebf5fb" "#0b375f"))))
+      (ediff-current-diff-B                  ((t :background
+                                                 ,(if light? "#fff7de" "#3f361f"))))
+      (ediff-fine-diff-A                     ((t :background
+                                                 ,(if light? "#bde1f2" "#275b7f"))))
+      (ediff-fine-diff-B                     ((t :background
+                                                 ,(if light? "#ffe69e" "#6b5a2a"))))
       (ediff-current-diff-C                  ((t :background "#5a2387")))
-      (ediff-fine-diff-A                     ((t :background "#275b7f")))
-      (ediff-fine-diff-B                     ((t :background "#6b5a2a")))
       (ediff-fine-diff-C                     ((t :background "#7d43aa")))
       (ediff-even-diff-Ancestor              ((t :inherit powerline-active1)))
       (ediff-even-diff-A                     ((t :inherit powerline-active2)))
@@ -514,7 +521,9 @@ Chooses based on `display-graphic-p'."
 
 (defun modern-minik-configure-spaceline ()
   (when (require 'spaceline-config nil)
-    ;;(spaceline-reset)
+    ;; This is unfortunately done before the theme is loaded, but if loading
+    ;; twice maybe it should catch up?
+    (spaceline-compile)
     (spaceline-emacs-theme)))
 
 (defun modern-minik-configure-org ()
