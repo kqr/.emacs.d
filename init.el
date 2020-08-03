@@ -1169,7 +1169,7 @@
 (setq custom-theme-directory "~/.emacs.d/etc/theme/")
 
 ;; We like our theme
-(setq frame-background-mode 'dark)
+(setq frame-background-mode 'light)
 (load-theme 'modern-minik t)
 (modern-minik-eval-init)
 

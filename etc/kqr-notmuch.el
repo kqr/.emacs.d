@@ -87,4 +87,4 @@
   ;;;;;; Sendmail integration
   (when (require 'sendmail nil)
     (setq mail-envelope-from 'header
-          sendmail-program "/usr/bin/msmtp")))
+          sendmail-program "sendmail")))
