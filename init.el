@@ -944,13 +944,14 @@
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
+;; This now assumes Emacs 27 with its built-in JS mode.
 (use-package js2-mode
-  :mode ("\\.jsx?\\'" . js2-jsx-mode)
-  :hook ((js2-mode . javascript-configuration)
-         (js2-mode . add-node-modules-path))
+  :mode ("\\.jsx?\\'" . js-mode)
+  :hook ((js-mode . javascript-configuration))
   :init
   (defun javascript-configuration ()
-    "Configure two spaces indent for JavaScript."
+    "Configure two spaces indent and js2 linting for JavaScript."
+    (js2-minor-mode +1)
     (setq js2-basic-offset 2)
     (setq js-indent-level js2-basic-offset)
     (setq c-basic-offset js-indent-level)))
