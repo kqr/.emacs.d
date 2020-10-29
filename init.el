@@ -749,7 +749,10 @@
 
 ;; Copy-and-pasting on steroids.
 (use-package auto-yasnippet
-  :after (yasnippet))
+  :after (yasnippet)
+  :config
+  (evil-define-key '(normal visual) 'global (kbd "<leader>y") 'aya-create)
+  (evil-define-key '(normal visual) 'global (kbd "<leader>p") 'aya-expand))
 
 ;; Spell checking. This is not at all refined yet. There are useful tips:
 ;; - https://www.emacswiki.org/emacs/FlySpell

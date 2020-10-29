@@ -15,6 +15,8 @@
   ;; Too good to pass up on. Remove one key from all ex commands!
   (define-key evil-normal-state-map (kbd ";") #'evil-ex)
 
+  (evil-set-leader '(normal visual) " ")
+
   ;; Various useful defaults.
   (setq evil-want-Y-yank-to-eol t
         evil-move-beyond-eol t
