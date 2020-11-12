@@ -800,6 +800,11 @@
   :commands (markdown-mode gfm-mode)
   :mode (("\\.md\\'" . markdown-mode)))
 
+;;; Writing prose...
+(use-package fountain-mode
+  :commands (fountain-mode)
+  :mode (("\\.fountain\\'" . fountain-mode)))
+
 ;;; Programming
 (use-package flycheck
   :hook ((prog-mode . global-flycheck-mode))
