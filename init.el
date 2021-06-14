@@ -353,36 +353,37 @@
 
 (load "kqr-misc.el")
 
-(use-package tramp
-  :config
-  (defun tramp-file-name-as-hop (vec)
-    "Return VEC formatted as a hop."
-    (concat (tramp-file-name-hop vec)
-            (tramp-file-name-method vec)
-            (and (tramp-file-name-method vec)
-                 tramp-postfix-method-format)
-            (tramp-file-name-user-domain vec)
-            (and (tramp-file-name-user-domain vec)
-                 tramp-postfix-user-format)
-            (tramp-file-name-host-port vec)
-            tramp-postfix-hop-format))
-
-  (defun sudo-edit-current-file (as-user)
-    (interactive "sAs user? ")
-    (let ((position (point)))
-      (find-alternate-file
-       (if (file-remote-p (buffer-file-name))
-           (with-parsed-tramp-file-name buffer-file-name remote
-             (tramp-make-tramp-file-name
-              "sudo" as-user remote-domain
-              remote-host remote-port
-              remote-localname
-              (tramp-file-name-as-hop
-               (tramp-dissect-file-name
-                (buffer-file-name)))))
-         (concat "/sudo:root@localhost:"
-                 (buffer-file-name))))
-      (goto-char position))))
+;; Disabled because it is causing errors.
+;;(use-package tramp
+;;  :config
+;;  (defun tramp-file-name-as-hop (vec)
+;;    "Return VEC formatted as a hop."
+;;    (concat (tramp-file-name-hop vec)
+;;            (tramp-file-name-method vec)
+;;            (and (tramp-file-name-method vec)
+;;                 tramp-postfix-method-format)
+;;            (tramp-file-name-user-domain vec)
+;;            (and (tramp-file-name-user-domain vec)
+;;                 tramp-postfix-user-format)
+;;            (tramp-file-name-host-port vec)
+;;            tramp-postfix-hop-format))
+;;
+;;  (defun sudo-edit-current-file (as-user)
+;;    (interactive "sAs user? ")
+;;    (let ((position (point)))
+;;      (find-alternate-file
+;;       (if (file-remote-p (buffer-file-name))
+;;           (with-parsed-tramp-file-name buffer-file-name remote
+;;             (tramp-make-tramp-file-name
+;;              "sudo" as-user remote-domain
+;;              remote-host remote-port
+;;              remote-localname
+;;              (tramp-file-name-as-hop
+;;               (tramp-dissect-file-name
+;;                (buffer-file-name)))))
+;;         (concat "/sudo:root@localhost:"
+;;                 (buffer-file-name))))
+;;      (goto-char position))))
 
 ;; Replace keywords with Unicode symbols
 (global-prettify-symbols-mode +1)
@@ -664,7 +665,7 @@
   (setq htmlize-output-type 'inline-css)
 
   ;; Automatically upload HTML of region-or-buffer to remote
-  (defvar htmlize-paste-it-target-directory "/-:two-wrongs.com:pastes/")
+  (defvar htmlize-paste-it-target-directory "/-:kqr@two-wrongs.com:pastes/")
   (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
 
   (defun htmlize-paste-it ()
@@ -958,9 +959,11 @@
   :hook ((js-mode . javascript-configuration))
   :init
   (defun javascript-configuration ()
-    "Configure two spaces indent and js2 linting for JavaScript."
+    "Configure four spaces indent and js2 linting for JavaScript."
     (js2-minor-mode +1)
-    (setq js2-basic-offset 2)
+    ;; I would like to set this through editorconfig hacks instead when
+    ;; appropriate, but that doesn't appear to work for some reason.
+    (setq js2-basic-offset 4)
     (setq js-indent-level js2-basic-offset)
     (setq c-basic-offset js-indent-level)))
 
