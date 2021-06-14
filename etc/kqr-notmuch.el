@@ -83,6 +83,8 @@
 
   ;; Always sign outgoing messages
   (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
+  ;; Use the sender name to find a sign key. (Required in message-mode in Emacs 27)
+  (setq mml-secure-openpgp-sign-with-sender t)
 
   ;;;;;; Sendmail integration
   (when (require 'sendmail nil)
