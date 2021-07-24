@@ -1093,6 +1093,9 @@
       ;; (add-hook 'fsharp-mode-hook ;;'omnisharp-enable)
       )))
 
+(use-package csv-mode
+  :mode "\\.csv\\'")
+
 ;;; Application type major modes.
 (load "kqr-eshell.el")
 
