@@ -822,14 +822,18 @@
 ;; Subword-mode allows word motions to TerminateInCamelCasedWords
 (add-hook 'prog-mode-hook 'subword-mode)
 
-;; Try out dumb-jump for finding definitions etc.
+;; The version I want (1.1) comes with Emacs 28, but just to be sure, get it
+;; from source. This is a bit of a hack, but it seems to sidestep the existence
+;; of a bundled xref.
+(straight-use-package 'xref)
+(load "~/.emacs.d/straight/repos/xref/xref.el")
+
+;; Note to self: in evil, gd means go to definition.
 (use-package dumb-jump
-  :bind ("C-c ." . dumb-jump-go)
   :config
   ;; Use a popup near point to select location
-  (setq dumb-jump-selector nil)
-  (with-eval-after-load "csharp-mode"
-    (define-key csharp-mode-map (kbd "C-c .") nil)))
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read))
 
 (use-package highlight-parentheses
   :config
@@ -1127,6 +1131,15 @@
 (use-package magit
   :bind ("<f3>" . magit-status)
   :config
+  ;; Ensure default key binds work in blame mode, and that it exits into normal state.
+  (defun magit-blame-ensure-evil-emacs-state ()
+    (if magit-blame-read-only-mode
+        (evil-emacs-state)
+      (evil-normal-state)))
+  (add-hook 'magit-blame-read-only-mode-hook 'magit-blame-ensure-evil-emacs-state)
+  ;; Make it easy to bring up magit-file-dispatch
+  (evil-define-key '(normal visual) 'global (kbd "<leader>m") 'magit-file-dispatch)
+
   ;; Enable all subcommands and options everywhere
   (setq transient-default-level 7)
 
