@@ -350,9 +350,27 @@
   (setq dimmer-fraction 0.3)
   (dimmer-mode +1))
 
+;;; Early packages that Org depends on but that do not depend on Org
+;; (hopefully...)
 
+(use-package undo-tree
+  :bind (("C-/" . undo-tree-undo)
+         ("C-?" . undo-tree-redo)
+         ("C-x u" . undo-tree-visualize))
+  :diminish undo-tree-mode
+  :config
+  (global-undo-tree-mode +1)
+  (setq-default undo-tree-visualizer-diff t))
+
+;; Contains remove-all-advice-for which kqr-org relies on.
 (load "kqr-misc.el")
 
+;;; Load Org
+;; This needs to be called very early, to prevent the incorrect default Org
+;; version to be partially loaded.
+(load "kqr-org.el")
+
+;;; More misc stuff
 ;; Disabled because it is causing errors.
 ;;(use-package tramp
 ;;  :config
@@ -877,15 +895,6 @@
   :config
   (global-auto-revert-mode +1))
 
-(use-package undo-tree
-  :bind (("C-/" . undo-tree-undo)
-         ("C-?" . undo-tree-redo)
-         ("C-x u" . undo-tree-visualize))
-  :diminish undo-tree-mode
-  :config
-  (global-undo-tree-mode +1)
-  (setq-default undo-tree-visualizer-diff t))
-
 (use-package smerge-mode
   :config
   (defun sm-try-smerge ()
@@ -928,7 +937,9 @@
 (use-package projectile
   :bind-keymap ("<f8>" . projectile-command-map)
   :config
-  (projectile-mode +1))
+  (projectile-mode +1)
+  ;;(add-hook 'project-find-functions #'projectile-project-root)
+  )
 
 (use-package counsel-projectile
   :after (counsel projectile)
@@ -1093,6 +1104,9 @@
     (push 'fsharp-mode aggressive-indent-excluded-modes)
     (setq fsharp-conservative-indentation-after-bracket t)
 
+    ;; This project root finder does not interact well with e.g. dumb-jump.
+;;    (remove-hook 'project-find-functions #'fsharp-mode-project-root)
+
     (when (configure-omnisharp)
       ;; (add-hook 'fsharp-mode-hook ;;'omnisharp-enable)
       )))
@@ -1158,7 +1172,6 @@
 
   (setq magit-no-confirm '(safe-with-wip)))
 
-(load "kqr-org.el")
 (use-package epresent
   :hook (epresent-mode . evil-emacs-state)
   :config

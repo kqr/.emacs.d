@@ -5,6 +5,8 @@
     (diminish 'tab-as-escape-mode)
     (tab-as-escape-mode +1))
 
+  (customize-set-variable 'evil-undo-system 'undo-tree)
+
   ;; Allow escape to exit out of most things.
   (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
