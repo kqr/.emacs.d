@@ -851,7 +851,18 @@
   :config
   ;; Use a popup near point to select location
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read))
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+
+  ;; Add a generic vc-based project-root method. This should be part of
+  ;; project.el but I'm not sure why it's not. Also the dumb-jump functionality
+  ;; works when Emacs is freshly started, and breaks only when ESS is started. I
+  ;; really have no idea what's going on, but this fix seems to work.
+  ;;
+  ;; Maybe for maximum workage this should be defined in some sort of hook to be
+  ;; automatically called when ESS is started, but for the time being I can
+  ;; probably run it manually.
+  (cl-defmethod project-root ((project (head vc)))
+    (cdr project)))
 
 (use-package highlight-parentheses
   :config
