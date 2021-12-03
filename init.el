@@ -283,18 +283,11 @@
     (global-display-line-numbers-mode +1)
   (warn "EMACS VERSION < 26 used. If this is unexpected, look into it."))
 
-(use-package ace-window
-  :bind ("M-o" . ace-window))
+
 
 ;; Enable quick ways of dragging buffers around
-(use-package buffer-move
-  :bind (("<C-S-up>" . buf-move-up)
-         ("<C-S-down>" . buf-move-down)
-         ("<C-S-left>" . buf-move-left)
-         ("<C-S-right>" . buf-move-right))
-  )
-
-(use-package sr-speedbar)
+;; I used to have buffer-move here but it's rare enough that I need to move
+;; buffers around that it makes little sense to me to have dedicated support for it.
 
 ;; Fixed width font
 (when (display-graphic-p)
@@ -715,6 +708,28 @@
   (keyfreq-autosave-mode +1))
 
 ;;; General editing
+
+;; Jump around, to different windows and everything!
+;; For more inspiration, see https://karthinks.com/software/avy-can-do-anything/
+(use-package avy
+  :bind ("C-;" . avy-goto-char-timer)
+  :config
+  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o)))
+
+;; List files and headings and definitions in a sidebar
+(use-package sr-speedbar
+  :bind (:map speedbar-mode-map
+              ("Q" . sr-speedbar-close)
+              ("q" . sr-speedbar-close))
+  :hook (sr-speedbar-mode . evil-emacs-state)
+  :init
+  (defun sr-speedbar-open-and-goto ()
+    (interactive)
+    (sr-speedbar-open)
+    (sr-speedbar-select-window))
+  :config
+  (evil-define-key '(normal visual) 'global (kbd "<leader>f") 'sr-speedbar-open-and-goto))
+
 (use-package editorconfig
   :diminish editorconfig-mode
   :config
@@ -776,14 +791,8 @@
 ;; Spell checking. This is not at all refined yet. There are useful tips:
 ;; - https://www.emacswiki.org/emacs/FlySpell
 ;; - https://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(setq flyspell-issue-message-flag nil
-      ispell-silently-savep t)
-(ispell-change-dictionary "en_GB" 'global)  ;; any prefix argument makes it global
-(define-advice ispell (:before (&rest _) unfold-everything-before-ispell)
-  (when (fboundp 'outline-show-all)
-    (outline-show-all)))
+;; Removed because I rarely use it, it confuses me, and it conflicts with the
+;; key I have configured for avy.
 
 
 ;; Latex editing.
