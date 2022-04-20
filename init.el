@@ -352,6 +352,7 @@
          ("C-x u" . undo-tree-visualize))
   :diminish undo-tree-mode
   :config
+  (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
   (global-undo-tree-mode +1)
   (setq-default undo-tree-visualizer-diff t))
 
