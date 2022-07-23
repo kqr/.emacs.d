@@ -10,12 +10,6 @@
 ;; This used to be performed further down, which might have been an error.
 (straight-use-package 'org)
 (straight-use-package 'org-contrib)
-;;(straight-use-package
-;; '(org-plus-contrib
-;;   :repo "https://code.orgmode.org/bzg/org-mode.git"
-;;   :local-repo "org"
-;;   :files (:defaults "contrib/lisp/*.el")
-;;   :includes (org))
 
 ;; I /think/ these need to be set before Org is required
 (setq-default org-export-backends '(org html publish s5 latex rss))
@@ -343,39 +337,3 @@
 ;; (Hopefully a temporary measure until the bug is fixed for realsies.)
 (when (= 0 (remove-all-advice-for 'org-get-tags))
   (warn "No advice removed from org-get-tags. Maybe it's time to remove this workaround."))
-
-;; for some reason, this started misbehaving after Caspian jumped up on my
-;; keyboard, so I have made it temporarly non-mandatory and at some point
-;; I'll have to troubleshoot what went wrong.
-(when (and nil (require 'org-trello))
-  ;; Some hacks to make org-trello work with boards with large boards.
-  ;; The implementation is not very pretty, and it's hacky of me to re-define
-  ;; the functions rather than advise them, but meh.
-
-  (defun orgtrello-api-get-full-cards-from-page (board-id &optional before-id)
-    "Create a paginated retrieval of 25 cards before BEFORE-ID from BOARD-ID."
-    (orgtrello-api-make-query
-     "GET"
-     (format "/boards/%s/cards" board-id)
-     `(("actions" .  "commentCard")
-       ("checklists" . "all")
-       ("limit" . "250")
-       ("before" . ,(or before-id ""))
-       ("filter" . "open")
-       ("fields" .
-        "closed,desc,due,idBoard,idList,idMembers,labels,name,pos"))))
-
-  (defun orgtrello-controller--retrieve-full-cards (data &optional before-id)
-    "Retrieve the full cards from DATA, optionally paginated from before-ID.
-DATA is a list of (archive-cards board-id &rest buffer-name point-start).
-Return the cons of the full cards and the initial list."
-    (-let* (((archive-cards board-id &rest) data)
-            (cards
-             (-> board-id
-                (orgtrello-api-get-full-cards-from-page before-id)
-                (orgtrello-query-http-trello 'sync)))
-            (more-cards
-             (when cards
-               (let ((before-id (car (sort (mapcar 'orgtrello-data-entity-id cards) 'string<))))
-                 (car (orgtrello-controller--retrieve-full-cards-paged data before-id))))))
-      (cons (append more-cards cards) data))))
