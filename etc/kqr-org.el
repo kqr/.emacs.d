@@ -239,12 +239,15 @@
 
 ;; Agenda
 (setq org-agenda-files
-      '("~/org/inbox.org"
-        "~/org/projects.org"
-        "~/org/tickler.org"
+      ;; For the time being, use org-agenda only for work stuff. Reintroduce
+      ;; personal stuff
+      '(;;"~/org/inbox.org"
+        ;;"~/org/projects.org"
+        ;;"~/org/tickler.org"
         "~/org/loop54.org"
-        "~/org/flashcards.org"
-        "~/org/kth.org")
+        ;;"~/org/flashcards.org"
+        ;;"~/org/kth.org"
+        )
       org-agenda-dim-blocked-tasks 'invisible
       org-agenda-span 'day
       org-agenda-start-on-weekday nil
