@@ -978,7 +978,7 @@
   (setq ada-skel-initial-string nil))
 
 (use-package cc-mode
-  :mode "\\.\\(c\\|h\\)\\'"
+  :mode ("\\.\\(c\\|h\\)\\'" . c-mode)
   :config
   (setq-default c-default-style "stroustrup"
                 c-basic-offset 4))
