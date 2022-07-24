@@ -1040,7 +1040,8 @@
           (save-excursion (slime))
         (error (message "Slime failed to start. This may be expected.")))))
 
-  (add-hook 'lisp-mode-hook 'start-slime)
+  ;; Temporarily disabled – I don't have slime installed anyway.
+  ;; (add-hook 'lisp-mode-hook 'start-slime)
 
   (with-eval-after-load "slime"
     (setq inferior-lisp-program "/usr/local/bin/sbcl")
