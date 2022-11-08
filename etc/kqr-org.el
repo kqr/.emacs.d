@@ -288,7 +288,8 @@
                                (R . t)
                                (python . t)
                                (lisp . t)
-                               (shell . t)))
+                               (shell . t)
+                               (dot . t)))
 
 (setq org-babel-python-command "python3"
       org-export-with-smart-quotes t

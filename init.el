@@ -354,7 +354,9 @@
   :config
   (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
   (global-undo-tree-mode +1)
-  (setq-default undo-tree-visualizer-diff t))
+  (setq-default undo-tree-visualizer-diff t)
+  ;; I don't need persistent history and this might slow bulk file operations down.
+  (setq undo-tree-auto-save-history nil))
 
 ;; Contains remove-all-advice-for which kqr-org relies on.
 (load "kqr-misc.el")
