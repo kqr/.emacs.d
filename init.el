@@ -972,12 +972,14 @@
   :config
   (counsel-projectile-mode +1))
 
-(use-package ada-mode
-  :mode "\\.ad\\(b\\|s\\)\\'"
-  :config
-  (setq-default flycheck-gnat-args "-gnat12")
-  (setq ada-language-version 'ada2012)
-  (setq ada-skel-initial-string nil))
+;; Disable ada-mode for now. It relies on a parser writen in Ada, and I don't
+;; have an Ada environment at the moment.
+;; (use-package ada-mode
+;;   :mode "\\.ad\\(b\\|s\\)\\'"
+;;   :config
+;;   (setq-default flycheck-gnat-args "-gnat12")
+;;   (setq ada-language-version 'ada2012)
+;;   (setq ada-skel-initial-string nil))
 
 (use-package cc-mode
   :mode ("\\.\\(c\\|h\\)\\'" . c-mode)
@@ -990,6 +992,9 @@
 
 (use-package yaml-mode
   :mode "\\.yml\\'")
+
+(use-package cperl-mode
+  :mode ("\\.\\(pl\\|pm\\)\\'" . cperl-mode))
 
 ;; This now assumes Emacs 27 with its built-in JS mode.
 (use-package js2-mode

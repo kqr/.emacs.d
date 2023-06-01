@@ -294,6 +294,9 @@
       (jdee-font-lock-constant-face          ((t :inherit theme-base-face)))
       (jdee-font-lock-constructor-face       ((t :inherit theme-base-face)))
 
+      (cperl-nonoverridable-face             ((t :inherit theme-base-face)))
+      (cperl-hash-face                       ((t :inherit theme-base-face)))
+
       (js2-function-param                    ((t :inherit theme-base-face)))
       (js2-function-call                     ((t :inherit theme-base-face)))
       (js2-external-variable                 ((t :inherit flycheck-warning)))
