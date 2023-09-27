@@ -1110,25 +1110,6 @@
 (use-package nxml
   :mode "\\..sproj\\'")
 
-(use-package csharp-mode
-  :after (omnisharp)
-  :mode "\\.cs\\'"
-  :hook (csharp-mode . csharp-mode-enable)
-  :init
-  (defun csharp-mode-enable ()
-    "Configure settings relating to C# development."
-    (setq c-syntactic-indentation t)
-    (c-set-style "ellemtel")
-    (setq c-basic-offset 4)
-    (c-set-offset 'arglist-close 0)
-    (c-set-offset 'brace-list-open '-)
-
-    (setq tab-width 4)
-    (electric-indent-local-mode -1)
-    (c-set-offset 'inline-open 0)
-    (when (configure-omnisharp)
-      (add-hook 'csharp-mode-hook 'omnisharp-enable))))
-
 (use-package fsharp-mode
   :after (omnisharp)
   :mode "\\.fs\\'"
