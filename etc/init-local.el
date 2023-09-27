@@ -2,7 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(when (display-graphic-p)
+(when (and (display-graphic-p)
+           (find-font (font-spec :name "Hack")))
   (set-frame-font (font-spec :name "Hack" :size 14) t t))
 
 (when (require 'notmuch nil 'noerror)

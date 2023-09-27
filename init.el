@@ -141,9 +141,12 @@
 ;; least a little with that issue.
 ;;
 ;; Maybe it happens also with other platforms, so try running it everywhere.
+
 (use-package exec-path-from-shell
   :config
-  (exec-path-from-shell-initialize))
+  ;; No point doing this on windows...
+  (unless (eq system-type 'windows-nt)
+    (exec-path-from-shell-initialize)))
 
 ;; Config troubleshooting.
 (use-package bug-hunter
@@ -290,7 +293,9 @@
 ;; buffers around that it makes little sense to me to have dedicated support for it.
 
 ;; Fixed width font
-(when (display-graphic-p)
+(when (and (display-graphic-p)
+           (find-font (font-spec :name "Hack"))
+           (find-font (font-spec :name "Linux Libertine")))
   (set-frame-font (font-spec :name "Hack" :size 14) t t)
   (custom-theme-set-faces 'user '(fixed-pitch
                                   ((t :family "Hack"
