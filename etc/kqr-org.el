@@ -130,9 +130,13 @@
         ;; Avoid large batches of items followed by nothing for a few days
         ;; (This is apparently recommended with the default algorithm!)
         org-drill-add-random-noise-to-intervals-p t
-        ;; Encourage frequent, shorter drills
+        ;; Encourage frequent, shorter drills (tihs used to be 15 items per
+        ;; session but at the current rate I usually have 30-ish flashcards per
+        ;; day to go through so it would make sense to get them over with in
+        ;; just one session. Still should not take more than 10 minutes unless
+        ;; interrupted.)
         org-drill-maximum-duration 10
-        org-drill-maximum-items-per-session 15
+        org-drill-maximum-items-per-session 30
         ;; Consider items recent until inter-repetition time is this big
         org-drill-days-before-old 15))
 

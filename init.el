@@ -684,7 +684,7 @@
   (setq htmlize-output-type 'inline-css)
 
   ;; Automatically upload HTML of region-or-buffer to remote
-  (defvar htmlize-paste-it-target-directory "/-:kqr@two-wrongs.com:pastes/")
+  (defvar htmlize-paste-it-target-directory "/-:kqr@two-wrongs.com:/var/www/pastes/")
   (defvar htmlize-paste-it-base-url "https://two-wrongs.com/pastes/")
 
   (defun htmlize-paste-it ()
@@ -999,7 +999,9 @@
   :mode "\\.yml\\'")
 
 (use-package cperl-mode
-  :mode ("\\.\\(pl\\|pm\\)\\'" . cperl-mode))
+  :mode ("\\.\\(pl\\|pm\\|t\\)\\'" . cperl-mode)
+  :config
+  (setq cperl-indent-level 4))
 
 ;; This now assumes Emacs 27 with its built-in JS mode.
 (use-package js2-mode
