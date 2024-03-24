@@ -712,7 +712,9 @@
 ;; Analyse command usage frequency to optimise config
 (use-package keyfreq
   :config
-  (keyfreq-mode +1)
+  ;; This doesn't work well with multiple sessions running simultaneously.
+  ;; I also don't use it very often. Let's disable it for now.
+  (keyfreq-mode -1)
   (keyfreq-autosave-mode +1))
 
 ;;; General editing
@@ -1227,9 +1229,12 @@
 (setq custom-theme-directory "~/.emacs.d/etc/theme/")
 
 ;; We like our theme
-(setq frame-background-mode 'light)
-(load-theme 'modern-minik t)
-(modern-minik-eval-init)
+(defun reset-theme ()
+  "Reset theme to the one we like."
+  (setq frame-background-mode 'light)
+  (load-theme 'modern-minik t)
+  (modern-minik-eval-init))
+(reset-theme)
 
 ;; But we also don't want a bunch of junk in the modeline...
 (when (require 'diminish nil)
