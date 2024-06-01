@@ -1136,16 +1136,6 @@
 ;;; Application type major modes.
 (load "kqr-eshell.el")
 
-(use-package timeclock
-  ;; Since switching to hledger for time budgeting, these are the commands I
-  ;; still use – none of the show time remaining in status bar stuff.
-  :bind (("C-x t i" . timeclock-in)
-         ("C-x t o" . timeclock-out)
-         ("C-x t r" . timeclock-reread-log))
-  :config
-  (setq timeclock-file "~/org/log.timeclock")
-  (setq timeclock-workday 28800))
-
 (use-package calc
   :bind ("<f12>" . calc)
   :config
