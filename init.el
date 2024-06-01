@@ -1157,10 +1157,6 @@
   :config
   (setq sr-show-file-attributes nil))
 
-(use-package git-timemachine
-  :commands (git-timemachine-toggle)
-  :hook (git-timemachine-mode . evil-emacs-state))
-
 (use-package magit
   :bind ("<f3>" . magit-status)
   :config
