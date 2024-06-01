@@ -1090,45 +1090,8 @@
   :config
   (setq python-shell-interpreter "python3"))
 
-(use-package omnisharp
-  :config
-  (defun configure-omnisharp ()
-    "Set up omnisharp for C# and F# the way I'm used to."
-    (when (require 'company nil)
-      (add-to-list 'company-backends #'company-omnisharp))
-
-    ;; Note that this requires the latest HEAD of omnisharp-emacs!
-    (setq omnisharp-expected-server-version "1.34.1")
-
-    (defun omnisharp-enable ()
-      "Configure advanced settings related to C# development."
-      (omnisharp-mode)
-      (local-set-key (kbd "C-c r m") 'omnisharp-run-code-action-refactoring)
-      (local-set-key (kbd "C-c r r") 'omnisharp-rename)
-      (local-set-key (kbd "C-c r d") 'omnisharp-go-to-definition-other-window)
-      (local-set-key (kbd "C-c r t") 'omnisharp-current-type-information)
-      (local-set-key (kbd "C-c r u") 'omnisharp-find-usages)
-      (local-set-key (kbd "C-c r i") 'omnisharp-find-implementations))
-    t))
-
 (use-package nxml
   :mode "\\..sproj\\'")
-
-(use-package fsharp-mode
-  :after (omnisharp)
-  :mode "\\.fs\\'"
-  :hook (fsharp-mode . fsharp-mode-enable)
-  :init
-  (defun fsharp-mode-enable ()
-    (push 'fsharp-mode aggressive-indent-excluded-modes)
-    (setq fsharp-conservative-indentation-after-bracket t)
-
-    ;; This project root finder does not interact well with e.g. dumb-jump.
-;;    (remove-hook 'project-find-functions #'fsharp-mode-project-root)
-
-    (when (configure-omnisharp)
-      ;; (add-hook 'fsharp-mode-hook ;;'omnisharp-enable)
-      )))
 
 (use-package csv-mode
   :mode "\\.csv\\'")
