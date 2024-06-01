@@ -1069,19 +1069,6 @@
         (error "No symbol given"))
       (slime-eval-async `(swank:documentation-symbol ,symbol-name) 'popup-tip))))
 
-(use-package ansible
-  :hook ((yaml-mode . ansible)
-         (ansible . ansible-auto-decrypt-encrypt))
-  :config
-  ;; The easiest solution to customise this on various work laptops is to
-  ;; symlink the actual password file to this location – I'm unlikely to manage
-  ;; more than one set of Ansible-controlled hosts anyway.
-  (setq ansible-vault-password-file "~/.vault_pass"))
-
-(use-package cfengine
-  :mode ("\\.cf\\'" . cfengine3-mode)
-  :hook (cfengine3-mode . eldoc-mode))
-
 (use-package python
   :hook (python-mode . python-mode-configure)
   :init
