@@ -10,6 +10,7 @@
 ;; This used to be performed further down, which might have been an error.
 (straight-use-package 'org)
 (straight-use-package 'org-contrib)
+(load "ox-rss.el")
 
 ;; I /think/ these need to be set before Org is required
 (setq-default org-export-backends '(org html publish s5 latex rss))
