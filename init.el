@@ -579,7 +579,7 @@
     (let ((count 0))
       (dolist (timer timer-idle-list)
         (when (eq 'aggressive-indent--indent-if-changed (aref timer 5))
-          (incf count)
+          (cl-incf count)
           (cancel-timer timer)))
       (when (> count 0)
         (message "Cancelled %s aggressive-indent timers" count))))
@@ -885,6 +885,9 @@
   :config
   (setq-default c-default-style "stroustrup"
                 c-basic-offset 4))
+
+(use-package haskell-mode
+  :mode ("\\.hs\\'"))
 
 (use-package restclient
   :mode "\\.http\\'")
